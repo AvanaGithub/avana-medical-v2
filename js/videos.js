@@ -48,8 +48,9 @@
   lazy('echi.mp4', ['echiVideo'], ['echiToggle'], ['echi']);
   lazy('movmedix.mp4', ['mmVideo'], ['mmToggle'], ['movmedix']);
 
-  // About Us: Arthro Knee 2026 event highlights (cut from "Arthroknee Post Event Video Final.mp4")
-  lazy('about-arthroknee.mp4', ['aboutBg'], ['aboutBgToggle'], ['about']);
+  // About Us: Arthro Knee 2026 event video (full 92 s, muted web version of "Arthroknee Post Event Video Final.mp4")
+  // "?v=2": bump the number whenever the file is replaced, so browsers don't keep showing a cached copy
+  lazy('about-arthroknee.mp4?v=2', ['aboutBg'], ['aboutBgToggle'], ['about']);
 
   // Meet the Team and Contact share one background video
   lazy('page-background.mp4', ['teamBg','contactBg'], ['teamBgToggle'], ['team','contact'], ['teamBg']);
