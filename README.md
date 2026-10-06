@@ -13,6 +13,7 @@ Avana_medical_v2/
 ├── js/
 │   ├── main.js             Menus, mobile nav, page router, Careers bloom, Contact office map, video controls
 │   ├── careers-modal.js    "Open positions" pop-up form on the Careers page
+│   ├── card-slides.js      Fades each Careers card through its photo set
 │   └── videos.js           Loads each background video when its page is first opened
 ├── images/
 │   ├── logos/              Avana, Arthrex, e.CHI, MovMedix (-dark for light backgrounds, -white for dark)
@@ -21,6 +22,7 @@ Avana_medical_v2/
 │   ├── echi/               e.CHI FrequenzChip products
 │   ├── team/               Leadership photos
 │   ├── events/             Company events and team life (Careers, About)
+│   ├── careers/            Photo sets for the Careers cards: discover/, creativity/, growth/
 │   ├── posters/            Still frame shown while each video loads
 │   ├── icons/              Small UI graphics
 │   └── textures/           Background texture
@@ -59,6 +61,7 @@ Then open http://localhost:8097. Use the server rather than double-clicking `ind
 
 - **Text:** edit `index.html`. Search for the heading you want to change.
 - **Image:** replace the file in `images/` with one of the same name and shape. To use a new file name, update the `src` in `index.html`.
+- **Careers card photos:** add a JPG to `images/careers/<card>/` and an `<img>` line inside that card's `data-slides` block in `index.html`. Each photo shows for about 4.5 seconds.
 - **Video:** replace the `.mp4` in `videos/` with one of the same name. Keep videos short, muted and under about 3 MB, and update the matching still in `images/posters/`.
 - **Colours and fonts:** change the variables at the top of `css/styles.css` (`--gold`, `--charcoal`, `--sand`, …).
 - **Product highlight of the month:** the hero block at the top of `<div data-page="home">`.
