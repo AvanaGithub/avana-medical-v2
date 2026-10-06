@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Avana Medical Website</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="main">
+  <div class="wrap">
+    <a href="#home" class="logo" aria-label="Avana Medical Devices, home"><img src="images/logos/avana-dark.png" alt=""></a>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+    <nav class="primary" id="nav" aria-label="Main">
+      <ul>
+        <li class="has-menu">
+          <button class="nav-link" aria-expanded="false" aria-controls="menu-about" id="btn-about">About Us
+            <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          <ul class="menu" id="menu-about" hidden aria-labelledby="btn-about">
+            <li><a href="#about" data-route="about">About Us<span>Who we are</span></a></li>
+            <li><a href="#team" data-route="team">Meet our Leaders<span>Our leadership</span></a></li>
+            <li><a href="#contact" data-route="contact">Contact Us<span>Our offices and how to reach us</span></a></li>
+          </ul>
+        </li>
+        <li class="has-menu">
+          <button class="nav-link" aria-expanded="false" aria-controls="menu-edu" id="btn-edu">Medical Education
+            <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          <ul class="menu" id="menu-edu" hidden aria-labelledby="btn-edu">
+            <li><a href="https://arthrolab.in" target="_blank" rel="noopener">ArthroLab India<span>Courses, labs and forums</span></a></li>
+            <li><a href="https://www.youtube.com/@MargdarshanAvana" target="_blank" rel="noopener">Medical Education<span>Margdarshan videos on YouTube</span></a></li>
+            <li><a href="https://www.orthopedia.com" target="_blank" rel="noopener">Patient Education<span>Procedure guides for patients</span></a></li>
+          </ul>
+        </li>
+        <li class="has-menu">
+          <button class="nav-link" aria-expanded="false" aria-controls="menu-prod" id="btn-prod" data-group="products">Products
+            <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          <ul class="menu" id="menu-prod" hidden aria-labelledby="btn-prod">
+            <li><a href="#arthrex" data-route="arthrex">Arthrex<span>Product range by anatomy</span></a></li>
+            <li><a href="#echi" data-route="echi">e.CHI<span>FrequenzChip catalogue</span></a></li>
+            <li><a href="#movmedix" data-route="movmedix">MovMedix<span>Synthetic ligament catalogue</span></a></li>
+          </ul>
+        </li>
+        <li><a class="nav-link" href="#careers" data-route="careers">Careers</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<!-- ============ HOME ============ -->
+<div data-page="home">
+  <section class="hero" aria-labelledby="hero-h">
+    <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="auto" poster="images/posters/hero.jpg" aria-hidden="true">
+      
+    </video>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">Product highlight of the month</span>
+        <h1 id="hero-h">Arthrex<sup>®</sup> TightRope II</h1>
+        <p class="sub">Adjustable-loop cortical fixation for ACL (anterior cruciate ligament) reconstruction, with a flat-tape loop the surgeon can retension after the buttons are placed.</p>
+        <a class="btn" href="#arthrex" data-route="arthrex">Explore the Arthrex range</a>
+      </div>
+    </div>
+    <button class="vid-toggle" id="vidToggle" aria-label="Pause background video" aria-pressed="false">
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" fill="currentColor"/></svg>
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+    </button>
+  </section>
+
+  <section class="partners" aria-labelledby="partners-h">
+    <div class="wrap">
+      <p id="partners-h">Our products</p>
+      <ul>
+        <li><a href="#arthrex" data-route="arthrex"><img src="images/logos/arthrex-dark.png" alt="Arthrex"><small>USA</small></a></li>
+        <li><a href="#movmedix" data-route="movmedix"><img src="images/logos/movmedix-dark.png" alt="MovMedix"><small>France</small></a></li>
+        <li><a href="#echi" data-route="echi"><img class="echi" src="images/logos/echi-dark.png" alt="e.CHI"><small>Germany</small></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="about-vid" id="about-sec" aria-labelledby="about-h">
+    <video class="bgvid" id="aboutVideo" autoplay muted loop playsinline preload="auto" poster="images/posters/about-section.jpg" aria-hidden="true"></video>
+    <div class="about-shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="copy">
+        <span class="eyebrow">Established in 2009</span>
+        <h2 id="about-h">Improving lives through medical innovation</h2>
+        <p class="lead">Market leader in joint preservation, with a growing presence across orthopaedic specialties.</p>
+        <p>Avana works closely with surgeons to understand the challenges they face in the operating room. Through Avana Medical, Avana Surgical and Avana Technologies, we bring arthroscopy, arthroplasty, spine and capital equipment to hospitals across India and the SAARC region, backed by clinical support in every case.</p>
+        <p>Our customers can call our leadership and team at any time. Our biggest success is understanding what surgeons need to do their best work for their patients.</p>
+        <a class="btn" href="#team" data-route="team">Meet the Team</a>
+      </div>
+    </div>
+    <button class="vid-toggle" id="aboutToggle" aria-label="Pause background video" aria-pressed="false">
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" fill="currentColor"/></svg>
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+    </button>
+  </section>
+
+</div>
+
+<!-- ============ CAREERS ============ -->
+<div data-page="careers" hidden>
+  <section class="page-head ph-photo">
+    <img class="ph-bg" src="images/events/achievers-summit-1.jpg" alt="Avana team members at the Annual Achievers Summit">
+    <div class="ph-shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <img class="ph-logo" src="images/logos/avana-white.png" alt="Avana">
+      <div class="ph-copy">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><span aria-current="page">Careers</span></nav>
+      <h1 tabindex="-1">Careers at Avana</h1>
+      <div class="title-rule" aria-hidden="true"></div>
+      <p>Impact lives, transform futures: join the medical innovation quest. Our success is driven by the passion and dedication of our people, and we are always looking for talented, motivated individuals who share our commitment to excellence in medical devices.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="why-avana" aria-labelledby="why-h">
+    <div class="wrap">
+      <div class="why-copy">
+        <div>
+          <span class="eyebrow">Why Avana</span>
+          <h2 id="why-h">A growing company with room for you to grow</h2>
+          <p class="lead">A dynamic, supportive workplace with real opportunities for career advancement and personal growth.</p>
+        </div>
+        <div>
+          <p>Our people are encouraged to take an active role in shaping the future of the company, and to make a positive difference to patients and their families.</p>
+          <p>We offer roles from entry level to senior management. Our benefits include competitive salaries, health insurance and opportunities for professional development.</p>
+          <button type="button" class="btn" id="openPosBtn" aria-haspopup="dialog" aria-controls="careersModal">See open positions</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="life" aria-labelledby="life-h">
+    <div class="wrap">
+      <span class="eyebrow">Life at Avana</span>
+      <h2 id="life-h">What it means to work here</h2>
+      <div class="bloom" id="bloom">
+        <svg class="bloom-lines" id="bloomLines" aria-hidden="true"></svg>
+        <div class="brow btop"><article class="bnode" data-i="0"><div class="bimg"><img src="images/events/annual-dealers-meet.jpg" alt="Avana team and dealer partners at the Annual Dealers Meet FY26" loading="lazy"></div><div class="btxt"><h3>Discover your work family</h3><p>Avana Group is more than a workplace. It is a platform for personal and professional growth, with the chance to make a meaningful impact in medical devices.</p></div></article><article class="bnode" data-i="1"><div class="bimg"><img src="images/events/sports-day.jpg" alt="Avana team member hosting a company sports day" loading="lazy"></div><div class="btxt"><h3>Unleash your creativity</h3><p>We celebrate diversity and new ideas. You get the resources, mentorship and freedom to challenge norms and bring better solutions to life.</p></div></article><article class="bnode" data-i="2"><div class="bimg"><img src="images/events/achievers-summit-3.jpg" alt="Avana team members together at the Annual Achievers Summit" loading="lazy"></div><div class="btxt"><h3>Grow beyond limits</h3><p>Continuous learning, skill building and career advancement, backed by our medical education programmes, industry partnerships and the latest technology.</p></div></article></div>
+        <div class="bloom-core" aria-label="Avana Group"><span class="core-ring" aria-hidden="true"></span><img src="images/logos/avana-dark.png" alt=""><span class="core-word">GROUP</span></div>
+        <div class="brow bbot"><article class="bnode" data-i="3"><div class="bimg"><img src="images/events/achievers-summit-2.jpg" alt="Avana team members in conversation at the Annual Achievers Summit" loading="lazy"></div><div class="btxt"><h3>Join an inspiring community</h3><p>Work alongside passionate colleagues and leaders who guide and support you, in a culture where your voice matters.</p></div></article><article class="bnode" data-i="4"><div class="bimg"><img src="images/events/cricket-match.jpg" alt="Avana team in blue tees at a company cricket match" loading="lazy"></div><div class="btxt"><h3>Make a difference</h3><p>Your work improves patients’ lives and helps move medical devices forward, bringing healing and innovation to the people who need it.</p></div></article><article class="bnode" data-i="5"><div class="bimg"><img src="images/events/long-service-award.jpg" alt="Long Service Award presented on stage at the Annual Achievers Summit FY26" loading="lazy"></div><div class="btxt"><h3>Recognising your value</h3><p>Competitive pay, comprehensive benefits and recognition for your contributions, in a workplace that supports work-life balance and well-being.</p></div></article></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ ABOUT ============ -->
+<!-- ============ Contact Us ============ -->
+<div data-page="contact" hidden>
+  <section class="gl-hero" id="ctHero" aria-labelledby="ct-h">
+    <video class="gl-bgvid" id="contactBg" autoplay muted loop playsinline preload="auto" poster="images/posters/page-background.jpg" aria-hidden="true"></video>
+    <div class="gl-glow" aria-hidden="true"></div>
+    <div class="gl-noise" aria-hidden="true"></div>
+    <div class="wrap gl-wrap">
+      <div class="gl-left">
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><a href="#about" data-route="about">About Us</a><span aria-hidden="true">›</span><span aria-current="page">Contact Us</span></nav>
+        <h1 id="ct-h" tabindex="-1" class="sr-only">Contact Us</h1>
+        <p class="gl-sub team-intro" aria-hidden="true"></p>
+      </div>
+      <div class="gl-right" aria-hidden="true">
+        <span class="gl-hand-glow"></span>
+        <div class="gl-stage">
+          <img class="gl-logo" src="images/logos/avana-white.png" alt="Avana">
+        </div>
+      </div>
+    </div>
+    <button class="vid-toggle" id="contactBgToggle" aria-label="Pause background video" aria-pressed="false">
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" fill="currentColor"/></svg>
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+    </button>
+  </section>
+  <section class="ct-offices" aria-labelledby="ct-off-h">
+    <div class="wrap">
+      <span class="eyebrow">How to find us</span>
+      <h2 id="ct-off-h">Our Offices</h2>
+      <div class="title-rule" aria-hidden="true"></div>
+      <div class="orbit" id="orbit">
+        <svg class="orbit-lines" id="orbitLines" aria-hidden="true"></svg>
+        <button class="orbit-core" id="orbitCore" type="button" aria-expanded="false" aria-controls="orbitList">
+          <span class="orbit-ring" aria-hidden="true"></span>
+          <img src="images/logos/avana-white.png" alt="Avana">
+          <span class="orbit-hint" id="orbitHint">Tap to see our offices</span>
+        </button>
+        <ul class="orbit-list" id="orbitList">
+          <li class="ofc-hubitem" data-k="chennai">
+            <button class="ofc-hub" id="chennaiHub" type="button" aria-expanded="false" aria-controls="ofc-corp ofc-log ofc-tech">
+              <span class="ofc-hub-ring" aria-hidden="true"></span>
+              <span class="ofc-hub-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""><span>Chennai</span></span>
+              <span class="ofc-hub-text"><b>Avana Chennai</b><span>Corporate · Logistics · Technology &amp; Service</span></span>
+              <span class="ofc-hub-hint" id="chennaiHint">Tap to see 3 offices</span>
+              <svg class="ofc-hub-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </li>
+          <li class="ofc ofc-sub" data-k="corp" id="ofc-corp">
+            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""></div>
+            <div class="ofc-card">
+              <h3 class="ofc-title">Headquarters<span class="sr-only">, Avana Chennai</span></h3>
+              <p class="ofc-addr"><b>Avana Medical Devices Pvt. Ltd.</b>No. 91, Sundar Nagar 4th Avenue, Nandambakkam, Chennai – 600032, Tamil Nadu, India</p>
+              <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+914422331061">+91 44 2233 1061 / 1062 / 1063</a></p>
+              <a class="ofc-map" href="https://maps.app.goo.gl/Q3CqudFAv8cvF4Ri8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
+            </div>
+          </li>
+          <li class="ofc ofc-sub" data-k="log" id="ofc-log">
+            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""></div>
+            <div class="ofc-card">
+              <h3 class="ofc-title">Logistics<span class="sr-only">, Avana Chennai</span></h3>
+              <p class="ofc-addr">3/249F, 3/249G, Krishna Enclave, Parthasarathy Nagar, Manapakkam, Chennai – 600125, Tamil Nadu, India</p>
+              <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+919551252020">+91 95512 52020</a></p>
+              <a class="ofc-map" href="https://www.google.com/maps/search/?api=1&query=Krishna+Enclave+Parthasarathy+Nagar+Manapakkam+Chennai+600125" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
+            </div>
+          </li>
+          <li class="ofc ofc-sub" data-k="tech" id="ofc-tech">
+            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""></div>
+            <div class="ofc-card">
+              <h3 class="ofc-title">Technology &amp; Service<span class="sr-only">, Avana Chennai</span></h3>
+              <p class="ofc-addr">No. 91, Sundar Nagar 4th Avenue, Nandambakkam, Chennai – 600032, Tamil Nadu, India</p>
+              <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+914422331061">+91 44 2233 1061 / 1062 / 1063</a></p>
+              <a class="ofc-map" href="https://maps.app.goo.gl/Q3CqudFAv8cvF4Ri8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
+            </div>
+          </li>
+          <li class="ofc" data-k="mumbai" id="ofc-mumbai">
+            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""><span>Mumbai</span></div>
+            <div class="ofc-card">
+              <h3 class="sr-only">Avana Mumbai</h3>
+              <p class="ofc-label">Regional Office</p>
+              <p class="ofc-addr"><b>Avana Medical Devices Pvt. Ltd.</b>The Summit Business Bay (Omkar), Office No. 606, 6th Floor, Andheri Kurla Road, Chakala, Andheri East, Mumbai – 400093, Maharashtra, India</p>
+              <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+912249700628">+91 22 4970 0628</a></p>
+              <a class="ofc-map" href="https://maps.app.goo.gl/2K2C3eHkzqMF7aoa9" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
+            </div>
+          </li>
+          <li class="ofc" data-k="bengaluru" id="ofc-bengaluru">
+            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""><span>Bengaluru</span></div>
+            <div class="ofc-card">
+              <h3 class="sr-only">Avana Bengaluru</h3>
+              <p class="ofc-label">Regional Office</p>
+              <p class="ofc-addr"><b>Avana Medical Devices Pvt. Ltd.</b>No. 52, 3rd Floor, Agastya Arcade, 80 Feet Road, New BEL Road, Devasandra Layout, Bengaluru – 560094, Karnataka, India</p>
+              <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+918023512259">+91 80 2351 2259</a></p>
+              <a class="ofc-map" href="https://maps.app.goo.gl/km8v9sxuaLHkHVLj7" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
+            </div>
+          </li>
+          <li class="ofc" data-k="delhi" id="ofc-delhi">
+            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""><span>Delhi</span></div>
+            <div class="ofc-card">
+              <h3 class="sr-only">Avana Delhi</h3>
+              <p class="ofc-label">Regional Office</p>
+              <p class="ofc-addr"><b>Avana Medical Devices Pvt. Ltd.</b>B6, Qutab Institutional Area, New Delhi – 110016, India</p>
+              <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+911141538222">+91 11 4153 8222</a></p>
+              <a class="ofc-map" href="https://maps.app.goo.gl/PBNrr8ety7ntrhVU6" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <p class="ct-mailline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3.5 6l8.5 7 8.5-7"/></svg><span>Have any questions? Mail us at</span> <a href="mailto:info@avanamedical.com">info@avanamedical.com</a></p>
+    </div>
+  </section>
+</div>
+
+<!-- ============ About Us ============ -->
+<div data-page="about" class="ab-page" hidden>
+  <section class="gl-hero" id="glHero" aria-labelledby="ab-h">
+    <video class="gl-bgvid" id="aboutBg" autoplay muted loop playsinline preload="auto" poster="images/posters/page-background.jpg" aria-hidden="true"></video>
+    <div class="gl-glow" aria-hidden="true"></div>
+    <div class="gl-noise" aria-hidden="true"></div>
+    <div class="wrap gl-wrap">
+      <div class="gl-left">
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><span aria-current="page">About Us</span></nav>
+        <h1 id="ab-h" tabindex="-1" class="sr-only">About Us</h1>
+        <p class="gl-sub">Since 2009, Avana has brought world-class orthopaedic and sports medicine technology to surgeons across India and the SAARC region.</p>
+        <a class="gl-cta" href="#team" data-route="team"><span class="gl-cta-t">Meet the Team</span><span class="gl-cta-a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span></a>
+      </div>
+      <div class="gl-right" aria-hidden="true">
+        <span class="gl-hand-glow"></span>
+        <div class="gl-stage">
+          <img class="gl-logo" src="images/logos/avana-white.png" alt="Avana">
+        </div>
+      </div>
+    </div>
+    <button class="vid-toggle" id="aboutBgToggle" aria-label="Pause background video" aria-pressed="false">
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" fill="currentColor"/></svg>
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+    </button>
+  </section>
+
+  <div class="ab-body">
+    <section class="wrap ab-trio" aria-label="Our Purpose, Mission and Vision">
+      <figure class="ab-feat ab-feat--tall">
+        <img src="images/events/md-speaking-achievers-summit.jpg" alt="P. Sundararajan, Managing Director, speaking at the Annual Achievers Summit FY26" loading="lazy">
+        <figcaption class="ab-feat-cap">
+          <h2 id="ab-purpose">Our Purpose</h2>
+          <div class="title-rule" aria-hidden="true"></div>
+          <p>Widening access to world-class care, restoring health and mobility.</p>
+        </figcaption>
+      </figure>
+      <figure class="ab-feat">
+        <img src="images/events/achievers-summit-group.jpg" alt="Avana team together at the Annual Achievers Summit" loading="lazy">
+        <figcaption class="ab-feat-cap">
+          <h2 id="ab-mission">Our Mission</h2>
+          <div class="title-rule" aria-hidden="true"></div>
+          <p>A partner surgeons and hospitals across India can trust — for world-class products, medical education and customer service they can count on.</p>
+        </figcaption>
+      </figure>
+      <figure class="ab-feat">
+        <img src="images/events/training-session.jpg" alt="Avana team in a training session" loading="lazy">
+        <figcaption class="ab-feat-cap">
+          <h2 id="ab-vision">Our Vision</h2>
+          <div class="title-rule" aria-hidden="true"></div>
+          <p>To be the most trusted medical company — growing across specialties, known for exceptional talent, real outcomes, and the standard we set in all we do.</p>
+        </figcaption>
+      </figure>
+    </section>
+  </div>
+</div>
+
+<!-- ============ Meet the Team ============ -->
+<div data-page="team" hidden>
+  <section class="gl-hero" id="tmHero" aria-labelledby="tm-h">
+    <video class="gl-bgvid" id="teamBg" autoplay muted loop playsinline preload="auto" poster="images/posters/page-background.jpg" aria-hidden="true"></video>
+    <div class="gl-glow" aria-hidden="true"></div>
+    <div class="gl-noise" aria-hidden="true"></div>
+    <div class="wrap gl-wrap">
+      <div class="gl-left">
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><a href="#about" data-route="about">About Us</a><span aria-hidden="true">›</span><span aria-current="page">Meet the Team</span></nav>
+        <h1 id="tm-h" tabindex="-1" class="sr-only">Meet the Team</h1>
+        <p class="gl-sub team-intro" aria-hidden="true"></p>
+      </div>
+      <div class="gl-right" aria-hidden="true">
+        <span class="gl-hand-glow"></span>
+        <div class="gl-stage">
+          <img class="gl-logo" src="images/logos/avana-white.png" alt="Avana">
+        </div>
+      </div>
+    </div>
+    <button class="vid-toggle" id="teamBgToggle" aria-label="Pause background video" aria-pressed="false">
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" fill="currentColor"/></svg>
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+    </button>
+  </section>
+  <section class="team" aria-labelledby="team-h">
+    <div class="wrap">
+      <h2 class="center" id="team-h">Leadership Team</h2>
+      <div class="title-rule" aria-hidden="true"></div>
+      <article class="member flip">
+        <img class="photo" src="images/team/p-sundararajan.jpg" alt="P. Sundararajan, Managing Director">
+        <div>
+          <h3>P. Sundararajan</h3>
+          <div class="role">Managing Director, Avana Group <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+        </div>
+      </article>
+      <article class="member">
+        <img class="photo" src="images/team/manish-gautham.jpg" alt="Manish Gautham, Director of Sales, Sports Medicine">
+        <div>
+          <h3>Manish Gautham</h3>
+          <div class="role">Director of Sales, Sports Medicine <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+        </div>
+      </article>
+      <article class="member">
+        <img class="photo" src="images/team/ruchir-gupta.jpg" alt="Ruchir Gupta, Deputy Director, Marketing and Business Strategy">
+        <div>
+          <h3>Ruchir Gupta</h3>
+          <div class="role">Deputy Director, Marketing &amp; Business Strategy <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+        </div>
+      </article>
+      <article class="member">
+        <img class="photo" src="images/team/praveen-raghavendra.jpg" alt="Praveen Raghavendra, National Sales Manager, Dextra and Bio">
+        <div>
+          <h3>Praveen Raghavendra</h3>
+          <div class="role">National Sales Manager, Dextra &amp; Bio <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+        </div>
+      </article>
+      <article class="member">
+        <img class="photo" src="images/team/avadhut-kaluskar.jpg" alt="Avadhut Kaluskar, Senior Manager, Medical Education">
+        <div>
+          <h3>Avadhut Kaluskar</h3>
+          <div class="role">Senior Manager, Medical Education <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+        </div>
+      </article>
+      <article class="member">
+        <img class="photo" src="images/team/m-srinivasan.jpg" alt="M. Srinivasan, Senior Manager, Finance and Administration">
+        <div>
+          <h3>M. Srinivasan</h3>
+          <div class="role">Senior Manager, Finance &amp; Administration <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+        </div>
+      </article>
+      <article class="member">
+        <img class="photo" src="images/team/s-singaravel.jpg" alt="S. Singaravel, Manager, IT and Service">
+        <div>
+          <h3>S. Singaravel</h3>
+          <div class="role">Manager, IT &amp; Service <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+
+<!-- ============ ARTHREX ============ -->
+<div data-page="arthrex" hidden>
+  <section class="ax-head" aria-labelledby="ax-h">
+    <video class="ax-video" id="arthrexVideo" autoplay muted loop playsinline preload="auto" poster="images/posters/arthrex.jpg" aria-hidden="true"></video>
+    <div class="ax-shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><span>Products</span><span aria-hidden="true">›</span><span aria-current="page">Arthrex</span></nav>
+      <div class="brand-title">
+        <img class="brand-logo" src="images/logos/arthrex-white.png" alt="Arthrex">
+        <h1 class="sr-only" id="ax-h" tabindex="-1">Arthrex Product Range</h1>
+      </div>
+      <div class="title-rule" aria-hidden="true"></div>
+      <p>Arthrex pioneered arthroscopy and sports medicine and continues to introduce more than 1,000 new products and procedures every year. With a focus on patient safety and clinical outcomes, it now leads in orthobiologics and arthroplasty too. Avana brings the full Arthrex range to surgeons across India, with clinical specialists in the operating room and ArthroLab training behind every product.</p>
+    </div>
+    <button class="vid-toggle" id="arthrexToggle" aria-label="Pause background video" aria-pressed="false">
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" fill="currentColor"/></svg>
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+    </button>
+  </section>
+  <section class="ax-range" aria-label="Arthrex product categories">
+    <div class="wrap">
+      <div class="acards">
+        <article class="acard"><img class="img" src="images/arthrex/shoulder.jpg" alt="" loading="lazy"><div class="body"><h2>Shoulder</h2><a class="more" href="https://www.arthrex.com/shoulder" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Shoulder on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/arthrex/knee.jpg" alt="" loading="lazy"><div class="body"><h2>Knee</h2><a class="more" href="https://www.arthrex.com/knee" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Knee on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/arthrex/hand-wrist.jpg" alt="" loading="lazy"><div class="body"><h2>Hand &amp; Wrist</h2><a class="more" href="https://www.arthrex.com/hand-wrist" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Hand &amp; Wrist on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/arthrex/foot-ankle.jpg" alt="" loading="lazy"><div class="body"><h2>Foot &amp; Ankle</h2><a class="more" href="https://www.arthrex.com/foot-ankle" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Foot &amp; Ankle on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/arthrex/hip.jpg" alt="" loading="lazy"><div class="body"><h2>Hip</h2><a class="more" href="https://www.arthrex.com/hip" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Hip on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/arthrex/orthobiologics.jpg" alt="" loading="lazy"><div class="body"><h2>Orthobiologics</h2><a class="more" href="https://www.arthrex.com/orthobiologics" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Orthobiologics on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/arthrex/imaging-resection.jpg" alt="" loading="lazy"><div class="body"><h2>Imaging &amp; Resection</h2><a class="more" href="https://synergy.arthrex.com" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Imaging &amp; Resection on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/arthrex/endoscopy.jpg" alt="" loading="lazy"><div class="body"><h2>Endoscopy</h2><a class="more" href="https://endoscopy.arthrex.com/en" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Endoscopy on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ e.CHI ============ -->
+<div data-page="echi" hidden>
+  <section class="ax-head echi-head" aria-labelledby="echi-h">
+    <video class="ax-video" id="echiVideo" autoplay muted loop playsinline preload="auto" poster="images/posters/echi.jpg" aria-hidden="true"></video>
+    <div class="ax-shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><span>Products</span><span aria-hidden="true">›</span><span aria-current="page">e.CHI</span></nav>
+      <div class="brand-title">
+        <img class="brand-logo echi" src="images/logos/echi-white.png" alt="e.CHI">
+        <h1 class="sr-only" id="echi-h" tabindex="-1">e.CHI Product Catalogue</h1>
+      </div>
+      <div class="title-rule" aria-hidden="true"></div>
+      <p>e.CHI from Germany develops the FrequenzChip, a drug-free wearable for everyday pain relief. Avana is bringing e.CHI to India.</p>
+    </div>
+    <button class="vid-toggle" id="echiToggle" aria-label="Pause background video" aria-pressed="false">
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" fill="currentColor"/></svg>
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+    </button>
+  </section>
+  <section class="ax-range" aria-label="e.CHI products">
+    <div class="wrap">
+      <div class="acards">
+        <article class="acard"><img class="img" src="images/echi/kneefriend-chip.jpg" alt="e.CHI KneeFriend frequency chip" loading="lazy"><div class="body"><h2>KneeFriend</h2><span class="more">Learn More<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></span></div></article>
+        <article class="acard"><img class="img" src="images/echi/painfriend-chip.jpg" alt="e.CHI PainFriend frequency chip" loading="lazy"><div class="body"><h2>PainFriend</h2><span class="more">Learn More<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></span></div></article>
+        <article class="acard"><img class="img" src="images/echi/inflammationfriend-chip.jpg" alt="e.CHI InflammationFriend frequency chip" loading="lazy"><div class="body"><h2>InflammationFriend</h2><span class="more">Learn More<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></span></div></article>
+        <article class="acard"><img class="img" src="images/echi/backfriend-chip.jpg" alt="e.CHI BackFriend frequency chip" loading="lazy"><div class="body"><h2>BackFriend</h2><span class="more">Learn More<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></span></div></article>
+      </div>
+    </div>
+  </section>
+  <section class="cat-band dark">
+    <div class="wrap">
+      <div><h2>Need the full e.CHI catalogue?</h2><p>Our team will send the latest catalogue and pricing for your clinic or hospital.</p></div>
+      <a class="btn" href="#contact" data-route="contact">Request Catalogue</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ MovMedix ============ -->
+<div data-page="movmedix" hidden>
+  <section class="ax-head mm-head" aria-labelledby="mm-h">
+    <video class="ax-video" id="mmVideo" autoplay muted loop playsinline preload="auto" poster="images/posters/movmedix.jpg" aria-hidden="true"></video>
+    <div class="ax-shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><span>Products</span><span aria-hidden="true">›</span><span aria-current="page">MovMedix</span></nav>
+      <div class="brand-title">
+        <img class="brand-logo movmedix" src="images/logos/movmedix-white.png" alt="MovMedix">
+        <h1 class="sr-only" id="mm-h" tabindex="-1">MovMedix Product Catalogue</h1>
+      </div>
+      <div class="title-rule" aria-hidden="true"></div>
+      <p>MovMedix, the maker of the LARS (Ligament Advanced Reinforcement System) ligament, is based near Dijon, France. Its knitted PET (polyethylene terephthalate) prostheses are used to reconstruct and reinforce ligaments and tendons. All are sterile and supplied in a range of sizes.</p>
+    </div>
+    <button class="vid-toggle" id="mmToggle" aria-label="Pause background video" aria-pressed="false">
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" fill="currentColor"/></svg>
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+    </button>
+  </section>
+  <section class="ax-range" aria-label="MovMedix product categories">
+    <div class="wrap">
+      <div class="acards">
+        <article class="acard"><img class="img" src="images/movmedix/knee.jpg" alt="" loading="lazy"><div class="body"><h2>Knee</h2><a class="more" href="https://movmedix.com/solutions/?body_part=Knee&amp;ligament_type=&amp;technique=#filtered-articles" target="_blank" rel="noopener">Learn More<span class="sr-only"> about MovMedix Knee solutions on movmedix.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/movmedix/shoulder.jpg" alt="" loading="lazy"><div class="body"><h2>Shoulder</h2><a class="more" href="https://movmedix.com/solutions/?body_part=Shoulder&amp;ligament_type=&amp;technique=#filtered-articles" target="_blank" rel="noopener">Learn More<span class="sr-only"> about MovMedix Shoulder solutions on movmedix.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/movmedix/foot-ankle.jpg" alt="" loading="lazy"><div class="body"><h2>Foot &amp; Ankle</h2><a class="more" href="https://movmedix.com/solutions/?body_part=Foot+%26+ankle&amp;ligament_type=&amp;technique=#filtered-articles" target="_blank" rel="noopener">Learn More<span class="sr-only"> about MovMedix Foot &amp; Ankle solutions on movmedix.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/movmedix/soft-tissues.jpg" alt="" loading="lazy"><div class="body"><h2>Soft Tissues</h2><a class="more" href="https://movmedix.com/solutions/?body_part=Soft+tissues&amp;ligament_type=&amp;technique=#filtered-articles" target="_blank" rel="noopener">Learn More<span class="sr-only"> about MovMedix Soft Tissues solutions on movmedix.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="cta" id="cta" aria-labelledby="cta-h">
+  <div class="wrap">
+    <div>
+      <h2 id="cta-h">We would love to connect</h2>
+      <p>Be at the forefront of orthopaedic medical devices in India, from sports medicine and arthroscopy to spine and capital equipment.</p>
+    </div>
+    <a class="btn" href="#contact" data-route="contact">Contact Us</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap top">
+    <div>
+      <a href="#home" class="logo" aria-label="Avana Medical Devices, home"><img src="images/logos/avana-white.png" alt=""></a>
+      <div class="social">
+        <a href="https://www.linkedin.com/company/avana-medical/" target="_blank" rel="noopener" aria-label="Avana on LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a>
+        <a href="https://www.instagram.com/avanamedical" target="_blank" rel="noopener" aria-label="Avana on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        <a href="https://www.facebook.com/AvanaMedical" target="_blank" rel="noopener" aria-label="Avana on Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v7h4v-7h3l.5-4h-3.5V9c0-.6.4-1 1-1z"/></svg></a>
+        <a href="https://twitter.com/AvanaPvt" target="_blank" rel="noopener" aria-label="Avana on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3.3l-7.2 8.2L22 21h-6.6l-5.2-6.8L4.3 21H1l7.7-8.8L1 3h6.8l4.7 6.2zm-1.2 16h1.8L6.8 4.9H4.9z"/></svg></a>
+      </div>
+    </div>
+    <nav aria-labelledby="f-co"><h2 id="f-co">Home</h2>
+      <ul><li><a href="#about" data-route="about">About Us</a></li><li><a href="#team" data-route="team">Meet the Team</a></li><li><a href="#careers" data-route="careers">Careers</a></li><li><a href="#contact" data-route="contact">Contact Us</a></li></ul></nav>
+    <nav aria-labelledby="f-pr"><h2 id="f-pr">Products</h2>
+      <ul><li><a href="#arthrex" data-route="arthrex">Arthrex</a></li><li><a href="#movmedix" data-route="movmedix">MovMedix</a></li><li><a href="#echi" data-route="echi">e.CHI</a></li></ul></nav>
+    <nav aria-labelledby="f-ed"><h2 id="f-ed">Education</h2>
+      <ul><li><a href="https://www.youtube.com/@MargdarshanAvana" target="_blank" rel="noopener">Medical Education</a></li><li><a href="https://arthrolab.in" target="_blank" rel="noopener">ArthroLab India</a></li><li><a href="https://www.orthopedia.com" target="_blank" rel="noopener">Patient Education</a></li></ul></nav>
+  </div>
+  <div class="bottom">
+    <div class="wrap">
+      <span>© 2026 Avana Medical Devices Pvt. Ltd. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ Careers: open positions request ============ -->
+<div class="cm-overlay" id="careersModal" hidden>
+  <div class="cm-panel" role="dialog" aria-modal="true" aria-labelledby="cm-h" aria-describedby="cm-intro">
+    <button type="button" class="cm-close" id="cmClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="cm-head">
+      <img class="cm-logo" src="images/logos/avana-white.png" alt="Avana">
+      <span class="eyebrow">Careers at Avana</span>
+      <h2 id="cm-h">See our open positions</h2>
+      <p id="cm-intro">Share a few details and we will email you a link to every current opening at Avana Medical.</p>
+    </div>
+    <form class="cm-form" id="cmForm" novalidate>
+      <div class="cm-row">
+      <div class="cm-field">
+        <label for="cm-name">Full name</label>
+        <input id="cm-name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="80">
+        <p class="cm-err" id="cm-name-e"></p>
+      </div>
+        <div class="cm-field">
+        <label for="cm-email">Email address</label>
+        <input id="cm-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120">
+        <p class="cm-hint">We'll send the link to this address.</p>
+        <p class="cm-err" id="cm-email-e"></p>
+      </div>
+      </div>
+      <div class="cm-row">
+        <div class="cm-field">
+          <label for="cm-age">Age</label>
+          <input id="cm-age" name="age" type="number" inputmode="numeric" min="18" max="65" required>
+          <p class="cm-err" id="cm-age-e"></p>
+        </div>
+        <div class="cm-field">
+          <label for="cm-marital">Marital status</label>
+          <select id="cm-marital" name="marital_status" required>
+            <option value="">Select</option><option>Single</option><option>Married</option><option>Prefer not to say</option>
+          </select>
+          <p class="cm-err" id="cm-marital-e"></p>
+        </div>
+      </div>
+      <div class="cm-field">
+        <label for="cm-edu">Education</label>
+        <input id="cm-edu" name="education" type="text" required minlength="2" maxlength="120" placeholder="Highest qualification, e.g. B.Pharm, MBA (Marketing)">
+        <p class="cm-err" id="cm-edu-e"></p>
+      </div>
+      <div class="cm-field">
+        <label for="cm-why">Why do you want to join our team? <span class="cm-opt">Optional</span></label>
+        <textarea id="cm-why" name="why_join" rows="2" maxlength="600"></textarea>
+        <p class="cm-hint"><span id="cm-why-n">0</span>/600 characters</p>
+      </div>
+      <div class="cm-field cm-check">
+        <input id="cm-consent" name="consent" type="checkbox" required>
+        <label for="cm-consent">I agree that Avana Medical Devices Pvt. Ltd. may store and use these details for recruitment.</label>
+        <p class="cm-err" id="cm-consent-e"></p>
+      </div>
+      <p class="cm-err cm-form-err" id="cmFormErr" role="alert"></p>
+      <div class="cm-actions">
+        <button type="submit" class="btn" id="cmSubmit">Send me the link</button>
+        <button type="button" class="btn ghost" id="cmCancel">Cancel</button>
+      </div>
+    </form>
+    <div class="cm-done" id="cmDone" hidden tabindex="-1">
+      <span class="cm-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <h3>Check your inbox</h3>
+      <p>Thank you, <span id="cmDoneName"></span>. We have emailed a link to our open positions to <b id="cmDoneEmail"></b> from noreply@avanamedical.com.</p>
+      <p class="cm-hint">If it hasn't arrived in a few minutes, please check your spam or promotions folder.</p>
+      <button type="button" class="btn" id="cmDoneClose">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/careers-modal.js"></script>
+<script src="js/main.js"></script>
+<script src="js/videos.js"></script>
+</body>
+</html>
