@@ -5,3 +5,7 @@ Desktop.ini
 node_modules/
 
 _contact-sheet.html
+
+# Full-length source videos (too large for GitHub; web versions are cut from these)
+videos/*Final*.mp4
+

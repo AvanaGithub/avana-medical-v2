@@ -48,6 +48,9 @@
   lazy('echi.mp4', ['echiVideo'], ['echiToggle'], ['echi']);
   lazy('movmedix.mp4', ['mmVideo'], ['mmToggle'], ['movmedix']);
 
-  // About, Meet the Team and Contact share one background video
-  lazy('page-background.mp4', ['aboutBg','teamBg','contactBg'], ['aboutBgToggle','teamBgToggle'], ['about','team','contact'], ['aboutBg','teamBg']);
+  // About Us: Arthro Knee 2026 event highlights (cut from "Arthroknee Post Event Video Final.mp4")
+  lazy('about-arthroknee.mp4', ['aboutBg'], ['aboutBgToggle'], ['about']);
+
+  // Meet the Team and Contact share one background video
+  lazy('page-background.mp4', ['teamBg','contactBg'], ['teamBgToggle'], ['team','contact'], ['teamBg']);
 })();

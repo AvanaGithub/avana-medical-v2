@@ -63,6 +63,7 @@ Then open http://localhost:8097. Use the server rather than double-clicking `ind
 - **Image:** replace the file in `images/` with one of the same name and shape. To use a new file name, update the `src` in `index.html`.
 - **Careers card photos:** add a JPG to `images/careers/<card>/` and an `<img>` line inside that card's `data-slides` block in `index.html`. Each photo shows for about 4.5 seconds.
 - **Video:** replace the `.mp4` in `videos/` with one of the same name. Keep videos short, muted and under about 3 MB, and update the matching still in `images/posters/`.
+- **Full-length source videos** (for example `Arthroknee Post Event Video Final.mp4`, 268 MB) stay on your computer only: `.gitignore` keeps files with "Final" in the name out of git, because GitHub rejects files over 100 MB. `videos/about-arthroknee.mp4` (the About Us background) is a 42-second, muted, 720p cut of that video.
 - **Colours and fonts:** change the variables at the top of `css/styles.css` (`--gold`, `--charcoal`, `--sand`, …).
 - **Product highlight of the month:** the hero block at the top of `<div data-page="home">`.
 
