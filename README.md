@@ -23,6 +23,7 @@ Avana_medical_v2/
 │   ├── team/               Leadership photos
 │   ├── events/             Company events and team life (Careers, About)
 │   ├── careers/            Photo sets for the Careers cards: discover/, creativity/, growth/
+│   ├── news/               News & Events cards: upcoming/ (On the horizon) and past/ (Moments we've shared)
 │   ├── posters/            Still frame shown while each video loads
 │   ├── icons/              Small UI graphics
 │   └── textures/           Background texture
@@ -44,6 +45,7 @@ The site is a single page. The address after `#` picks the section, and `js/main
 | `#echi`        | `<div data-page="echi">`         |
 | `#movmedix`    | `<div data-page="movmedix">`     |
 | `#careers`     | `<div data-page="careers">`      |
+| `#events`      | `<div data-page="events">`       |
 
 Links between sections use `href="#about" data-route="about"`.
 
@@ -65,6 +67,7 @@ Then open http://localhost:8097. Use the server rather than double-clicking `ind
 - **Video:** replace the `.mp4` in `videos/` with one of the same name. Keep videos short, muted and under about 3 MB, and update the matching still in `images/posters/`.
 - **Full-length source videos** (for example `Arthroknee Post Event Video Final.mp4`, 268 MB) stay on your computer only: `.gitignore` keeps files with "Final" in the name out of git, because GitHub rejects files over 100 MB. `videos/about-arthroknee.mp4` (the About Us background) is the full 92-second video, muted and compressed to 720p (6.7 MB).
 - **Colours and fonts:** change the variables at the top of `css/styles.css` (`--gold`, `--charcoal`, `--sand`, …).
+- **News & Events:** each event is one `<li class="ev-card">` inside `#evAheadTrack` (upcoming) or `#evPastTrack` (past) in `index.html`; photos go in `images/news/upcoming/` or `images/news/past/`. Update the `/ 05` count and the `aria-label` numbers when adding or removing a card.
 - **Product highlight of the month:** the hero block at the top of `<div data-page="home">`.
 
 ## Still to do

@@ -52,6 +52,7 @@
   // "?v=2": bump the number whenever the file is replaced, so browsers don't keep showing a cached copy
   lazy('about-arthroknee.mp4?v=2', ['aboutBg'], ['aboutBgToggle'], ['about']);
 
-  // Meet the Team and Contact share one background video
-  lazy('page-background.mp4', ['teamBg','contactBg'], ['teamBgToggle'], ['team','contact'], ['teamBg']);
+  // Meet the Team, Contact and News & Events share one background video.
+  // evVideo is the "Knee Surgery Academic Programme" card on News & Events; main.js plays it only while it is on screen.
+  lazy('page-background.mp4', ['teamBg','contactBg','eventsBg','evVideo'], ['teamBgToggle','contactBgToggle','eventsBgToggle'], ['team','contact','events'], ['teamBg','contactBg','eventsBg']);
 })();

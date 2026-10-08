@@ -2,7 +2,7 @@
   var pages=[].slice.call(document.querySelectorAll('[data-page]'));
   var routes=pages.map(function(p){return p.getAttribute('data-page')});
   var nav=document.getElementById('nav'),menuBtn=document.getElementById('menuBtn');
-  var names={home:'Home',about:'About Us',team:'Meet the Team',contact:'Contact Us',arthrex:'Arthrex Product Range',echi:'e.CHI Catalogue',movmedix:'MovMedix Catalogue',careers:'Careers'};
+  var names={home:'Home',about:'About Us',team:'Meet the Team',contact:'Contact Us',events:'News & Events',arthrex:'Arthrex Product Range',echi:'e.CHI Catalogue',movmedix:'MovMedix Catalogue',careers:'Careers'};
 
   /* ---- Dropdown menus (disclosure pattern) ---- */
   var toggles=[].slice.call(document.querySelectorAll('.has-menu>button'));
@@ -40,8 +40,8 @@
     pages.forEach(function(p){p.hidden=p.getAttribute('data-page')!==route});
     document.querySelectorAll('[aria-current="page"].nav-link,.menu a[aria-current="page"]').forEach(function(a){a.removeAttribute('aria-current')});
     document.querySelectorAll('.nav-link.active').forEach(function(a){a.classList.remove('active')});
-    if(route==='careers'){document.querySelector('.nav-link[data-route="careers"]').setAttribute('aria-current','page')}
-    if(route==='about'||route==='team'||route==='contact'){document.getElementById('btn-about').classList.add('active');var am=document.querySelector('#menu-about a[data-route="'+route+'"]');am&&am.setAttribute('aria-current','page')}
+    if(route==='careers'||route==='events'||route==='contact'){document.querySelector('.nav-link[data-route="'+route+'"]').setAttribute('aria-current','page')}
+    if(route==='about'||route==='team'){document.getElementById('btn-about').classList.add('active');var am=document.querySelector('#menu-about a[data-route="'+route+'"]');am&&am.setAttribute('aria-current','page')}
     if(['arthrex','echi','movmedix'].indexOf(route)>-1){
       document.getElementById('btn-prod').classList.add('active');
       var a=document.querySelector('#menu-prod a[data-route="'+route+'"]');a&&a.setAttribute('aria-current','page');
@@ -124,6 +124,47 @@
   });
 
 
+  /* ---- News & Events: arrow carousels ---- */
+  (function(){
+    var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function pad(n){return (n<10?'0':'')+n}
+    [].forEach.call(document.querySelectorAll('[data-carousel]'),function(sec){
+      var track=sec.querySelector('.ev-track'),cards=[].slice.call(track.children),n=cards.length,
+          prev=sec.querySelector('.ev-arrow[data-dir="-1"]'),next=sec.querySelector('.ev-arrow[data-dir="1"]'),
+          cnt=sec.querySelector('.ev-count'),bar=sec.querySelector('.ev-progress span');
+      function step(){return n>1?(cards[1].offsetLeft-cards[0].offsetLeft):track.clientWidth}
+      function perView(){var s=step(),g=s-cards[0].offsetWidth;return s>0?Math.max(1,Math.min(n,Math.floor((track.clientWidth+g+4)/s))):1}
+      function update(){
+        var s=step();if(!s)return;
+        var max=track.scrollWidth-track.clientWidth,pv=perView(),atEnd=track.scrollLeft>=max-4;
+        var i=atEnd?n-pv:Math.max(0,Math.min(n-pv,Math.round(track.scrollLeft/s)));
+        prev.disabled=track.scrollLeft<=4;next.disabled=atEnd;
+        cnt.innerHTML='<b>'+pad(i+1)+(pv>1?'–'+pad(i+pv):'')+'</b> / '+pad(n);
+        if(bar){bar.style.width=(pv/n*100)+'%';bar.style.left=(i/n*100)+'%'}
+      }
+      var pend=null,pt;/* remembers the target while a smooth scroll is still running, so quick repeat clicks each move one slide */
+      function go(d){var s=step(),pv=perView(),base=pend!==null?pend:Math.round(track.scrollLeft/s),t=Math.max(0,Math.min(n-pv,base+d));
+        pend=t;clearTimeout(pt);pt=setTimeout(function(){pend=null},650);track.scrollTo({left:t*s,behavior:reduce?'auto':'smooth'})}
+      prev.addEventListener('click',function(){go(-1)});next.addEventListener('click',function(){go(1)});
+      track.addEventListener('keydown',function(e){if(e.target!==track)return;if(e.key==='ArrowRight'){e.preventDefault();go(1)}else if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}});
+      var raf;track.addEventListener('scroll',function(){cancelAnimationFrame(raf);raf=requestAnimationFrame(update)},{passive:true});
+      window.addEventListener('resize',update);
+      var pg=sec.closest('[data-page]');if(pg)new MutationObserver(function(){if(!pg.hidden){track.scrollLeft=0;requestAnimationFrame(update)}}).observe(pg,{attributes:true,attributeFilter:['hidden']});
+      update();
+    });
+    /* highlights film: plays while on screen, pauses when scrolled away or toggled off */
+    var v=document.getElementById('evVideo'),t=document.getElementById('evVideoToggle');if(!v||!t)return;
+    var userOff=reduce,seen=false;
+    function setBtn(off){t.setAttribute('aria-pressed',off);t.setAttribute('aria-label',off?'Play highlights film':'Pause highlights film')}
+    function sync(){if(seen&&!userOff&&v.currentSrc&&!document.hidden){var r=v.play();r&&r.catch(function(){})}else if(!v.paused)v.pause()}
+    setBtn(userOff);
+    t.addEventListener('click',function(){userOff=!userOff;setBtn(userOff);if(!userOff&&v.currentSrc){var r=v.play();r&&r.catch(function(){})}else v.pause()});
+    v.addEventListener('canplay',sync);
+    document.addEventListener('visibilitychange',sync);
+    if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){seen=e.isIntersecting&&e.intersectionRatio>=0.5;sync()})},{threshold:[0,0.5,1]}).observe(v)}else{seen=true}
+  })();
+
+
   /* ---- Contact: offices (Avana → cities; Chennai → 3 offices) ---- */
   (function(){
     var orbit=document.getElementById('orbit');if(!orbit)return;
@@ -194,13 +235,16 @@
   var tbv=document.getElementById('teamBg'),tbt=document.getElementById('teamBgToggle');
   tbt.addEventListener('click',function(){var p=!tbv.paused;if(p)tbv.pause();else{var r=tbv.play();r&&r.catch(function(){})}tbt.setAttribute('aria-pressed',p);tbt.setAttribute('aria-label',p?'Play background video':'Pause background video')});
 
+  var ebv=document.getElementById('eventsBg'),ebt=document.getElementById('eventsBgToggle');
+  ebt.addEventListener('click',function(){var p=!ebv.paused;if(p)ebv.pause();else{var r=ebv.play();r&&r.catch(function(){})}ebt.setAttribute('aria-pressed',p);ebt.setAttribute('aria-label',p?'Play background video':'Pause background video')});
+
   var cbv=document.getElementById('contactBg'),cbt=document.getElementById('contactBgToggle');
   cbt.addEventListener('click',function(){var p=!cbv.paused;if(p)cbv.pause();else{var r=cbv.play();r&&r.catch(function(){})}cbt.setAttribute('aria-pressed',p);cbt.setAttribute('aria-label',p?'Play background video':'Pause background video')});
 
   /* ---- About video ---- */
   var av=document.getElementById('aboutVideo'),at=document.getElementById('aboutToggle');
   /* keep both background videos looping without a stall */
-  [['aboutVideo','aboutToggle'],['heroVideo','vidToggle'],['arthrexVideo','arthrexToggle'],['echiVideo','echiToggle'],['aboutBg','aboutBgToggle'],['mmVideo','mmToggle'],['teamBg','teamBgToggle'],['contactBg','contactBgToggle']].forEach(function(p){
+  [['aboutVideo','aboutToggle'],['heroVideo','vidToggle'],['arthrexVideo','arthrexToggle'],['echiVideo','echiToggle'],['aboutBg','aboutBgToggle'],['mmVideo','mmToggle'],['teamBg','teamBgToggle'],['contactBg','contactBgToggle'],['eventsBg','eventsBgToggle']].forEach(function(p){
     var v=document.getElementById(p[0]),t=document.getElementById(p[1]);if(!v)return;v.loop=true;
     function userPaused(){return t&&t.getAttribute('aria-pressed')==='true'}
     v.addEventListener('ended',function(){v.currentTime=0;var r=v.play();r&&r.catch(function(){})});
