@@ -1,0 +1,21 @@
+[Unit]
+Description=Avana Medical website (site + News & Events admin)
+After=network.target
+
+[Service]
+Type=simple
+User=avana
+WorkingDirectory=/var/www/avana-medical/server
+ExecStart=/usr/bin/node src/index.js
+Restart=always
+RestartSec=3
+Environment=NODE_ENV=production
+# Hardening: the app can only write to its data folder
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/avana-medical
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

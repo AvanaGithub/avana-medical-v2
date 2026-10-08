@@ -70,6 +70,32 @@ Then open http://localhost:8097. Use the server rather than double-clicking `ind
 - **News & Events:** each event is one `<li class="ev-card">` inside `#evAheadTrack` (upcoming) or `#evPastTrack` (past) in `index.html`; photos go in `images/news/upcoming/` or `images/news/past/`. Update the `/ 05` count and the `aria-label` numbers when adding or removing a card.
 - **Product highlight of the month:** the hero block at the top of `<div data-page="home">`.
 
+## News & Events admin panel
+
+The `server/` folder runs the site with an admin panel at `/admin` for managing News & Events (title, description, category, dates, location, 16:10 cropped images, publish/hide, order). It is meant for the DigitalOcean droplet; see **deploy/DEPLOY.md**. GitHub Pages can't run it, so there the page keeps showing the cards written in `index.html`.
+
+```
+server/
+├── src/index.js      Web server: serves the site, renders events into index.html, /admin, /api
+├── src/api.js        Admin API (sign-in, events, image upload, users)
+├── src/render.js     Fills the two carousels between the <!-- events:… --> markers in index.html
+├── src/images.js     Crops uploads to 16:10, saves 1600×1000 + 800×500 JPEGs
+├── scripts/          create-admin.js, seed-events.js (imports the cards in index.html once)
+└── test/             npm test
+admin/                Admin panel (index.html, admin.css, admin.js)
+deploy/               setup.sh, update.sh, backup.sh, nginx + systemd config, DEPLOY.md
+```
+
+Run it locally:
+
+```
+cd server
+npm install
+npm run seed-events
+npm run create-admin -- you@example.com "Your Name"
+npm start            # http://localhost:3000 (or PORT in server/.env), admin at /admin
+```
+
 ## Still to do
 
 - **Careers form:** `js/careers-modal.js` has `CAREERS_ENDPOINT = ''`. Until it is set to a form or email service, the form shows a confirmation but sends nothing. The original notes mention a `careers-email.html` email template that is not in this folder.

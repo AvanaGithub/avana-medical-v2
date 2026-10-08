@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Admin · Avana Medical</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/admin/vendor/cropper/cropper.min.css">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+<!-- ============ Sign in ============ -->
+<main class="login" id="loginView" hidden>
+  <form class="login-card" id="loginForm" novalidate>
+    <img class="login-logo" src="/images/logos/avana-dark.png" alt="Avana">
+    <h1>Website admin</h1>
+    <p class="muted">Sign in to manage News &amp; Events.</p>
+    <label class="field">
+      <span>Email</span>
+      <input id="loginEmail" type="email" autocomplete="username" required>
+    </label>
+    <label class="field">
+      <span>Password</span>
+      <input id="loginPassword" type="password" autocomplete="current-password" required>
+    </label>
+    <p class="form-error" id="loginError" role="alert" hidden></p>
+    <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+  </form>
+</main>
+
+<!-- ============ App ============ -->
+<div class="app" id="appView" hidden>
+  <header class="topbar">
+    <div class="topbar-in">
+      <a class="brand" href="#events"><img src="/images/logos/avana-dark.png" alt="Avana"><span>Admin</span></a>
+      <nav class="tabs" aria-label="Admin sections">
+        <a href="#events" data-view="events">News &amp; Events</a>
+        <a href="#users" data-view="users" data-admin-only>Users</a>
+        <a href="#account" data-view="account">My account</a>
+      </nav>
+      <div class="who">
+        <a class="link" href="/#events" target="_blank" rel="noopener">View website <span aria-hidden="true">↗</span></a>
+        <span class="who-name" id="whoName"></span>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn" type="button">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+
+    <!-- Events list -->
+    <section id="eventsView" data-view-panel="events" hidden>
+      <div class="page-head">
+        <div>
+          <h1>News &amp; Events</h1>
+          <p class="muted">Changes appear on the website as soon as you save.</p>
+        </div>
+        <button class="btn btn-primary" id="addEventBtn" type="button">+ Add event</button>
+      </div>
+      <div class="seg" role="tablist" aria-label="Event lists">
+        <button role="tab" type="button" data-section="upcoming" aria-selected="true">On the horizon <span class="count" id="countUpcoming">0</span></button>
+        <button role="tab" type="button" data-section="past" aria-selected="false">Moments we've shared <span class="count" id="countPast">0</span></button>
+      </div>
+      <p class="hint" id="sectionHint"></p>
+      <ol class="event-list" id="eventList" aria-live="polite"></ol>
+      <div class="empty" id="eventsEmpty" hidden>
+        <p><strong>No events here yet.</strong></p>
+        <p class="muted">This section is hidden on the website until it has at least one published event.</p>
+      </div>
+    </section>
+
+    <!-- Users -->
+    <section id="usersView" data-view-panel="users" hidden>
+      <div class="page-head">
+        <div>
+          <h1>Users</h1>
+          <p class="muted">Editors manage events. Admins can also add and remove users.</p>
+        </div>
+        <button class="btn btn-primary" id="addUserBtn" type="button">+ Add user</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Last sign-in</th><th><span class="sr-only">Actions</span></th></tr></thead>
+          <tbody id="userRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Account -->
+    <section id="accountView" data-view-panel="account" hidden>
+      <div class="page-head"><div><h1>My account</h1><p class="muted" id="accountWho"></p></div></div>
+      <form class="card narrow" id="passwordForm" novalidate>
+        <h2>Change password</h2>
+        <label class="field"><span>Current password</span><input id="pwCurrent" type="password" autocomplete="current-password" required></label>
+        <label class="field"><span>New password</span><input id="pwNew" type="password" autocomplete="new-password" required>
+          <small class="muted">At least 10 characters, with letters and numbers.</small></label>
+        <label class="field"><span>Repeat new password</span><input id="pwRepeat" type="password" autocomplete="new-password" required></label>
+        <p class="form-error" id="pwError" role="alert" hidden></p>
+        <button class="btn btn-primary" type="submit">Update password</button>
+      </form>
+    </section>
+  </main>
+</div>
+
+<!-- ============ Event editor ============ -->
+<dialog class="drawer" id="eventDialog" aria-labelledby="eventDialogTitle">
+  <form id="eventForm" novalidate>
+    <header class="drawer-head">
+      <h2 id="eventDialogTitle">Add event</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Close">✕</button>
+    </header>
+    <div class="drawer-body">
+      <div class="editor-grid">
+        <div class="editor-fields">
+          <fieldset class="field">
+            <legend>Show in</legend>
+            <div class="radio-row">
+              <label class="radio"><input type="radio" name="section" value="upcoming" checked> On the horizon <small>(upcoming)</small></label>
+              <label class="radio"><input type="radio" name="section" value="past"> Moments we've shared <small>(past)</small></label>
+            </div>
+          </fieldset>
+
+          <label class="field"><span>Title <b class="req" aria-hidden="true">*</b></span>
+            <input id="evTitle" name="title" maxlength="120" required placeholder="e.g. Annual Dealers Meet FY27"></label>
+
+          <label class="field"><span>Description</span>
+            <textarea id="evDesc" name="description" maxlength="400" rows="3" placeholder="One or two sentences about the event."></textarea>
+            <small class="muted counter" data-for="evDesc"></small></label>
+
+          <div class="row-2">
+            <label class="field"><span>Category</span>
+              <input id="evTag" name="tag" maxlength="40" list="tagList" placeholder="e.g. Partners">
+              <datalist id="tagList"></datalist></label>
+            <label class="field"><span>Location</span>
+              <input id="evLocation" name="location" maxlength="80" placeholder="e.g. Chennai"></label>
+          </div>
+
+          <div class="row-2">
+            <label class="field"><span>Start date</span><input id="evStart" name="start_date" type="date"></label>
+            <label class="field"><span>End date <small class="muted">(multi-day)</small></span><input id="evEnd" name="end_date" type="date"></label>
+          </div>
+          <label class="field"><span>Text to show when there is no date</span>
+            <input id="evNote" name="date_note" maxlength="80" placeholder="e.g. Dates to be announced, FY26">
+            <small class="muted">Used only if the start date is empty.</small></label>
+
+          <div class="field">
+            <span class="label">Image <small class="muted">(cropped to a 16:10 rectangle)</small></span>
+            <div class="image-pick" id="imagePick">
+              <input id="evFile" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+              <button class="btn btn-ghost" type="button" id="chooseImageBtn">Choose image…</button>
+              <span class="muted" id="imageStatus">JPG, PNG or WebP, ideally 1600 px wide or more.</span>
+            </div>
+            <p class="note" id="videoNote" hidden>This event shows the highlights video on the website. The image is the still shown before it plays.</p>
+          </div>
+          <label class="field"><span>Image description <small class="muted">(for screen readers)</small></span>
+            <input id="evAlt" name="image_alt" maxlength="200" placeholder="e.g. Partners on stage at the Annual Dealers Meet"></label>
+
+          <label class="switch"><input type="checkbox" id="evPublished" name="published" checked><span>Published on the website</span></label>
+        </div>
+
+        <aside class="editor-preview" aria-label="Preview">
+          <span class="label">Preview</span>
+          <div class="pv-card" id="pvCard">
+            <div class="pv-media" id="pvMedia"><span class="pv-empty">No image yet</span></div>
+            <div class="pv-cap">
+              <p class="pv-meta"><span class="pv-tag" id="pvTag"></span><span class="pv-when" id="pvWhen"></span></p>
+              <h3 id="pvTitle">Event title</h3>
+              <p class="pv-desc" id="pvDesc"></p>
+            </div>
+          </div>
+          <p class="muted small">How the card looks in the carousel on the website.</p>
+        </aside>
+      </div>
+      <p class="form-error" id="eventError" role="alert" hidden></p>
+    </div>
+    <footer class="drawer-foot">
+      <span class="muted small" id="eventMeta"></span>
+      <div class="foot-actions">
+        <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn-primary" type="submit" id="saveEventBtn">Save event</button>
+      </div>
+    </footer>
+  </form>
+</dialog>
+
+<!-- ============ Image cropper ============ -->
+<dialog class="modal modal-wide" id="cropDialog" aria-labelledby="cropTitle">
+  <header class="drawer-head">
+    <h2 id="cropTitle">Crop image</h2>
+    <button class="icon-btn" type="button" data-close aria-label="Close">✕</button>
+  </header>
+  <div class="crop-body">
+    <p class="muted">Drag the photo and resize the frame to choose the part to show. The frame keeps the card's 16:10 shape.</p>
+    <div class="crop-stage"><img id="cropImg" alt="Image to crop"></div>
+    <p class="warn" id="cropWarn" hidden></p>
+  </div>
+  <footer class="drawer-foot">
+    <div class="foot-actions left">
+      <button class="btn btn-ghost btn-sm" type="button" id="zoomOut" aria-label="Zoom out">−</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="zoomIn" aria-label="Zoom in">+</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="cropReset">Reset</button>
+    </div>
+    <div class="foot-actions">
+      <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+      <button class="btn btn-primary" type="button" id="cropUse">Use this crop</button>
+    </div>
+  </footer>
+</dialog>
+
+<!-- ============ User editor ============ -->
+<dialog class="modal" id="userDialog" aria-labelledby="userDialogTitle">
+  <form id="userForm" novalidate>
+    <header class="drawer-head">
+      <h2 id="userDialogTitle">Add user</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Close">✕</button>
+    </header>
+    <div class="modal-body">
+      <label class="field"><span>Full name</span><input id="usName" maxlength="80" required></label>
+      <label class="field"><span>Email</span><input id="usEmail" type="email" required></label>
+      <fieldset class="field">
+        <legend>Role</legend>
+        <div class="radio-row">
+          <label class="radio"><input type="radio" name="role" value="editor" checked> Editor <small>(events only)</small></label>
+          <label class="radio"><input type="radio" name="role" value="admin"> Admin <small>(events + users)</small></label>
+        </div>
+      </fieldset>
+      <label class="field"><span id="usPwLabel">Temporary password</span>
+        <div class="pw-row"><input id="usPassword" autocomplete="new-password"><button class="btn btn-ghost btn-sm" type="button" id="genPw">Generate</button></div>
+        <small class="muted" id="usPwHint">Share it with them privately. They can change it under My account.</small></label>
+      <label class="switch" id="usActiveRow" hidden><input type="checkbox" id="usActive" checked><span>Account active</span></label>
+      <p class="form-error" id="userError" role="alert" hidden></p>
+    </div>
+    <footer class="drawer-foot">
+      <span></span>
+      <div class="foot-actions">
+        <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn-primary" type="submit">Save user</button>
+      </div>
+    </footer>
+  </form>
+</dialog>
+
+<!-- ============ Confirm ============ -->
+<dialog class="modal modal-sm" id="confirmDialog" aria-labelledby="confirmTitle">
+  <div class="modal-body">
+    <h2 id="confirmTitle">Are you sure?</h2>
+    <p id="confirmText" class="muted"></p>
+  </div>
+  <footer class="drawer-foot">
+    <span></span>
+    <div class="foot-actions">
+      <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+      <button class="btn btn-danger" type="button" id="confirmYes">Delete</button>
+    </div>
+  </footer>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="/admin/vendor/cropper/cropper.min.js"></script>
+<script src="/admin/admin.js"></script>
+</body>
+</html>

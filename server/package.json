@@ -1,0 +1,26 @@
+{
+  "name": "avana-medical-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Avana Medical website server: serves the site, renders News & Events from the database, and runs the /admin panel.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "create-admin": "node scripts/create-admin.js",
+    "seed-events": "node scripts/seed-events.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.4.1",
+    "cookie-parser": "^1.4.7",
+    "cropperjs": "^1.6.2",
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "sharp": "^0.34.4"
+  }
+}

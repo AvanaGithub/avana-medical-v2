@@ -9,3 +9,10 @@ _contact-sheet.html
 # Full-length source videos (too large for GitHub; web versions are cut from these)
 videos/*Final*.mp4
 
+
+# Server: dependencies, secrets, database and uploaded images live only on the machine
+server/node_modules/
+server/.env
+server/data/
+uploads/
+
