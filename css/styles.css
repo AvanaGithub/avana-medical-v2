@@ -810,7 +810,7 @@ html.cm-lock{overflow:hidden}
 .ev-past{background:var(--charcoal);color:#fff}
 .ev-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px 40px;flex-wrap:wrap;margin-bottom:36px}
 .ev-head-t{max-width:640px}
-.ev-head h2{margin-top:10px;font-size:clamp(28px,3.4vw,40px);font-weight:800;line-height:1.1;color:var(--charcoal)}
+.ev-head h2,.ab-certs-head h2{margin-top:10px;font-size:clamp(28px,3.4vw,40px);font-weight:800;line-height:1.1;color:var(--charcoal)}
 .ev-head .title-rule{margin:18px 0 16px}
 .ev-lead{margin:0;color:var(--body);line-height:1.7}
 .ev-past .eyebrow{color:var(--gold-hi)}
@@ -869,6 +869,27 @@ html.cm-lock{overflow:hidden}
   .ev-desc{font-size:15px}
 }
 @media (prefers-reduced-motion:reduce){.ev-track{scroll-behavior:auto}.ev-media img,.ev-progress span,.ev-arrow{transition:none}}
+
+/* ---- About Us: certifications ---- */
+.ab-certs{padding-block:88px 96px}
+.ab-certs-head{text-align:center}
+.ab-certs-head h2{margin-top:10px;color:var(--charcoal)}
+.ab-certs-head .title-rule{margin:18px auto 44px}
+.ab-cert-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;max-width:1080px;margin-inline:auto}
+.ab-cert{display:grid;grid-template-columns:150px minmax(0,1fr);align-items:center;gap:30px;padding:34px 36px;background:#fff;border:1px solid rgba(178,127,13,.3);border-top:4px solid var(--gold)}
+.ab-cert-mark{display:grid;place-items:center}
+.ab-cert-badge{display:block;width:116px;height:auto}
+.ab-cert-seal{display:block;width:140px;height:140px}
+.ab-cert-k{margin:0 0 8px;font:700 12px/1.2 var(--f-display);letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dk)}
+.ab-cert h3{font:800 clamp(21px,2vw,26px)/1.2 var(--f-display);color:var(--charcoal);margin:0 0 10px}
+.ab-cert h3 sup,.ab-cert p sup{font-size:.5em;vertical-align:super;line-height:0}
+.ab-cert-body>p:not(.ab-cert-k){margin:0;color:var(--body);line-height:1.65;font-size:16px}
+.ab-cert-link{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font:700 13px/1 var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk);border-bottom:1px solid rgba(178,127,13,.45);padding-bottom:4px}
+.ab-cert-link svg{width:16px;height:16px;transition:transform .2s}
+.ab-cert-link:hover{color:var(--charcoal);border-color:var(--charcoal)}
+.ab-cert-link:hover svg{transform:translateX(3px)}
+@media (max-width:980px){.ab-cert-grid{grid-template-columns:1fr;max-width:620px}.ab-certs{padding-block:64px 72px}}
+@media (max-width:520px){.ab-cert{grid-template-columns:1fr;justify-items:center;text-align:center;padding:30px 22px;gap:20px}}
 
 /* Uniform titles: one size for every page title, one size for every section title */
 .page-head h1,.page-head .brand-title h1,.ax-head h1,.ax-head .brand-title h1{font-size:clamp(34px,4.4vw,52px);font-weight:800;line-height:1.08;letter-spacing:-.01em}
