@@ -16,3 +16,4 @@ server/.env
 server/data/
 uploads/
 
+server/TEST-LOGIN.txt

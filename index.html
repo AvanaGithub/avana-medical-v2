@@ -135,9 +135,30 @@
         <div>
           <p>Our people are encouraged to take an active role in shaping the future of the company, and to make a positive difference to patients and their families.</p>
           <p>We offer roles from entry level to senior management. Our benefits include competitive salaries, health insurance and opportunities for professional development.</p>
-          <button type="button" class="btn" id="openPosBtn" aria-haspopup="dialog" aria-controls="careersModal">See open positions</button>
+          <a class="btn" href="#careers" data-route="careers" data-scroll="openings">See open positions</a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Current openings: filled from the job board by the server (static copy shows the empty message) -->
+  <section class="jobs-sec" id="openings" aria-labelledby="jobs-h">
+    <div class="wrap">
+      <div class="jobs-head">
+        <div>
+          <span class="eyebrow">Join our team</span>
+          <h2 id="jobs-h">Current openings</h2>
+          <div class="title-rule" aria-hidden="true"></div>
+          <p class="jobs-lead">Find a role that fits you. Select a job to see the full details and apply online.</p>
+        </div>
+        <p class="jobs-count" id="jobsCount" aria-live="polite"></p>
+      </div>
+      <!-- jobs:list -->
+      <div class="jobs-empty">
+        <p><strong>There are no open positions right now.</strong></p>
+        <p>New roles are posted here first. You are welcome to send your CV to <a href="mailto:info@avanamedical.com">info@avanamedical.com</a> for future openings.</p>
+      </div>
+      <!-- /jobs:list -->
     </div>
   </section>
 
@@ -768,78 +789,65 @@
   </div>
 </footer>
 
-<!-- ============ Careers: open positions request ============ -->
-<div class="cm-overlay" id="careersModal" hidden>
-  <div class="cm-panel" role="dialog" aria-modal="true" aria-labelledby="cm-h" aria-describedby="cm-intro">
-    <button type="button" class="cm-close" id="cmClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <div class="cm-head">
-      <img class="cm-logo" src="images/logos/avana-white.png" alt="Avana">
-      <span class="eyebrow">Careers at Avana</span>
-      <h2 id="cm-h">See our open positions</h2>
-      <p id="cm-intro">Share a few details and we will email you a link to every current opening at Avana Medical.</p>
+<!-- ============ Careers: job details + application ============ -->
+<dialog class="job-dlg" id="jobDialog" aria-labelledby="jobDlgTitle">
+  <div class="job-dlg-in">
+    <button class="job-dlg-x" type="button" data-job-close aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+
+    <div class="job-view" id="jobView">
+      <article class="jd" id="jobDetail"></article>
+      <div class="job-dlg-foot">
+        <button class="btn" type="button" id="jobApplyBtn">Apply for this job</button>
+        <button class="btn ghost" type="button" id="jobShareBtn">Copy link</button>
+      </div>
     </div>
-    <form class="cm-form" id="cmForm" novalidate>
-      <div class="cm-row">
-      <div class="cm-field">
-        <label for="cm-name">Full name</label>
-        <input id="cm-name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="80">
-        <p class="cm-err" id="cm-name-e"></p>
+
+    <form class="apply" id="applyForm" novalidate hidden>
+      <button class="apply-back" type="button" id="applyBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>Back to job details</button>
+      <p class="jd-kicker">Apply for</p>
+      <h2 class="jd-title" id="applyTitle"></h2>
+
+      <div class="apply-grid">
+        <label class="af"><span>Full name <b aria-hidden="true">*</b></span><input name="name" autocomplete="name" maxlength="80" required></label>
+        <label class="af"><span>Email <b aria-hidden="true">*</b></span><input name="email" type="email" autocomplete="email" maxlength="120" required></label>
+        <label class="af"><span>Mobile number <b aria-hidden="true">*</b></span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+91" required></label>
+        <label class="af"><span>Current city <b aria-hidden="true">*</b></span><input name="city" autocomplete="address-level2" maxlength="60" required></label>
+        <label class="af"><span>Total experience (years) <b aria-hidden="true">*</b></span><input name="total_exp" type="number" min="0" max="50" step="0.5" inputmode="decimal" placeholder="0 for freshers" required></label>
+        <label class="af"><span>Notice period</span>
+          <select name="notice_period"><option value="">Select</option><option>Immediate</option><option>15 days</option><option>30 days</option><option>60 days</option><option>90 days</option><option>More than 90 days</option><option>Currently serving notice</option></select></label>
+        <label class="af"><span>Current CTC (₹ lakh per annum)</span><input name="current_ctc" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 6.5"></label>
+        <label class="af"><span>Expected CTC (₹ lakh per annum)</span><input name="expected_ctc" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 8"></label>
+        <label class="af"><span>Current employer</span><input name="current_employer" autocomplete="organization" maxlength="100"></label>
+        <label class="af"><span>Current designation</span><input name="current_role" autocomplete="organization-title" maxlength="100"></label>
+        <label class="af"><span>Highest qualification</span><input name="qualification" maxlength="120" placeholder="e.g. B.Pharm, B.E. Biomedical, MBA"></label>
+        <label class="af"><span>LinkedIn profile</span><input name="linkedin" type="url" maxlength="200" placeholder="https://linkedin.com/in/…"></label>
+        <label class="af af-wide"><span>Why are you interested in this role?</span><textarea name="cover_note" rows="3" maxlength="1500"></textarea></label>
+        <label class="af af-wide af-file"><span>CV / résumé <b aria-hidden="true">*</b> <small>PDF or Word, up to 5 MB</small></span>
+          <input name="cv" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required></label>
+        <label class="af-hp" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
+        <label class="af-consent af-wide"><input type="checkbox" name="consent" value="yes" required>
+          <span>I agree that Avana Medical Devices Pvt. Ltd. may store and use my details and CV to assess my application and contact me about it, in line with the Digital Personal Data Protection Act, 2023. I can ask for my data to be deleted at any time by writing to <a href="mailto:info@avanamedical.com">info@avanamedical.com</a>.</span></label>
       </div>
-        <div class="cm-field">
-        <label for="cm-email">Email address</label>
-        <input id="cm-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120">
-        <p class="cm-hint">We'll send the link to this address.</p>
-        <p class="cm-err" id="cm-email-e"></p>
-      </div>
-      </div>
-      <div class="cm-row">
-        <div class="cm-field">
-          <label for="cm-age">Age</label>
-          <input id="cm-age" name="age" type="number" inputmode="numeric" min="18" max="65" required>
-          <p class="cm-err" id="cm-age-e"></p>
-        </div>
-        <div class="cm-field">
-          <label for="cm-marital">Marital status</label>
-          <select id="cm-marital" name="marital_status" required>
-            <option value="">Select</option><option>Single</option><option>Married</option><option>Prefer not to say</option>
-          </select>
-          <p class="cm-err" id="cm-marital-e"></p>
-        </div>
-      </div>
-      <div class="cm-field">
-        <label for="cm-edu">Education</label>
-        <input id="cm-edu" name="education" type="text" required minlength="2" maxlength="120" placeholder="Highest qualification, e.g. B.Pharm, MBA (Marketing)">
-        <p class="cm-err" id="cm-edu-e"></p>
-      </div>
-      <div class="cm-field">
-        <label for="cm-why">Why do you want to join our team? <span class="cm-opt">Optional</span></label>
-        <textarea id="cm-why" name="why_join" rows="2" maxlength="600"></textarea>
-        <p class="cm-hint"><span id="cm-why-n">0</span>/600 characters</p>
-      </div>
-      <div class="cm-field cm-check">
-        <input id="cm-consent" name="consent" type="checkbox" required>
-        <label for="cm-consent">I agree that Avana Medical Devices Pvt. Ltd. may store and use these details for recruitment.</label>
-        <p class="cm-err" id="cm-consent-e"></p>
-      </div>
-      <p class="cm-err cm-form-err" id="cmFormErr" role="alert"></p>
-      <div class="cm-actions">
-        <button type="submit" class="btn" id="cmSubmit">Send me the link</button>
-        <button type="button" class="btn ghost" id="cmCancel">Cancel</button>
+      <p class="apply-err" id="applyErr" role="alert" hidden></p>
+      <div class="job-dlg-foot">
+        <button class="btn" type="submit" id="applySubmit">Submit application</button>
       </div>
     </form>
-    <div class="cm-done" id="cmDone" hidden tabindex="-1">
+
+    <div class="apply-done" id="applyDone" hidden tabindex="-1">
       <span class="cm-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
-      <h3>Check your inbox</h3>
-      <p>Thank you, <span id="cmDoneName"></span>. We have emailed a link to our open positions to <b id="cmDoneEmail"></b> from noreply@avanamedical.com.</p>
-      <p class="cm-hint">If it hasn't arrived in a few minutes, please check your spam or promotions folder.</p>
-      <button type="button" class="btn" id="cmDoneClose">Close</button>
+      <h2>Application received</h2>
+      <p>Thank you, <span id="applyDoneName"></span>. Your application for <strong id="applyDoneJob"></strong> has reached our HR team. If your profile matches, we will contact you by phone or email.</p>
+      <button class="btn" type="button" data-job-close>Close</button>
     </div>
   </div>
-</div>
+</dialog>
 
-<script src="js/careers-modal.js"></script>
 <script src="js/main.js"></script>
 <script src="js/videos.js"></script>
 <script src="js/card-slides.js"></script>
+<script src="js/jobs.js"></script>
 </body>
 </html>

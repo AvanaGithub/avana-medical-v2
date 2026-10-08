@@ -35,6 +35,7 @@ if [ ! -f "$APP_DIR/server/.env" ]; then
   cat > "$APP_DIR/server/.env" <<EOF
 NODE_ENV=production
 PORT=3000
+SITE_URL=https://$DOMAIN
 DATA_DIR=$DATA_DIR/data
 UPLOADS_DIR=$DATA_DIR/uploads
 EOF

@@ -73,7 +73,7 @@
   document.querySelectorAll('dialog').forEach(d => {
     d.addEventListener('click', e => {
       if (e.target.closest('[data-close]')) d.close();
-      else if (e.target === d && d.id !== 'eventDialog') d.close();
+      else if (e.target === d && !['eventDialog', 'jobDialog'].includes(d.id)) d.close();   // long forms: don't lose work on a stray click
     });
   });
 
@@ -97,12 +97,15 @@
 
   function route() {
     let view = (location.hash || '#events').slice(1);
-    if (!['events', 'users', 'account'].includes(view) || (view === 'users' && state.user.role !== 'admin')) view = 'events';
+    if (!['events', 'jobs', 'applications', 'users', 'account'].includes(view) || (view === 'users' && state.user.role !== 'admin')) view = 'events';
     document.querySelectorAll('[data-view-panel]').forEach(p => { p.hidden = p.dataset.viewPanel !== view; });
     document.querySelectorAll('.tabs a').forEach(a => a.toggleAttribute('aria-current', a.dataset.view === view));
     document.querySelectorAll('.tabs a[aria-current]').forEach(a => a.setAttribute('aria-current', 'page'));
     if (view === 'events') loadEvents();
+    if (view === 'jobs') loadJobs();
+    if (view === 'applications') loadApplications();
     if (view === 'users') loadUsers();
+    refreshBadge();
   }
   window.addEventListener('hashchange', () => state.user && route());
 
@@ -332,6 +335,256 @@
     } catch (err) {
       toast(err.message, true);
     } finally { btn.disabled = false; btn.textContent = 'Use this crop'; }
+  });
+
+  /* ---------- jobs ---------- */
+
+  const jstate = { jobs: [], options: null, status: 'open', editing: null };
+  const jform = $('jobForm');
+  const LIST_FIELDS = ['locations', 'skills', 'languages'];
+  const fmt = n => (n === null || n === undefined ? '' : String(n));
+
+  async function refreshBadge() {
+    try {
+      const r = await api('GET', '/admin/jobs');
+      jstate.jobs = r.jobs; jstate.options = r.options;
+      const n = r.applications.fresh || 0;
+      $('newAppsBadge').textContent = n; $('newAppsBadge').hidden = !n;
+    } catch (e) { /* ignore */ }
+  }
+
+  async function loadJobs() {
+    try {
+      const r = await api('GET', '/admin/jobs');
+      jstate.jobs = r.jobs; jstate.options = r.options;
+      renderJobs();
+    } catch (e) { toast(e.message, true); }
+  }
+
+  function jobWhere(j) {
+    const l = j.locations || [];
+    return l.length > 2 ? `${l[0].split(',')[0]}, ${l[1].split(',')[0]} +${l.length - 2}` : l.map(x => x.split(',')[0]).join(', ');
+  }
+
+  function renderJobs() {
+    const by = s => jstate.jobs.filter(j => j.status === s);
+    $('jcOpen').textContent = by('open').length; $('jcDraft').textContent = by('draft').length; $('jcClosed').textContent = by('closed').length;
+    document.querySelectorAll('[data-jstatus]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.jstatus === jstate.status)));
+    const list = by(jstate.status);
+    $('jobsEmpty').hidden = list.length > 0;
+    const today = new Date().toISOString().slice(0, 10);
+    $('jobList').innerHTML = list.map((j, i) => {
+      const expired = j.status === 'open' && j.closes_at && j.closes_at < today;
+      return `<li class="ev-row job" data-id="${j.id}">
+        <div class="order">
+          <button type="button" data-act="up" aria-label="Move up" ${i === 0 ? 'disabled' : ''}>▲</button>
+          <button type="button" data-act="down" aria-label="Move down" ${i === list.length - 1 ? 'disabled' : ''}>▼</button>
+        </div>
+        <div class="ev-info">
+          <h3 title="${esc(j.title)}">${esc(j.title)}</h3>
+          <div class="ev-sub">
+            ${j.status === 'open' ? (expired ? '<span class="chip chip-warn">Last date passed · hidden</span>' : '<span class="chip chip-live">On website</span>') : j.status === 'draft' ? '<span class="chip chip-off">Draft</span>' : '<span class="chip chip-off">Closed</span>'}
+            ${j.department ? `<span class="chip chip-tag">${esc(j.department)}</span>` : ''}
+            <span>${esc(j.ref_code)}</span>
+            ${jobWhere(j) ? `<span>${esc(jobWhere(j))}</span>` : ''}
+            ${j.experience ? `<span>${esc(j.experience)}</span>` : ''}
+          </div>
+          <div class="job-row-meta">
+            <a class="applicants" href="#applications" data-act="apps">${j.applicants} applicant${j.applicants === 1 ? '' : 's'}${j.new_applicants ? `<span class="new">${j.new_applicants} new</span>` : ''}</a>
+            ${j.posted_at ? `<span>Posted ${esc(j.posted_at)}</span>` : ''}${j.closes_at ? `<span>Apply by ${esc(j.closes_at)}</span>` : ''}
+            <span>${j.updated_by_name ? 'Edited by ' + esc(j.updated_by_name) + ' · ' : ''}${ago(j.updated_at)}</span>
+          </div>
+        </div>
+        <div class="ev-actions">
+          ${j.status === 'open' ? '<button class="btn btn-ghost btn-sm" type="button" data-act="close">Close job</button>' : `<button class="btn btn-ghost btn-sm" type="button" data-act="open">${j.status === 'draft' ? 'Publish' : 'Reopen'}</button>`}
+          ${j.live ? `<a class="btn btn-ghost btn-sm" href="/jobs/${esc(j.slug)}" target="_blank" rel="noopener">View</a>` : ''}
+          <button class="btn btn-ghost btn-sm" type="button" data-act="edit">Edit</button>
+          <button class="btn btn-ghost btn-sm" type="button" data-act="dup">Duplicate</button>
+          <button class="btn btn-ghost btn-sm" type="button" data-act="delete" aria-label="Delete ${esc(j.title)}">Delete</button>
+        </div>
+      </li>`;
+    }).join('');
+  }
+
+  document.querySelectorAll('[data-jstatus]').forEach(b => b.addEventListener('click', () => { jstate.status = b.dataset.jstatus; renderJobs(); }));
+
+  $('jobList').addEventListener('click', async ev => {
+    const btn = ev.target.closest('[data-act]');
+    if (!btn) return;
+    const id = Number(btn.closest('.ev-row').dataset.id);
+    const j = jstate.jobs.find(x => x.id === id);
+    const act = btn.dataset.act;
+    try {
+      if (act === 'edit') return openJob(j);
+      if (act === 'apps') { appFilter.job = String(id); return; }      // the link itself switches to #applications
+      if (act === 'open' || act === 'close') {
+        await api('PUT', `/admin/jobs/${id}`, { status: act === 'open' ? 'open' : 'closed' });
+        toast(act === 'open' ? 'Job is now on the Careers page.' : 'Job closed and removed from the Careers page.');
+        jstate.status = act === 'open' ? 'open' : 'closed';
+      }
+      if (act === 'dup') {
+        const r = await api('POST', `/admin/jobs/${id}/duplicate`);
+        toast('Copy saved as a draft.');
+        jstate.status = 'draft';
+        await loadJobs();
+        return openJob(r.job);
+      }
+      if (act === 'delete') {
+        const msg = j.applicants ? `"${j.title}" has ${j.applicants} application(s). They will be kept, but the job will be gone. Closing the job is usually better.` : `"${j.title}" will be removed permanently.`;
+        if (!await confirmDialog('Delete this job?', msg)) return;
+        await api('DELETE', `/admin/jobs/${id}`);
+        toast('Job deleted.');
+      }
+      if (act === 'up' || act === 'down') {
+        const ids = jstate.jobs.filter(x => x.status === jstate.status).map(x => x.id);
+        const i = ids.indexOf(id), k = act === 'up' ? i - 1 : i + 1;
+        [ids[i], ids[k]] = [ids[k], ids[i]];
+        // keep other statuses' order after these
+        await api('POST', '/admin/jobs/reorder', { ids: ids.concat(jstate.jobs.filter(x => x.status !== jstate.status).map(x => x.id)) });
+      }
+      await loadJobs();
+    } catch (err) { toast(err.message, true); }
+  });
+
+  $('addJobBtn').addEventListener('click', () => openJob(null));
+
+  function fillSelect(sel, opts, labels) {
+    sel.innerHTML = opts.map(o => `<option value="${esc(o)}">${esc((labels && labels[o]) || o || 'Not specified')}</option>`).join('');
+  }
+
+  async function openJob(j) {
+    if (!jstate.options) await loadJobs();
+    const o = jstate.options;
+    jstate.editing = j;
+    jform.reset();
+    fillSelect(jform.elements.employment_type, o.employment_type);
+    fillSelect(jform.elements.work_mode, o.work_mode);
+    fillSelect(jform.elements.notice_period, o.notice_period);
+    fillSelect(jform.elements.travel, o.travel);
+    $('deptList').innerHTML = [...new Set(o.departments.concat(jstate.jobs.map(x => x.department).filter(Boolean)))].map(d => `<option value="${esc(d)}">`).join('');
+    $('jobDialogTitle').textContent = j ? `Edit job · ${j.ref_code}` : 'Post a job';
+    const v = j || { employment_type: 'Full-time', work_mode: 'Field-based', openings: 1, status: 'draft', notice_period: '', travel: '' };
+    for (const el of jform.elements) {
+      if (!el.name) continue;
+      const val = v[el.name];
+      if (el.type === 'checkbox') el.checked = !!val;
+      else if (LIST_FIELDS.includes(el.name)) el.value = (val || []).join(el.tagName === 'TEXTAREA' ? '\n' : ', ');
+      else el.value = fmt(val);
+    }
+    $('jobMeta').textContent = j ? `${j.applicants} applicant(s) · ${j.updated_by_name ? 'last edited by ' + j.updated_by_name + ', ' : ''}${ago(j.updated_at)}` : 'New jobs start as drafts until you set the status to Open.';
+    showError($('jobError'));
+    $('jobDialog').showModal();
+    jform.elements.title.focus();
+  }
+
+  jform.addEventListener('submit', async e => {
+    e.preventDefault();
+    showError($('jobError'));
+    const body = {};
+    for (const el of jform.elements) {
+      if (!el.name) continue;
+      body[el.name] = el.type === 'checkbox' ? el.checked : el.value.trim();
+    }
+    const btn = $('saveJobBtn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      if (jstate.editing) await api('PUT', `/admin/jobs/${jstate.editing.id}`, body);
+      else await api('POST', '/admin/jobs', body);
+      $('jobDialog').close();
+      jstate.status = body.status;
+      toast(body.status === 'open' ? 'Saved. The job is on the Careers page.' : body.status === 'draft' ? 'Saved as a draft (not on the website).' : 'Saved as closed.');
+      await loadJobs();
+    } catch (err) {
+      showError($('jobError'), err.message);
+      $('jobError').scrollIntoView({ block: 'nearest' });
+    } finally { btn.disabled = false; btn.textContent = 'Save job'; }
+  });
+
+  /* ---------- applications ---------- */
+
+  const STATUS = { new: 'New', shortlisted: 'Shortlisted', interview: 'Interview', offered: 'Offered', hired: 'Hired', rejected: 'Rejected' };
+  const appFilter = { job: '', status: '' };
+  let apps = [], openApp = null;
+  fillSelect($('appStatusFilter'), [''].concat(Object.keys(STATUS)), Object.assign({ '': 'All statuses' }, STATUS));
+  fillSelect($('appStatus'), Object.keys(STATUS), STATUS);
+
+  async function loadApplications() {
+    try {
+      if (!jstate.options) await loadJobs();
+      $('appJobFilter').innerHTML = '<option value="">All jobs</option>' + jstate.jobs.map(j => `<option value="${j.id}">${esc(j.title)} (${esc(j.ref_code)})</option>`).join('');
+      $('appJobFilter').value = appFilter.job;
+      $('appStatusFilter').value = appFilter.status;
+      const q = new URLSearchParams(); if (appFilter.job) q.set('job', appFilter.job); if (appFilter.status) q.set('status', appFilter.status);
+      apps = (await api('GET', '/admin/applications?' + q)).applications;
+      $('appsEmpty').hidden = apps.length > 0;
+      const lpa = n => (n === null ? '–' : n + ' L');
+      $('appRows').innerHTML = apps.map(a => `<tr class="clickable" data-id="${a.id}">
+        <td><span class="cand">${esc(a.name)}</span><small>${esc(a.city)}${a.current_role ? ' · ' + esc(a.current_role) : ''}</small></td>
+        <td>${esc(a.job_title)}<small>${esc(a.ref_code || 'job removed')}</small></td>
+        <td>${a.total_exp === null ? '–' : a.total_exp + ' yrs'}</td>
+        <td>${lpa(a.current_ctc)} → ${lpa(a.expected_ctc)}</td>
+        <td>${esc(a.notice_period || '–')}</td>
+        <td>${ago(a.created_at)}</td>
+        <td><span class="st st-${a.status}">${STATUS[a.status]}</span></td>
+        <td><button class="btn btn-ghost btn-sm" type="button">Open</button></td>
+      </tr>`).join('');
+      refreshBadge();
+    } catch (e) { toast(e.message, true); }
+  }
+
+  $('appJobFilter').addEventListener('change', () => { appFilter.job = $('appJobFilter').value; loadApplications(); });
+  $('appStatusFilter').addEventListener('change', () => { appFilter.status = $('appStatusFilter').value; loadApplications(); });
+  $('appRows').addEventListener('click', e => {
+    const tr = e.target.closest('tr[data-id]');
+    if (tr) openApplication(apps.find(a => a.id === Number(tr.dataset.id)));
+  });
+
+  function openApplication(a) {
+    openApp = a;
+    $('appName').textContent = a.name;
+    $('appSub').textContent = `Applied for ${a.job_title}${a.ref_code ? ' (' + a.ref_code + ')' : ''} · ${ago(a.created_at)}`;
+    const rows = [
+      ['Email', `<a href="mailto:${esc(a.email)}">${esc(a.email)}</a>`],
+      ['Mobile', `<a href="tel:${esc(a.phone.replace(/[^\d+]/g, ''))}">${esc(a.phone)}</a>`],
+      ['Current city', esc(a.city)],
+      ['Total experience', a.total_exp === null ? '–' : esc(a.total_exp) + ' years'],
+      ['Current CTC', a.current_ctc === null ? '–' : '₹' + esc(a.current_ctc) + ' LPA'],
+      ['Expected CTC', a.expected_ctc === null ? '–' : '₹' + esc(a.expected_ctc) + ' LPA'],
+      ['Notice period', esc(a.notice_period || '–')],
+      ['Current employer', esc(a.current_employer || '–')],
+      ['Current designation', esc(a.current_role || '–')],
+      ['Qualification', esc(a.qualification || '–')],
+      ['LinkedIn', a.linkedin ? `<a href="${esc(a.linkedin)}" target="_blank" rel="noopener noreferrer">${esc(a.linkedin)}</a>` : '–'],
+      ['CV file', esc(a.cv_name)],
+      ['Consent given', esc(a.consent_at) + ' (UTC)']
+    ];
+    $('appDetails').innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
+    $('appCover').hidden = !a.cover_note;
+    $('appCover').textContent = a.cover_note;
+    $('appCv').href = `/api/admin/applications/${a.id}/cv`;
+    $('appStatus').value = a.status;
+    $('appNotes').value = a.notes;
+    showError($('appError'));
+    $('appDialog').showModal();
+  }
+
+  $('appSave').addEventListener('click', async () => {
+    try {
+      await api('PUT', `/admin/applications/${openApp.id}`, { status: $('appStatus').value, notes: $('appNotes').value });
+      $('appDialog').close();
+      toast('Application updated.');
+      loadApplications();
+    } catch (err) { showError($('appError'), err.message); }
+  });
+
+  $('appDelete').addEventListener('click', async () => {
+    if (!await confirmDialog('Delete this application?', `${openApp.name}'s application and CV will be permanently deleted (for example, when a candidate asks for their data to be removed).`)) return;
+    try {
+      await api('DELETE', `/admin/applications/${openApp.id}`);
+      $('appDialog').close();
+      toast('Application deleted.');
+      loadApplications();
+    } catch (err) { toast(err.message, true); }
   });
 
   /* ---------- users ---------- */

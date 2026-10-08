@@ -10,7 +10,9 @@ The website and its **News & Events admin panel** run together on one small Digi
 | **Admin panel** (`/admin`) | Sign in, then add, edit, hide, reorder or delete events, with a 16:10 image cropper. |
 | **Database** | One SQLite file: `/var/lib/avana-medical/data/app.db` |
 | **Uploaded photos** | `/var/lib/avana-medical/uploads/` (resized to 1600×1000 and 800×500 automatically) |
-| **Backups** | Every night at 02:30: database + photos → `/var/lib/avana-medical/backups/`, kept 14 days |
+| **Job board** | Jobs posted in Admin → Jobs appear under "Current openings" on the Careers page; each open job also has its own page `/jobs/<name>` with Google Jobs data |
+| **Candidates' CVs** | `/var/lib/avana-medical/data/cv/`, private: never reachable from the web, only downloadable by signed-in staff |
+| **Backups** | Every night at 02:30: database + photos + CVs → `/var/lib/avana-medical/backups/`, kept 14 days |
 
 Code lives in `/var/www/avana-medical` and comes from GitHub (`AvanaGithub/avana-medical-v2`). Data lives in `/var/lib/avana-medical`, so updating the code never touches events or photos.
 
@@ -72,6 +74,9 @@ It asks for a password (at least 10 characters, letters and numbers). After that
 | Task | How |
 |---|---|
 | Add or change events | `https://<site>/admin` → News & Events |
+| Post, edit or close a job | Admin → Jobs (Draft = hidden, Open = on the Careers page, Closed = hidden). After the "last date to apply" a job hides itself |
+| Review applicants | Admin → Applications: filter by job/status, open a candidate, download the CV, set status (New → Shortlisted → Interview → Offered → Hired / Rejected), add internal notes |
+| A candidate asks for their data to be deleted | Admin → Applications → open them → **Delete application** (removes the record and the CV) |
 | Add a team member | Admin → Users → **Add user** (Editor = events only, Admin = events + users) |
 | Someone forgot their password | An admin opens Users → Edit → set a new password |
 | Deploy new code from GitHub | `bash /var/www/avana-medical/deploy/update.sh` |

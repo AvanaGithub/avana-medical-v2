@@ -5,6 +5,8 @@ const { db, audit } = require('./db');
 const auth = require('./auth');
 const events = require('./events');
 const images = require('./images');
+const jobs = require('./jobs');
+const apps = require('./applications');
 
 const router = express.Router();
 router.use(express.json({ limit: '100kb' }));
@@ -44,6 +46,30 @@ router.post('/auth/password', auth.requireUser, (req, res) => {
   db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(auth.hashPassword(req.body.password), req.user.id);
   audit(req.user.id, 'change_password', 'user', req.user.id);
   ok(res);
+});
+
+/* ---------- public: apply for a job ---------- */
+
+const cvUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: apps.CV_MAX, files: 1, fields: 30 } });
+const applyLog = new Map();   // IP → timestamps, max 6 applications per hour
+router.post('/apply/:slug', (req, res) => {
+  const now = Date.now();
+  const recent = (applyLog.get(req.ip) || []).filter(t => now - t < 3600e3);
+  if (recent.length >= 6) return bad(res, 'Too many applications from your connection. Please try again in an hour.', 429);
+  cvUpload.single('cv')(req, res, err => {
+    if (err) return bad(res, err.code === 'LIMIT_FILE_SIZE' ? 'Your CV must be smaller than 5 MB.' : 'Upload failed. Please try again.');
+    const job = jobs.getBySlug(String(req.params.slug));
+    if (!jobs.isLive(job)) return bad(res, 'This position is no longer accepting applications.', 410);
+    if (req.body.website) return ok(res);                       // hidden "honeypot" field: bots fill it, people don't
+    const v = apps.validate(req.body);
+    if (v.error) return res.status(400).json({ error: v.error, field: v.field });
+    if (!req.file) return res.status(400).json({ error: 'Attach your CV (PDF or Word, up to 5 MB).', field: 'cv' });
+    const cv = apps.saveCv(req.file.buffer, req.file.originalname);
+    if (cv.error) return res.status(400).json({ error: cv.error, field: 'cv' });
+    apps.create(job, v.value, cv);
+    recent.push(now); applyLog.set(req.ip, recent);
+    ok(res, { ok: true, job: job.title });
+  });
 });
 
 /* ---------- events ---------- */
@@ -112,6 +138,95 @@ router.post('/admin/uploads', (req, res) => {
       bad(res, e.message && e.message.startsWith('That') ? e.message : 'That file could not be read as an image.');
     }
   });
+});
+
+/* ---------- jobs ---------- */
+
+router.get('/admin/jobs', (req, res) => ok(res, {
+  jobs: jobs.listAdmin().map(j => Object.assign(j, { experience: jobs.experienceLabel(j), live: jobs.isLive(j) })),
+  options: jobs.OPTIONS,
+  applications: apps.counts()
+}));
+
+router.post('/admin/jobs', (req, res) => {
+  const r = jobs.validate(req.body);
+  if (r.error) return bad(res, r.error);
+  const j = jobs.create(r.value, req.user.id);
+  audit(req.user.id, 'create', 'job', j.id, { title: j.title, status: j.status });
+  ok(res, { job: j });
+});
+
+router.put('/admin/jobs/:id', (req, res) => {
+  const id = int(req.params.id);
+  const before = jobs.get(id);
+  if (!before) return bad(res, 'That job no longer exists.', 404);
+  const r = jobs.validate(req.body, before);
+  if (r.error) return bad(res, r.error);
+  const j = jobs.update(id, r.value, req.user.id);
+  audit(req.user.id, 'update', 'job', id, { title: j.title, status: j.status });
+  ok(res, { job: j });
+});
+
+router.post('/admin/jobs/:id/duplicate', (req, res) => {
+  const src = jobs.get(int(req.params.id));
+  if (!src) return bad(res, 'That job no longer exists.', 404);
+  const copy = Object.assign({}, src, { title: src.title + ' (copy)', status: 'draft', posted_at: null, closes_at: null });
+  delete copy.id;
+  const j = jobs.create(jobs.validate(copy).value, req.user.id);
+  audit(req.user.id, 'duplicate', 'job', j.id, { from: src.id });
+  ok(res, { job: j });
+});
+
+router.post('/admin/jobs/reorder', (req, res) => {
+  const ids = req.body && req.body.ids;
+  if (!Array.isArray(ids) || !ids.every(Number.isInteger)) return bad(res, 'Invalid order.');
+  jobs.reorder(ids);
+  ok(res);
+});
+
+router.delete('/admin/jobs/:id', (req, res) => {
+  const id = int(req.params.id);
+  const j = jobs.get(id);
+  if (!j) return bad(res, 'That job no longer exists.', 404);
+  jobs.remove(id);                         // applications stay, keeping the job title
+  audit(req.user.id, 'delete', 'job', id, { title: j.title });
+  ok(res);
+});
+
+/* ---------- applications ---------- */
+
+router.get('/admin/applications', (req, res) => {
+  const status = apps_status(req.query.status);
+  ok(res, { applications: apps.list({ jobId: int(req.query.job) || null, status }), notice: apps.NOTICE });
+});
+const apps_status = s => (jobs.OPTIONS.application_status.includes(s) ? s : null);
+
+router.put('/admin/applications/:id', (req, res) => {
+  const id = int(req.params.id);
+  if (!apps.get(id)) return bad(res, 'That application no longer exists.', 404);
+  if (req.body.status !== undefined && !apps_status(req.body.status)) return bad(res, 'Choose a valid status.');
+  if (req.body.notes !== undefined && String(req.body.notes).length > 4000) return bad(res, 'Notes are too long.');
+  const a = apps.update(id, { status: req.body.status, notes: req.body.notes !== undefined ? String(req.body.notes) : undefined }, req.user.id);
+  audit(req.user.id, 'update', 'application', id, { status: a.status });
+  ok(res, { application: a });
+});
+
+router.delete('/admin/applications/:id', (req, res) => {
+  const id = int(req.params.id);
+  const a = apps.get(id);
+  if (!a) return bad(res, 'That application no longer exists.', 404);
+  apps.remove(id);
+  audit(req.user.id, 'delete', 'application', id, { job: a.job_title });
+  ok(res);
+});
+
+router.get('/admin/applications/:id/cv', (req, res) => {
+  const a = apps.get(int(req.params.id));
+  const p = a && apps.cvPath(a.cv_file);
+  if (!p || !require('fs').existsSync(p)) return bad(res, 'CV not found.', 404);
+  audit(req.user.id, 'download_cv', 'application', a.id);
+  res.set('Cache-Control', 'no-store');
+  res.download(p, `${a.name.replace(/[^\w ]/g, '').trim() || 'candidate'} - CV${require('path').extname(a.cv_file)}`);
 });
 
 /* ---------- users (admins only) ---------- */

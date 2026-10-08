@@ -33,6 +33,18 @@ app.get(['/', '/index.html'], (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+// A job's own page: the Careers page with that job open, plus Google Jobs data
+const jobs = require('./jobs');
+app.get('/jobs/:slug', (req, res, next) => {
+  try {
+    const job = jobs.getBySlug(String(req.params.slug));
+    if (!jobs.isLive(job)) return res.redirect(302, '/#careers');
+    const siteUrl = config.siteUrl || `${req.protocol}://${req.get('host')}`;
+    res.set('Cache-Control', 'no-cache');
+    res.type('html').send(renderIndex({ job, siteUrl }));
+  } catch (e) { next(e); }
+});
+
 const day = 24 * 3600e3;
 const pub = (dir, maxAge) => express.static(path.join(config.siteRoot, dir), { maxAge, index: false, dotfiles: 'deny' });
 app.use('/css', pub('css', 3600e3));

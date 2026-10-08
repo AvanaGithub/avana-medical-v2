@@ -63,6 +63,74 @@ const migrations = [
     detail    TEXT,
     at        TEXT NOT NULL DEFAULT (datetime('now'))
   );
+  `,
+  // 2: job board — jobs and applications
+  `
+  CREATE TABLE jobs (
+    id              INTEGER PRIMARY KEY,
+    slug            TEXT NOT NULL UNIQUE,          -- used in the job's own link: /jobs/<slug>
+    ref_code        TEXT NOT NULL UNIQUE,          -- e.g. AMD-26-007
+    title           TEXT NOT NULL,
+    department      TEXT NOT NULL DEFAULT '',
+    role_category   TEXT NOT NULL DEFAULT '',
+    employment_type TEXT NOT NULL DEFAULT 'Full-time',
+    work_mode       TEXT NOT NULL DEFAULT 'On-site',
+    locations       TEXT NOT NULL DEFAULT '[]',    -- JSON array of "City, State"
+    openings        INTEGER NOT NULL DEFAULT 1,
+    exp_min         REAL,                          -- years
+    exp_max         REAL,
+    salary_min      REAL,                          -- ₹ lakh per annum (LPA)
+    salary_max      REAL,
+    show_salary     INTEGER NOT NULL DEFAULT 0,
+    education       TEXT NOT NULL DEFAULT '',
+    skills          TEXT NOT NULL DEFAULT '[]',    -- JSON array
+    languages       TEXT NOT NULL DEFAULT '[]',    -- JSON array
+    notice_period   TEXT NOT NULL DEFAULT '',
+    travel          TEXT NOT NULL DEFAULT '',
+    two_wheeler     INTEGER NOT NULL DEFAULT 0,
+    reporting_to    TEXT NOT NULL DEFAULT '',
+    summary         TEXT NOT NULL DEFAULT '',
+    responsibilities TEXT NOT NULL DEFAULT '',     -- one point per line
+    requirements    TEXT NOT NULL DEFAULT '',
+    preferred       TEXT NOT NULL DEFAULT '',
+    benefits        TEXT NOT NULL DEFAULT '',
+    status          TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','open','closed')),
+    posted_at       TEXT,                          -- YYYY-MM-DD, set when first opened
+    closes_at       TEXT,                          -- last date to apply, optional
+    sort_order      INTEGER NOT NULL DEFAULT 0,
+    created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_by      INTEGER REFERENCES users(id) ON DELETE SET NULL
+  );
+  CREATE INDEX jobs_status ON jobs(status, sort_order);
+
+  CREATE TABLE applications (
+    id              INTEGER PRIMARY KEY,
+    job_id          INTEGER REFERENCES jobs(id) ON DELETE SET NULL,
+    job_title       TEXT NOT NULL,                 -- kept even if the job is later deleted
+    name            TEXT NOT NULL,
+    email           TEXT NOT NULL,
+    phone           TEXT NOT NULL,
+    city            TEXT NOT NULL DEFAULT '',
+    total_exp       REAL,
+    current_ctc     REAL,                          -- LPA
+    expected_ctc    REAL,                          -- LPA
+    notice_period   TEXT NOT NULL DEFAULT '',
+    current_employer TEXT NOT NULL DEFAULT '',
+    current_role    TEXT NOT NULL DEFAULT '',
+    qualification   TEXT NOT NULL DEFAULT '',
+    linkedin        TEXT NOT NULL DEFAULT '',
+    cover_note      TEXT NOT NULL DEFAULT '',
+    cv_file         TEXT NOT NULL,                 -- stored name inside DATA_DIR/cv (never public)
+    cv_name         TEXT NOT NULL,                 -- the candidate's original file name
+    status          TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new','shortlisted','interview','offered','hired','rejected')),
+    notes           TEXT NOT NULL DEFAULT '',      -- internal, never shown to candidates
+    consent_at      TEXT NOT NULL,
+    created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_by      INTEGER REFERENCES users(id) ON DELETE SET NULL
+  );
+  CREATE INDEX applications_job ON applications(job_id, status);
   `
 ];
 

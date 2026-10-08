@@ -12,7 +12,7 @@ Avana_medical_v2/
 │   └── styles.css          All site styles: colours and fonts are variables at the top (:root)
 ├── js/
 │   ├── main.js             Menus, mobile nav, page router, Careers bloom, Contact office map, video controls
-│   ├── careers-modal.js    "Open positions" pop-up form on the Careers page
+│   ├── jobs.js             Careers job list: filters, job details dialog, online application
 │   ├── card-slides.js      Fades each Careers card through its photo set
 │   └── videos.js           Loads each background video when its page is first opened
 ├── images/
@@ -72,7 +72,7 @@ Then open http://localhost:8097. Use the server rather than double-clicking `ind
 
 ## News & Events admin panel
 
-The `server/` folder runs the site with an admin panel at `/admin` for managing News & Events (title, description, category, dates, location, 16:10 cropped images, publish/hide, order). It is meant for the DigitalOcean droplet; see **deploy/DEPLOY.md**. GitHub Pages can't run it, so there the page keeps showing the cards written in `index.html`.
+The `server/` folder runs the site with an admin panel at `/admin` for managing News & Events (title, description, category, dates, location, 16:10 cropped images, publish/hide, order) and the **job board**: jobs posted in Admin → Jobs appear under "Current openings" on the Careers page (between the `<!-- jobs:list -->` markers in `index.html`), candidates apply online with a CV, and applications are reviewed in Admin → Applications. Each open job also has its own page at `/jobs/<slug>` with Google Jobs (JobPosting) data. Site-side behaviour is in `js/jobs.js`. It is meant for the DigitalOcean droplet; see **deploy/DEPLOY.md**. GitHub Pages can't run it, so there the page keeps showing the cards written in `index.html`.
 
 ```
 server/
@@ -98,5 +98,4 @@ npm start            # http://localhost:3000 (or PORT in server/.env), admin at 
 
 ## Still to do
 
-- **Careers form:** `js/careers-modal.js` has `CAREERS_ENDPOINT = ''`. Until it is set to a form or email service, the form shows a confirmation but sends nothing. The original notes mention a `careers-email.html` email template that is not in this folder.
 - **Fonts:** Figtree from Google Fonts. The CSS notes plan a switch to Proxima Nova once Avana has an Adobe Fonts kit.

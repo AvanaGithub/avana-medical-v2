@@ -20,6 +20,8 @@ module.exports = {
   dataDir: path.resolve(process.env.DATA_DIR || path.join(siteRoot, 'server', 'data')),
   uploadsDir: path.resolve(process.env.UPLOADS_DIR || path.join(siteRoot, 'uploads')),
   sessionHours: Number(process.env.SESSION_HOURS) || 12,
+  // Public address of the site, used in job links and Google Jobs data, e.g. https://new.avanamedical.com
+  siteUrl: (process.env.SITE_URL || '').replace(/\/+$/, ''),
   // When true, cookies are marked Secure (HTTPS only). Set COOKIE_SECURE=false only for plain-HTTP testing.
   cookieSecure: process.env.COOKIE_SECURE ? process.env.COOKIE_SECURE === 'true' : process.env.NODE_ENV === 'production'
 };

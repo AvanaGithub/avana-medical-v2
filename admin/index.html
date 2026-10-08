@@ -39,6 +39,8 @@
       <a class="brand" href="#events"><img src="/images/logos/avana-dark.png" alt="Avana"><span>Admin</span></a>
       <nav class="tabs" aria-label="Admin sections">
         <a href="#events" data-view="events">News &amp; Events</a>
+        <a href="#jobs" data-view="jobs">Jobs</a>
+        <a href="#applications" data-view="applications">Applications <span class="badge" id="newAppsBadge" hidden></span></a>
         <a href="#users" data-view="users" data-admin-only>Users</a>
         <a href="#account" data-view="account">My account</a>
       </nav>
@@ -71,6 +73,45 @@
         <p><strong>No events here yet.</strong></p>
         <p class="muted">This section is hidden on the website until it has at least one published event.</p>
       </div>
+    </section>
+
+    <!-- Jobs -->
+    <section id="jobsView" data-view-panel="jobs" hidden>
+      <div class="page-head">
+        <div>
+          <h1>Jobs</h1>
+          <p class="muted">Open jobs appear under "Current openings" on the Careers page as soon as you save. Drafts and closed jobs stay hidden.</p>
+        </div>
+        <button class="btn btn-primary" id="addJobBtn" type="button">+ Post a job</button>
+      </div>
+      <div class="seg" role="tablist" aria-label="Job status">
+        <button role="tab" type="button" data-jstatus="open" aria-selected="true">Open <span class="count" id="jcOpen">0</span></button>
+        <button role="tab" type="button" data-jstatus="draft" aria-selected="false">Drafts <span class="count" id="jcDraft">0</span></button>
+        <button role="tab" type="button" data-jstatus="closed" aria-selected="false">Closed <span class="count" id="jcClosed">0</span></button>
+      </div>
+      <ol class="event-list" id="jobList"></ol>
+      <div class="empty" id="jobsEmpty" hidden><p><strong>No jobs here.</strong></p><p class="muted">Use "Post a job" to add one.</p></div>
+    </section>
+
+    <!-- Applications -->
+    <section id="applicationsView" data-view-panel="applications" hidden>
+      <div class="page-head">
+        <div>
+          <h1>Applications</h1>
+          <p class="muted">Candidates who applied through the Careers page. CVs are stored privately on the server.</p>
+        </div>
+      </div>
+      <div class="filters">
+        <label class="field"><span>Job</span><select id="appJobFilter"><option value="">All jobs</option></select></label>
+        <label class="field"><span>Status</span><select id="appStatusFilter"><option value="">All statuses</option></select></label>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Candidate</th><th>Applied for</th><th>Experience</th><th>CTC now → expected</th><th>Notice</th><th>Applied</th><th>Status</th><th><span class="sr-only">Open</span></th></tr></thead>
+          <tbody id="appRows"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="appsEmpty" hidden><p><strong>No applications yet.</strong></p><p class="muted">They will appear here when candidates apply on the Careers page.</p></div>
     </section>
 
     <!-- Users -->
@@ -185,6 +226,124 @@
       </div>
     </footer>
   </form>
+</dialog>
+
+<!-- ============ Job editor ============ -->
+<dialog class="drawer" id="jobDialog" aria-labelledby="jobDialogTitle">
+  <form id="jobForm" novalidate>
+    <header class="drawer-head">
+      <h2 id="jobDialogTitle">Post a job</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Close">✕</button>
+    </header>
+    <div class="drawer-body">
+      <div class="job-form">
+        <section class="fgroup">
+          <h3>Basics</h3>
+          <label class="field"><span>Job title <b class="req" aria-hidden="true">*</b></span>
+            <input name="title" maxlength="120" required placeholder="e.g. Territory Manager – Sports Medicine"></label>
+          <div class="row-2">
+            <label class="field"><span>Department <b class="req" aria-hidden="true">*</b></span>
+              <input name="department" maxlength="60" list="deptList" placeholder="e.g. Sales"><datalist id="deptList"></datalist></label>
+            <label class="field"><span>Role category</span>
+              <input name="role_category" maxlength="80" placeholder="e.g. Field Sales, Clinical Specialist"></label>
+          </div>
+          <div class="row-3">
+            <label class="field"><span>Employment type</span><select name="employment_type"></select></label>
+            <label class="field"><span>Work mode</span><select name="work_mode"></select></label>
+            <label class="field"><span>Number of openings</span><input name="openings" type="number" min="1" max="500" value="1"></label>
+          </div>
+          <label class="field"><span>Locations <b class="req" aria-hidden="true">*</b> <small class="muted">one per line, as City, State</small></span>
+            <textarea name="locations" rows="2" placeholder="Chennai, Tamil Nadu&#10;Mumbai, Maharashtra"></textarea></label>
+        </section>
+
+        <section class="fgroup">
+          <h3>Experience &amp; salary</h3>
+          <div class="row-4">
+            <label class="field"><span>Experience from (yrs)</span><input name="exp_min" type="number" min="0" max="50" step="0.5" placeholder="0 = freshers"></label>
+            <label class="field"><span>to (yrs)</span><input name="exp_max" type="number" min="0" max="50" step="0.5"></label>
+            <label class="field"><span>Salary from (₹ LPA)</span><input name="salary_min" type="number" min="0" step="0.1" placeholder="e.g. 6"></label>
+            <label class="field"><span>to (₹ LPA)</span><input name="salary_max" type="number" min="0" step="0.1" placeholder="e.g. 9"></label>
+          </div>
+          <label class="switch"><input type="checkbox" name="show_salary"><span>Show the salary range on the website</span></label>
+          <label class="field"><span>Education</span>
+            <input name="education" maxlength="200" placeholder="e.g. B.Pharm / B.Sc / B.E. Biomedical; MBA preferred"></label>
+          <label class="field"><span>Key skills <small class="muted">comma-separated</small></span>
+            <input name="skills" placeholder="e.g. Orthopaedic sales, Arthroscopy, Hospital key accounts"></label>
+        </section>
+
+        <section class="fgroup">
+          <h3>Description</h3>
+          <label class="field"><span>Job summary <b class="req" aria-hidden="true">*</b> <small class="muted">2–4 sentences</small></span>
+            <textarea name="summary" rows="3" maxlength="1200"></textarea></label>
+          <label class="field"><span>Key responsibilities <small class="muted">one point per line</small></span>
+            <textarea name="responsibilities" rows="5" maxlength="4000"></textarea></label>
+          <label class="field"><span>Requirements <small class="muted">one point per line</small></span>
+            <textarea name="requirements" rows="5" maxlength="4000"></textarea></label>
+          <label class="field"><span>Good to have <small class="muted">one point per line</small></span>
+            <textarea name="preferred" rows="3" maxlength="2000"></textarea></label>
+          <label class="field"><span>What we offer <small class="muted">one point per line, e.g. incentives, insurance</small></span>
+            <textarea name="benefits" rows="3" maxlength="2000"></textarea></label>
+        </section>
+
+        <section class="fgroup">
+          <h3>More details</h3>
+          <div class="row-2">
+            <label class="field"><span>Notice period accepted</span><select name="notice_period"></select></label>
+            <label class="field"><span>Travel</span><select name="travel"></select></label>
+          </div>
+          <div class="row-2">
+            <label class="field"><span>Languages <small class="muted">comma-separated</small></span><input name="languages" placeholder="e.g. English, Hindi, Tamil"></label>
+            <label class="field"><span>Reports to</span><input name="reporting_to" maxlength="80" placeholder="e.g. Regional Sales Manager"></label>
+          </div>
+          <label class="switch"><input type="checkbox" name="two_wheeler"><span>Two-wheeler with a valid driving licence required</span></label>
+        </section>
+
+        <section class="fgroup">
+          <h3>Publishing</h3>
+          <div class="row-3">
+            <label class="field"><span>Status</span>
+              <select name="status"><option value="draft">Draft (hidden)</option><option value="open">Open (on the website)</option><option value="closed">Closed (hidden)</option></select></label>
+            <label class="field"><span>Posted on</span><input name="posted_at" type="date"></label>
+            <label class="field"><span>Last date to apply <small class="muted">optional</small></span><input name="closes_at" type="date"></label>
+          </div>
+          <p class="hint">After the last date to apply, the job disappears from the website automatically.</p>
+        </section>
+      </div>
+      <p class="form-error" id="jobError" role="alert" hidden></p>
+    </div>
+    <footer class="drawer-foot">
+      <span class="muted small" id="jobMeta"></span>
+      <div class="foot-actions">
+        <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn-primary" type="submit" id="saveJobBtn">Save job</button>
+      </div>
+    </footer>
+  </form>
+</dialog>
+
+<!-- ============ Application detail ============ -->
+<dialog class="drawer drawer-narrow" id="appDialog" aria-labelledby="appName">
+  <div class="app-sheet">
+    <header class="drawer-head">
+      <div><h2 id="appName"></h2><p class="muted small" id="appSub"></p></div>
+      <button class="icon-btn" type="button" data-close aria-label="Close">✕</button>
+    </header>
+    <div class="drawer-body">
+      <dl class="kv" id="appDetails"></dl>
+      <p class="cover" id="appCover" hidden></p>
+      <a class="btn btn-ghost" id="appCv" href="#">Download CV</a>
+      <label class="field" style="margin-top:20px"><span>Status</span><select id="appStatus"></select></label>
+      <label class="field"><span>Internal notes <small class="muted">only visible to the team</small></span><textarea id="appNotes" rows="4" maxlength="4000"></textarea></label>
+      <p class="form-error" id="appError" role="alert" hidden></p>
+    </div>
+    <footer class="drawer-foot">
+      <button class="btn btn-ghost btn-sm" type="button" id="appDelete">Delete application</button>
+      <div class="foot-actions">
+        <button class="btn btn-ghost" type="button" data-close>Close</button>
+        <button class="btn btn-primary" type="button" id="appSave">Save</button>
+      </div>
+    </footer>
+  </div>
 </dialog>
 
 <!-- ============ Image cropper ============ -->
