@@ -22,6 +22,8 @@ module.exports = {
   sessionHours: Number(process.env.SESSION_HOURS) || 12,
   // Public address of the site, used in job links and Google Jobs data, e.g. https://new.avanamedical.com
   siteUrl: (process.env.SITE_URL || '').replace(/\/+$/, ''),
+  // NOINDEX=true keeps a test site (e.g. test.avanamedical.com) out of Google and other search engines
+  noindex: process.env.NOINDEX === 'true',
   // When true, cookies are marked Secure (HTTPS only). Set COOKIE_SECURE=false only for plain-HTTP testing.
   cookieSecure: process.env.COOKIE_SECURE ? process.env.COOKIE_SECURE === 'true' : process.env.NODE_ENV === 'production'
 };

@@ -36,21 +36,21 @@ Code lives in `/var/www/avana-medical` and comes from GitHub (`AvanaGithub/avana
 
 ## Step 2 — Point a test address at it
 
-Where avanamedical.com's DNS is managed, add:
+avanamedical.com's DNS is managed at **GoDaddy** (nameservers ns63/ns64.domaincontrol.com). In GoDaddy: **My Products → avanamedical.com → DNS → Add New Record**:
 
 | Type | Name | Value | TTL |
 |---|---|---|---|
-| A | `new` | *droplet IPv4 address* | 300 |
+| A | `test` | *droplet IPv4 address* | 300 |
 
-This creates **new.avanamedical.com** for review. The current avanamedical.com is not affected.
+This creates **test.avanamedical.com** for review. The current avanamedical.com is not affected.
 
 ## Step 3 — Install (Claude can do this over SSH)
 
 ```bash
 ssh -i ~/.ssh/avana_medical_do root@<droplet-ip>
 curl -fsSL https://raw.githubusercontent.com/AvanaGithub/avana-medical-v2/main/deploy/setup.sh -o setup.sh
-bash setup.sh new.avanamedical.com
-apt-get install -y certbot python3-certbot-nginx && certbot --nginx -d new.avanamedical.com
+bash setup.sh test.avanamedical.com
+apt-get install -y certbot python3-certbot-nginx && certbot --nginx -d test.avanamedical.com
 ```
 
 ## Step 4 — Create the first admin
@@ -66,6 +66,7 @@ It asks for a password (at least 10 characters, letters and numbers). After that
 1. DNS: point the `@` (and `www`) A records to the droplet IP.
 2. On the droplet: `certbot --nginx -d avanamedical.com -d www.avanamedical.com`
 3. Add `avanamedical.com www.avanamedical.com` to `server_name` in `/etc/nginx/sites-available/avana-medical`, then `nginx -t && systemctl reload nginx`.
+4. Let Google index the real site: in `/var/www/avana-medical/server/.env` set `NOINDEX=false` and `SITE_URL=https://avanamedical.com`, then `systemctl restart avana-medical`. (The test address is hidden from search engines on purpose.)
 
 ---
 

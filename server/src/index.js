@@ -20,7 +20,15 @@ app.use((req, res, next) => {
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'X-Frame-Options': 'SAMEORIGIN'
   });
+  if (config.noindex) res.set('X-Robots-Tag', 'noindex, nofollow');
   next();
+});
+
+// Test sites tell search engines to stay away; the real site allows them (but never /admin or /api)
+app.get('/robots.txt', (req, res) => {
+  res.type('text').send(config.noindex
+    ? 'User-agent: *\nDisallow: /\n'
+    : 'User-agent: *\nDisallow: /admin\nDisallow: /api/\n');
 });
 app.use(cookieParser());
 

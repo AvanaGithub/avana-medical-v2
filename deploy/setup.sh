@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # One-time setup of the Avana Medical website on a fresh Ubuntu 24.04 DigitalOcean droplet.
-# Run as root:   bash setup.sh new.avanamedical.com
+# Run as root:   bash setup.sh test.avanamedical.com
 # Safe to re-run: it skips steps that are already done.
 set -euo pipefail
 
-DOMAIN="${1:?Usage: bash setup.sh <domain, e.g. new.avanamedical.com>}"
+DOMAIN="${1:?Usage: bash setup.sh <domain, e.g. test.avanamedical.com>}"
 REPO="https://github.com/AvanaGithub/avana-medical-v2.git"
 APP_DIR=/var/www/avana-medical          # git checkout of the site + server code
 DATA_DIR=/var/lib/avana-medical          # database + uploaded images (kept outside the code folder)
@@ -31,11 +31,14 @@ chown -R "$APP_USER:$APP_USER" "$APP_DIR" "$DATA_DIR"
 git config --global --add safe.directory "$APP_DIR"
 
 echo "==> Server settings"
+# Test addresses (test.*, staging.*) are hidden from Google; the real domain is not
+case "$DOMAIN" in test.*|staging.*|new.*) NOINDEX=true ;; *) NOINDEX=false ;; esac
 if [ ! -f "$APP_DIR/server/.env" ]; then
   cat > "$APP_DIR/server/.env" <<EOF
 NODE_ENV=production
 PORT=3000
 SITE_URL=https://$DOMAIN
+NOINDEX=$NOINDEX
 DATA_DIR=$DATA_DIR/data
 UPLOADS_DIR=$DATA_DIR/uploads
 EOF
