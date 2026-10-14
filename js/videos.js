@@ -41,7 +41,7 @@
     var v = document.getElementById('heroVideo');
     if (v){ v.src = 'videos/hero.mp4'; if (!reduce){ var p = v.play(); p && p.catch(function(){}); } }
   })();
-  lazy('about-section.mp4', ['aboutVideo'], ['aboutToggle']);
+  lazy('about-section.mp4?v=2', ['aboutVideo'], ['aboutToggle']);
 
   // Brand pages
   lazy('arthrex.mp4', ['arthrexVideo'], ['arthrexToggle'], ['arthrex']);

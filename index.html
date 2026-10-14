@@ -6,7 +6,7 @@
   <title>Avana Medical Website</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700&display=swap">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -23,26 +23,33 @@
           <button class="nav-link" aria-expanded="false" aria-controls="menu-about" id="btn-about">About Us
             <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
           <ul class="menu" id="menu-about" hidden aria-labelledby="btn-about">
-            <li><a href="#about" data-route="about">About Us<span>Who we are</span></a></li>
-            <li><a href="#team" data-route="team">Meet our Leaders<span>Our leadership</span></a></li>
+            <li><a href="#about" data-route="about">About Us</a></li>
+            <li><a href="#team" data-route="team">Meet our Leaders</a></li>
           </ul>
         </li>
         <li class="has-menu">
           <button class="nav-link" aria-expanded="false" aria-controls="menu-edu" id="btn-edu">Medical Education
             <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
           <ul class="menu" id="menu-edu" hidden aria-labelledby="btn-edu">
-            <li><a href="https://arthrolab.in" target="_blank" rel="noopener">ArthroLab India<span>Courses, labs and forums</span></a></li>
-            <li><a href="https://www.youtube.com/@MargdarshanAvana" target="_blank" rel="noopener">Medical Education<span>Margdarshan videos on YouTube</span></a></li>
-            <li><a href="https://www.orthopedia.com" target="_blank" rel="noopener">Patient Education<span>Procedure guides for patients</span></a></li>
+            <li><a href="https://arthrolab.in" target="_blank" rel="noopener">ArthroLab India</a></li>
+            <li><a href="https://www.youtube.com/@MargdarshanAvana" target="_blank" rel="noopener">Margdarshan</a></li>
+            <li class="has-sub">
+              <button type="button" class="sub-btn" id="btn-patient" aria-expanded="false" aria-controls="menu-patient">Patient Education
+                <svg class="sub-chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M3 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+              <ul class="menu sub-menu" id="menu-patient" hidden aria-labelledby="btn-patient">
+                <li><a href="https://www.orthopedia.com" target="_blank" rel="noopener">Orthopedia</a></li>
+                <li><a href="https://www.anklesprain.com" target="_blank" rel="noopener">Ankle Sprain</a></li>
+              </ul>
+            </li>
           </ul>
         </li>
         <li class="has-menu">
           <button class="nav-link" aria-expanded="false" aria-controls="menu-prod" id="btn-prod" data-group="products">Products
             <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
           <ul class="menu" id="menu-prod" hidden aria-labelledby="btn-prod">
-            <li><a href="#arthrex" data-route="arthrex">Arthrex<span>Product range by anatomy</span></a></li>
-            <li><a href="#echi" data-route="echi">e.CHI<span>FrequenzChip catalogue</span></a></li>
-            <li><a href="#movmedix" data-route="movmedix">MovMedix<span>Synthetic ligament catalogue</span></a></li>
+            <li><a href="#arthrex" data-route="arthrex">Arthrex</a></li>
+            <li><a href="#echi" data-route="echi">e.CHI</a></li>
+            <li><a href="#movmedix" data-route="movmedix">MovMedix</a></li>
           </ul>
         </li>
         <li><a class="nav-link" href="#events" data-route="events">News &amp; Events</a></li>
@@ -67,7 +74,6 @@
         <span class="eyebrow">Product highlight of the month</span>
         <h1 id="hero-h">Arthrex<sup>®</sup> TightRope II</h1>
         <p class="sub">Adjustable-loop cortical fixation for ACL (anterior cruciate ligament) reconstruction, with a flat-tape loop the surgeon can retension after the buttons are placed.</p>
-        <a class="btn" href="#arthrex" data-route="arthrex">Explore the Arthrex range</a>
       </div>
     </div>
     <button class="vid-toggle" id="vidToggle" aria-label="Pause background video" aria-pressed="false">
@@ -78,11 +84,11 @@
 
   <section class="partners" aria-labelledby="partners-h">
     <div class="wrap">
-      <p id="partners-h">Our products</p>
+      <h2 id="partners-h">Our Partners</h2>
       <ul>
-        <li><a href="#arthrex" data-route="arthrex"><img src="images/logos/arthrex-dark.png" alt="Arthrex"><small>USA</small></a></li>
-        <li><a href="#movmedix" data-route="movmedix"><img src="images/logos/movmedix-dark.png" alt="MovMedix"><small>France</small></a></li>
-        <li><a href="#echi" data-route="echi"><img class="echi" src="images/logos/echi-dark.png" alt="e.CHI"><small>Germany</small></a></li>
+        <li><a href="#arthrex" data-route="arthrex"><img src="images/logos/arthrex-white.png" alt="Arthrex"><small>USA</small></a></li>
+        <li><a href="#movmedix" data-route="movmedix"><img src="images/logos/movmedix-white.png" alt="MovMedix"><small>France</small></a></li>
+        <li><a href="#echi" data-route="echi"><img class="echi" src="images/logos/echi-white.png" alt="e.CHI"><small>Germany</small></a></li>
       </ul>
     </div>
   </section>
@@ -183,7 +189,6 @@
   <section class="gl-hero" id="ctHero" aria-labelledby="ct-h">
     <video class="gl-bgvid" id="contactBg" autoplay muted loop playsinline preload="auto" poster="images/posters/page-background.jpg" aria-hidden="true"></video>
     <div class="gl-glow" aria-hidden="true"></div>
-    <div class="gl-noise" aria-hidden="true"></div>
     <div class="wrap gl-wrap">
       <div class="gl-left">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><span aria-current="page">Contact Us</span></nav>
@@ -218,8 +223,9 @@
           <li class="ofc-hubitem" data-k="chennai">
             <button class="ofc-hub" id="chennaiHub" type="button" aria-expanded="false" aria-controls="ofc-corp ofc-log ofc-tech">
               <span class="ofc-hub-ring" aria-hidden="true"></span>
-              <span class="ofc-hub-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""><span>Chennai</span></span>
-              <span class="ofc-hub-text"><b>Avana Chennai</b><span>Corporate · Logistics · Technology &amp; Service</span></span>
+              <span class="ofc-hub-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""></span>
+              <span class="ofc-hub-title">Chennai</span>
+              <span class="ofc-hub-text"><b>Avana Chennai</b><span>Head Office · Logistics &amp; Supply Chain · Technology &amp; Service</span></span>
               <span class="ofc-hub-hint" id="chennaiHint">Tap to see 3 offices</span>
               <svg class="ofc-hub-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
             </button>
@@ -227,7 +233,7 @@
           <li class="ofc ofc-sub" data-k="corp" id="ofc-corp">
             <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""></div>
             <div class="ofc-card">
-              <h3 class="ofc-title">Headquarters<span class="sr-only">, Avana Chennai</span></h3>
+              <h3 class="ofc-title">Head Office<span class="sr-only">, Avana Chennai</span></h3>
               <p class="ofc-addr"><b>Avana Medical Devices Pvt. Ltd.</b>No. 91, Sundar Nagar 4th Avenue, Nandambakkam, Chennai – 600032, Tamil Nadu, India</p>
               <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+914422331061">+91 44 2233 1061 / 1062 / 1063</a></p>
               <a class="ofc-map" href="https://maps.app.goo.gl/Q3CqudFAv8cvF4Ri8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
@@ -236,8 +242,8 @@
           <li class="ofc ofc-sub" data-k="log" id="ofc-log">
             <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""></div>
             <div class="ofc-card">
-              <h3 class="ofc-title">Logistics<span class="sr-only">, Avana Chennai</span></h3>
-              <p class="ofc-addr">3/249F, 3/249G, Krishna Enclave, Parthasarathy Nagar, Manapakkam, Chennai – 600125, Tamil Nadu, India</p>
+              <h3 class="ofc-title">Logistics &amp; Supply Chain<span class="sr-only">, Avana Chennai</span></h3>
+              <p class="ofc-addr"><b>Avana Medical Devices Pvt. Ltd.</b>3/249F, 3/249G, Krishna Enclave, Parthasarathy Nagar, Manapakkam, Chennai – 600125, Tamil Nadu, India</p>
               <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+919551252020">+91 95512 52020</a></p>
               <a class="ofc-map" href="https://www.google.com/maps/search/?api=1&query=Krishna+Enclave+Parthasarathy+Nagar+Manapakkam+Chennai+600125" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
             </div>
@@ -246,36 +252,33 @@
             <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""></div>
             <div class="ofc-card">
               <h3 class="ofc-title">Technology &amp; Service<span class="sr-only">, Avana Chennai</span></h3>
-              <p class="ofc-addr">No. 91, Sundar Nagar 4th Avenue, Nandambakkam, Chennai – 600032, Tamil Nadu, India</p>
+              <p class="ofc-addr"><b>Avana Technology Services Pvt.&nbsp;Ltd.</b>No. 91, Sundar Nagar 4th Avenue, Nandambakkam, Chennai – 600032, Tamil Nadu, India</p>
               <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+914422331061">+91 44 2233 1061 / 1062 / 1063</a></p>
               <a class="ofc-map" href="https://maps.app.goo.gl/Q3CqudFAv8cvF4Ri8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
             </div>
           </li>
           <li class="ofc" data-k="mumbai" id="ofc-mumbai">
-            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""><span>Mumbai</span></div>
+            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""></div>
             <div class="ofc-card">
-              <h3 class="sr-only">Avana Mumbai</h3>
-              <p class="ofc-label">Regional Office</p>
+              <h3 class="ofc-title">Regional Office Mumbai</h3>
               <p class="ofc-addr"><b>Avana Medical Devices Pvt. Ltd.</b>The Summit Business Bay (Omkar), Office No. 606, 6th Floor, Andheri Kurla Road, Chakala, Andheri East, Mumbai – 400093, Maharashtra, India</p>
               <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+912249700628">+91 22 4970 0628</a></p>
               <a class="ofc-map" href="https://maps.app.goo.gl/2K2C3eHkzqMF7aoa9" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
             </div>
           </li>
           <li class="ofc" data-k="bengaluru" id="ofc-bengaluru">
-            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""><span>Bengaluru</span></div>
+            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""></div>
             <div class="ofc-card">
-              <h3 class="sr-only">Avana Bengaluru</h3>
-              <p class="ofc-label">Regional Office</p>
+              <h3 class="ofc-title">Regional Office Bengaluru</h3>
               <p class="ofc-addr"><b>Avana Medical Devices Pvt. Ltd.</b>No. 52, 3rd Floor, Agastya Arcade, 80 Feet Road, New BEL Road, Devasandra Layout, Bengaluru – 560094, Karnataka, India</p>
               <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+918023512259">+91 80 2351 2259</a></p>
               <a class="ofc-map" href="https://maps.app.goo.gl/km8v9sxuaLHkHVLj7" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
             </div>
           </li>
           <li class="ofc" data-k="delhi" id="ofc-delhi">
-            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""><span>Delhi</span></div>
+            <div class="ofc-badge" aria-hidden="true"><img src="images/logos/avana-dark.png" alt=""></div>
             <div class="ofc-card">
-              <h3 class="sr-only">Avana Delhi</h3>
-              <p class="ofc-label">Regional Office</p>
+              <h3 class="ofc-title">Regional Office Delhi</h3>
               <p class="ofc-addr"><b>Avana Medical Devices Pvt. Ltd.</b>B6, Qutab Institutional Area, New Delhi – 110016, India</p>
               <p class="ofc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><a href="tel:+911141538222">+91 11 4153 8222</a></p>
               <a class="ofc-map" href="https://maps.app.goo.gl/PBNrr8ety7ntrhVU6" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Locate us<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
@@ -293,7 +296,6 @@
   <section class="gl-hero" id="evHero" aria-labelledby="ev-h">
     <video class="gl-bgvid" id="eventsBg" autoplay muted loop playsinline preload="auto" poster="images/posters/page-background.jpg" aria-hidden="true"></video>
     <div class="gl-glow" aria-hidden="true"></div>
-    <div class="gl-noise" aria-hidden="true"></div>
     <div class="wrap gl-wrap">
       <div class="gl-left">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><span aria-current="page">News &amp; Events</span></nav>
@@ -479,12 +481,10 @@
   <section class="gl-hero" id="glHero" aria-labelledby="ab-h">
     <video class="gl-bgvid" id="aboutBg" autoplay muted loop playsinline preload="auto" poster="images/posters/about-arthroknee.jpg" aria-hidden="true"></video>
     <div class="gl-glow" aria-hidden="true"></div>
-    <div class="gl-noise" aria-hidden="true"></div>
     <div class="wrap gl-wrap">
       <div class="gl-left">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><span aria-current="page">About Us</span></nav>
         <h1 id="ab-h" tabindex="-1" class="sr-only">About Us</h1>
-        <p class="gl-sub">Since 2009, Avana has brought world-class orthopaedic and sports medicine technology to surgeons across India and the SAARC region.</p>
         <a class="gl-cta" href="#team" data-route="team"><span class="gl-cta-t">Meet the Team</span><span class="gl-cta-a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span></a>
       </div>
       <div class="gl-right" aria-hidden="true">
@@ -530,8 +530,7 @@
 
     <section class="wrap ab-certs" aria-labelledby="ab-cert-h">
       <div class="ab-certs-head">
-        <span class="eyebrow">Certifications</span>
-        <h2 id="ab-cert-h">Certified for the way we work</h2>
+        <h2 id="ab-cert-h">Certifications</h2>
         <div class="title-rule center-rule" aria-hidden="true"></div>
       </div>
       <div class="ab-cert-grid">
@@ -548,19 +547,14 @@
         </article>
         <article class="ab-cert">
           <div class="ab-cert-mark">
-            <svg class="ab-cert-seal" viewBox="0 0 160 160" role="img" aria-label="ISO certified seal">
-              <circle cx="80" cy="80" r="74" fill="#172025"/>
-              <circle cx="80" cy="80" r="74" fill="none" stroke="#B27F0D" stroke-width="4"/>
-              <circle cx="80" cy="80" r="62" fill="none" stroke="#D19A1E" stroke-width="1.2" stroke-dasharray="2 5"/>
-              <path d="M69 50l8 8 15-16" fill="none" stroke="#D19A1E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-              <text x="80" y="96" text-anchor="middle" fill="#F3EFE5" font-family="Figtree,'Helvetica Neue',Arial,sans-serif" font-weight="800" font-size="40" letter-spacing="3">ISO</text>
-              <text x="80" y="119" text-anchor="middle" fill="#D19A1E" font-family="Figtree,'Helvetica Neue',Arial,sans-serif" font-weight="700" font-size="12" letter-spacing="3.2">CERTIFIED</text>
-            </svg>
+            <img class="ab-cert-iso" src="images/certifications/iso-13485.png" alt="ISO 13485 Quality Management System" width="118" height="127">
           </div>
           <div class="ab-cert-body">
-            <p class="ab-cert-k">Quality assured</p>
-            <h3>ISO Certified</h3>
-            <p>Our systems and processes are independently audited and certified to international ISO (International Organization for Standardization) standards, so surgeons and hospitals can count on the same quality every time.</p>
+            <p class="ab-cert-k">Certified by SGS</p>
+            <h3>ISO 13485:2016 Certified</h3>
+            <p>Our quality management system meets ISO (International Organization for Standardization) 13485:2016, the international standard for medical devices, across procurement, storage, sales and distribution, installation and servicing.</p>
+            <p class="ab-cert-ref">Certificate IN25/00000233</p>
+            <a class="ab-cert-link" href="images/certifications/Avana-ISO-13485-2016-Certificate.pdf" target="_blank" rel="noopener">View our certificate<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg><span class="sr-only"> (PDF, opens in a new tab)</span></a>
           </div>
         </article>
       </div>
@@ -600,14 +594,18 @@
         <img class="photo" src="images/team/p-sundararajan.jpg" alt="P. Sundararajan, Managing Director">
         <div>
           <h3>P. Sundararajan</h3>
-          <div class="role">Managing Director, Avana Group <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <div class="role">Managing Director, Avana Group <a href="https://www.linkedin.com/in/sundararajan-pandian-66964923" target="_blank" rel="noopener" aria-label="P. Sundararajan on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <p class="member-tag">"Building Businesses. Developing People. Creating Lasting Impact"</p>
+          <p>A technocrat from Madurai and a first-generation entrepreneur, he brings over three decades of experience in the medical technology industry. As Managing Director of AVANA Group, his journey has been shaped by a passion for entrepreneurship, a belief in people and a commitment to making a meaningful difference in healthcare. Beyond building successful businesses, he takes pride in nurturing talent, creating opportunities and empowering individuals to realise their potential. For him, true success is not measured by business growth alone, but by the people developed, the relationships built and the lasting impact created along the way.</p>
         </div>
       </article>
       <article class="member">
         <img class="photo" src="images/team/manish-gautham.jpg" alt="Manish Gautham, Director of Sales, Sports Medicine">
         <div>
           <h3>Manish Gautham</h3>
-          <div class="role">Director of Sales, Sports Medicine <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <div class="role">Director of Sales, Sports Medicine <a href="https://www.linkedin.com/in/manish-gautam-23a17115a" target="_blank" rel="noopener" aria-label="Manish Gautham on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <p class="member-tag">"Fueled by Passion, Driven by Resilience, Going the Extra Mile for Customer Delight"</p>
+          <p>With over 25 years in the medical device and pharmaceutical industries, Manish is a passionate, resilient and results-driven sales leader. Known for leading from the front, building high-performing teams and a never-give-up attitude, he consistently goes the extra mile to create value, exceed customer expectations and drive sustainable business growth.</p>
           <blockquote class="bio"><p>I take pride in being part of a company that is shaping the future of orthopedics in India. AVANA empowers its employees with opportunities to grow, innovate, and make a real difference in the lives of surgeons and patients.</p></blockquote>
         </div>
       </article>
@@ -615,7 +613,9 @@
         <img class="photo" src="images/team/ruchir-gupta.jpg" alt="Ruchir Gupta, Deputy Director, Marketing and Business Strategy">
         <div>
           <h3>Ruchir Gupta</h3>
-          <div class="role">Deputy Director, Marketing &amp; Business Strategy <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <div class="role">Deputy Director, Marketing &amp; Business Strategy <a href="https://www.linkedin.com/in/ruchir-gupta-4903ab7" target="_blank" rel="noopener" aria-label="Ruchir Gupta on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <p class="member-tag">"Shaping brands with strategy, powering growth through innovation"</p>
+          <p>With over two and a half decades in marketing and business leadership, he brings a rare blend of strategic vision and commercial acumen, building brands and translating market opportunities into business success. At AVANA, he plays a pivotal role in strengthening market leadership, championing innovation and advancing the adoption of cutting-edge healthcare solutions in India.</p>
           <blockquote class="bio"><p>At AVANA, innovation is not just what we do, it is who we are!</p><p>We are passionate about bringing the world’s most advanced medical technologies to India and making them accessible to surgeons and patients who can benefit from them.</p><p>Every innovation we introduce is driven by one purpose: to enable better surgical outcomes, empower surgeons with better solutions, and help patients return to an active and healthier life. We are proud to be part of AVANA’s journey of transforming the medical device landscape in India!</p><p>We don’t just bring technology to India. We bring the future of healthcare closer to our patients.</p></blockquote>
         </div>
       </article>
@@ -623,7 +623,9 @@
         <img class="photo" src="images/team/praveen-raghavendra.jpg" alt="Praveen Raghavendra, National Sales Manager, Dextra and Bio">
         <div>
           <h3>Praveen Raghavendra</h3>
-          <div class="role">National Sales Manager, Dextra &amp; Bio <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <div class="role">National Sales Manager, Dextra &amp; Bio <a href="https://www.linkedin.com/in/praveen-raghavendra-7b2a6a41" target="_blank" rel="noopener" aria-label="Praveen Raghavendra on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <p class="member-tag">"Leading teams with trust and unwavering commitment"</p>
+          <p>With more than 18 years in the medical device industry, he has built highly motivated teams of trusted achievers. He is committed to exceeding expectations and growing the business profitably, reliably and consistently, guided by a philosophy of high integrity and leading with purpose.</p>
           <blockquote class="bio"><p>My journey at AVANA has been filled with learning, challenges, and growth. From understanding advanced technologies to working closely with healthcare professionals, every experience adds value. I feel empowered to keep learning and contribute more every day.</p></blockquote>
         </div>
       </article>
@@ -631,7 +633,9 @@
         <img class="photo" src="images/team/s-singaravel.jpg" alt="S. Singaravel, Manager, Service and IT">
         <div>
           <h3>S. Singaravel</h3>
-          <div class="role">Manager, Service &amp; IT <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <div class="role">Manager, Service &amp; IT <a href="https://www.linkedin.com/in/singaravel-subramaniam-52455039" target="_blank" rel="noopener" aria-label="S. Singaravel on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <p class="member-tag">"Integrity in every commitment, solutions in every challenge"</p>
+          <p>He heads Avana's IT and service functions, keeping the company's systems and networks secure and running, while leading the technical team that installs, maintains and repairs capital equipment such as arthroscopy and visualisation systems for hospitals. His focus is minimal downtime for the operating theatres that depend on this equipment, and quick, reliable support whenever surgeons and hospital teams need it. He takes ownership of every service commitment and builds a team that solves problems with transparency and a drive for continuous improvement.</p>
           <blockquote class="bio"><p>At AVANA, innovation is more than introducing new technology—it is about improving patient care. We work closely with healthcare professionals to deliver solutions that support precision and clinical excellence. Being part of this mission gives purpose to everything we do.</p></blockquote>
         </div>
       </article>
@@ -656,6 +660,8 @@
         <div>
           <h3>M. Srinivasan</h3>
           <div class="role">Senior Manager, Finance &amp; Admin Accounts <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <p class="member-tag">"More than a workplace, a learning ground"</p>
+          <p>A long-standing member of the Avana family, he has been part of the company's journey for more than a decade, growing with it through every stage of its expansion. Beyond finance and accounts, his responsibilities now span administration, legal, compliance and regulatory matters, giving him a broad view of how the business runs. His steady commitment to Avana is built on accountability, teamwork, professional ethics and a solution-oriented approach.</p>
           <blockquote class="bio"><p>Being a part of AVANA Medical has given me the opportunity to continuously learn and grow. Every day brings new challenges, advanced technologies, and opportunities to make a meaningful difference. It is inspiring to work in an organization that truly values knowledge and innovation.</p></blockquote>
         </div>
       </article>
@@ -663,7 +669,9 @@
         <img class="photo" src="images/team/avadhut-kaluskar.jpg" alt="Avadhut Kaluskar, Senior Manager, Medical Education">
         <div>
           <h3>Avadhut Kaluskar</h3>
-          <div class="role">Senior Manager, Medical Education <a href="#team" aria-label="LinkedIn profile (link to be added)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <div class="role">Senior Manager, Medical Education <a href="https://www.linkedin.com/in/avadhut-kaluskar-9828926" target="_blank" rel="noopener" aria-label="Avadhut Kaluskar on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
+          <p class="member-tag">"Turning knowledge into inspiration, and inspiration into progress"</p>
+          <p>With nearly two decades of experience spanning sales, marketing, and medical education, he is passionate about connecting people, knowledge, and innovation. At AVANA Medical Devices, he has been instrumental in building educational platforms, strengthening international partnerships, and driving professional excellence through meaningful learning initiatives. He believes in empowering teams, encouraging fresh perspectives, and translating collective expertise into meaningful progress for healthcare professionals.</p>
           <blockquote class="bio"><p>Working at AVANA is more than a career—it’s an opportunity to be part of a team driven by innovation, integrity, and excellence. Together, we’re advancing healthcare by delivering cutting-edge solutions that improve patient outcomes across India.</p></blockquote>
         </div>
       </article>
@@ -802,11 +810,12 @@
     <nav aria-labelledby="f-pr"><h2 id="f-pr">Products</h2>
       <ul><li><a href="#arthrex" data-route="arthrex">Arthrex</a></li><li><a href="#movmedix" data-route="movmedix">MovMedix</a></li><li><a href="#echi" data-route="echi">e.CHI</a></li></ul></nav>
     <nav aria-labelledby="f-ed"><h2 id="f-ed">Education</h2>
-      <ul><li><a href="https://www.youtube.com/@MargdarshanAvana" target="_blank" rel="noopener">Medical Education</a></li><li><a href="https://arthrolab.in" target="_blank" rel="noopener">ArthroLab India</a></li><li><a href="https://www.orthopedia.com" target="_blank" rel="noopener">Patient Education</a></li></ul></nav>
+      <ul><li><a href="https://www.youtube.com/@MargdarshanAvana" target="_blank" rel="noopener">Margdarshan</a></li><li><a href="https://arthrolab.in" target="_blank" rel="noopener">ArthroLab India</a></li><li><a href="https://www.orthopedia.com" target="_blank" rel="noopener">Orthopedia</a></li><li><a href="https://www.anklesprain.com" target="_blank" rel="noopener">Ankle Sprain</a></li></ul></nav>
   </div>
   <div class="bottom">
     <div class="wrap">
       <span>© 2026 Avana Medical Devices Pvt. Ltd. All rights reserved.</span>
+      <span class="foot-iso">ISO 13485:2016 certified · SGS</span>
     </div>
   </div>
 </footer>

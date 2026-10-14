@@ -6,21 +6,33 @@
 
   /* ---- Dropdown menus (disclosure pattern) ---- */
   var toggles=[].slice.call(document.querySelectorAll('.has-menu>button'));
-  function closeAll(except){toggles.forEach(function(b){if(b!==except){b.setAttribute('aria-expanded','false');document.getElementById(b.getAttribute('aria-controls')).hidden=true;}})}
+  var subs=[].slice.call(document.querySelectorAll('.sub-btn'));
+  function setSub(sb,open){sb.setAttribute('aria-expanded',open?'true':'false');document.getElementById(sb.getAttribute('aria-controls')).hidden=!open}
+  function closeAll(except){toggles.forEach(function(b){if(b!==except){b.setAttribute('aria-expanded','false');document.getElementById(b.getAttribute('aria-controls')).hidden=true;}});subs.forEach(function(sb){if(!except||!except.parentNode.contains(sb))setSub(sb,false)})}
+  var hoverDesk=matchMedia('(hover: hover) and (min-width: 1081px)');
+  subs.forEach(function(sb){
+    var li=sb.parentNode,sm=document.getElementById(sb.getAttribute('aria-controls'));
+    sb.addEventListener('click',function(e){e.stopPropagation();setSub(sb,hoverDesk.matches?true:sb.getAttribute('aria-expanded')!=='true')});
+    sb.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();setSub(sb,true);var a=sm.querySelector('a');a&&a.focus()}});
+    sm.addEventListener('keydown',function(e){if(e.key==='ArrowLeft'||e.key==='Escape'){e.preventDefault();e.stopPropagation();setSub(sb,false);sb.focus()}});
+    var t;li.addEventListener('mouseenter',function(){if(hoverDesk.matches){clearTimeout(t);setSub(sb,true)}});
+    li.addEventListener('mouseleave',function(){if(hoverDesk.matches){t=setTimeout(function(){setSub(sb,false)},180)}});
+  });
   function openMenu(b,focusFirst){closeAll(b);b.setAttribute('aria-expanded','true');var m=document.getElementById(b.getAttribute('aria-controls'));m.hidden=false;if(focusFirst){var a=m.querySelector('a');a&&a.focus();}}
   toggles.forEach(function(b){
     var m=document.getElementById(b.getAttribute('aria-controls'));
     b.addEventListener('click',function(){b.getAttribute('aria-expanded')==='true'?closeAll():openMenu(b,false)});
     b.addEventListener('keydown',function(e){if(e.key==='ArrowDown'){e.preventDefault();openMenu(b,true)}});
     m.addEventListener('keydown',function(e){
-      var items=[].slice.call(m.querySelectorAll('a')),i=items.indexOf(document.activeElement);
+      var items=[].slice.call(m.querySelectorAll('a,.sub-btn')).filter(function(x){return x.offsetParent!==null}),i=items.indexOf(document.activeElement);
+      if(e.target.closest('.sub-menu')&&e.key!=='ArrowLeft'&&e.key!=='Escape'){var si=[].slice.call(e.target.closest('.sub-menu').querySelectorAll('a'));items=si;i=si.indexOf(document.activeElement)}
       if(e.key==='ArrowDown'){e.preventDefault();items[(i+1)%items.length].focus()}
       else if(e.key==='ArrowUp'){e.preventDefault();items[(i-1+items.length)%items.length].focus()}
       else if(e.key==='Home'){e.preventDefault();items[0].focus()}
       else if(e.key==='End'){e.preventDefault();items[items.length-1].focus()}
     });
     var li=b.parentNode;
-    li.addEventListener('focusout',function(e){if(!li.contains(e.relatedTarget)){b.setAttribute('aria-expanded','false');m.hidden=true}});
+    li.addEventListener('focusout',function(e){if(!li.contains(e.relatedTarget)){b.setAttribute('aria-expanded','false');m.hidden=true;subs.forEach(function(sb){if(li.contains(sb))setSub(sb,false)})}});
   });
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
@@ -191,14 +203,14 @@
         SUB.forEach(function(li){subH=Math.max(subH,li.offsetHeight)});
         hubTop=st.chennai?subTop+subH+90:top;hubCY=hubTop+hubR;P.chennai=[cx-90,hubTop];
         SUB.forEach(function(li,i){P[li.dataset.k]=[sx0+i*(w+gap),subTop]});
-        cyc=hubTop+2*hubR+44+60+CR;
+        cyc=hubTop+2*hubR+74+60+CR;
         P.mumbai=[cx-CR-gx-w,cyc-h('mumbai')/2+18];
         P.bengaluru=[cx+CR+gx,cyc-h('bengaluru')/2+18];
         P.delhi=[cx-w/2,cyc+CR+64];
         H=Math.max(P.mumbai[1]+h('mumbai'),P.bengaluru[1]+h('bengaluru'),P.delhi[1]+h('delhi'))+24;
         if(st.chennai)SUB.forEach(function(li,i){var x1=sx0+i*(w+gap)+w/2,y1=subTop+li.offsetHeight+10,y0=hubTop-14;
           paths.push('M'+x1+' '+y1+'C'+x1+' '+(y1+40)+' '+cx+' '+(y0-40)+' '+cx+' '+y0)});
-        paths.push('M'+cx+' '+(hubTop+2*hubR+44)+'V'+(cyc-CR-12));
+        paths.push('M'+cx+' '+(hubTop+2*hubR+74)+'V'+(cyc-CR-12));
         paths.push('M'+(cx-CR-12)+' '+cyc+'H'+(cx-CR-gx+8));
         paths.push('M'+(cx+CR+12)+' '+cyc+'H'+(cx+CR+gx-8));
         paths.push('M'+cx+' '+(cyc+CR+12)+'V'+(P.delhi[1]-10));
