@@ -261,6 +261,14 @@ section.split.flip .media-box{order:2}
 .member .role a{display:inline-grid;place-items:center;width:28px;height:28px;background:var(--gold);color:#fff;border-radius:3px}
 .member .role a svg{width:16px;height:16px}
 .member p{margin:0;color:var(--body);line-height:1.8;max-width:75ch}
+/* Leader's own words */
+.member .bio{position:relative;margin:4px 0 0;padding:4px 0 4px 24px;border-left:3px solid var(--gold);max-width:75ch}
+.member .bio::before{content:"\201C";position:absolute;left:-14px;top:-26px;font:800 64px/1 var(--f-display);color:var(--gold);opacity:.22;pointer-events:none}
+.member .bio p{font-style:italic;font-size:16.5px;line-height:1.75}
+.member .bio p+p{margin-top:10px}
+/* Placeholder until a photo is supplied */
+.member .photo-pending{border:1px dashed rgba(209,154,30,.55)}
+.member .photo-pending .initials{font:800 46px/1 var(--f-display);letter-spacing:.04em;color:var(--gold-hi);text-transform:none}
 
 /* Careers */
 .life{padding-block:88px;background:var(--sand-lt)}
