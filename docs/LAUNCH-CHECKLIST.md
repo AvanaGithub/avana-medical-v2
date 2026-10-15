@@ -32,7 +32,7 @@ Status as of 15 Oct 2026. Tick items off as they are done.
 - [ ] **Hosting account.** Add a payment method to the Avana Medical DigitalOcean account and create the droplet (Bangalore, Ubuntu 24.04).
 - [ ] **Droplet IP.** Send the IP to set up the server.
 - [ ] **DNS.** In GoDaddy, add an A record so that `test` points to the droplet IP. Don't touch `@`, `www` or the MX records.
-- [ ] **Code on GitHub.** Push the code: 4 commits are waiting (team bios, colleague's updates, careers email flow, SEO pages).
+- [x] **Code on GitHub.** Pushed 15 Oct (team bios, colleague's updates, careers email flow, SEO pages).
 - [ ] **Install.** Run the setup script, set up HTTPS with certbot, and create the first admin and the HR users.
 - [ ] **Email settings.** Add the SMTP settings to the server and send a test openings request to yourself.
 - [ ] **Phone testing.** Test on a real iPhone and a real Android phone (Safari and Chrome).

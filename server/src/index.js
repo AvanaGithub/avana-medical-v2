@@ -80,6 +80,8 @@ app.use('/css', pub('css', 0));             // always re-checked (cheap with ETa
 app.use('/js', pub('js', 0));
 app.use('/images', pub('images', 7 * day));
 app.use('/videos', pub('videos', 7 * day));
+// Browsers and search engines also look for the icon at the site root
+app.get('/favicon.ico', (req, res) => res.sendFile(path.join(config.siteRoot, 'images', 'icons', 'favicon.ico'), { maxAge: 7 * day }));
 app.use('/uploads', express.static(config.uploadsDir, { maxAge: 30 * day, index: false, dotfiles: 'deny', immutable: true }));
 
 /* ---------- admin panel ---------- */
