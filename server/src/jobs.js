@@ -205,7 +205,11 @@ function postedLabel(j) {
 }
 const lines = s => String(s || '').split(/\r?\n/).map(x => x.replace(/^\s*[-•*]\s*/, '').trim()).filter(Boolean);
 
+// The openings page groups jobs in two: anything in a Sales or Marketing department, and everything else
+const CATEGORIES = ['Sales & Marketing', 'Other roles'];
+const category = j => (/sales|marketing/i.test(j.department || '') ? CATEGORIES[0] : CATEGORIES[1]);
+
 module.exports = {
   OPTIONS, validate, get, getBySlug, listPublic, listAdmin, isLive, create, update, reorder, remove,
-  experienceLabel, salaryLabel, postedLabel, dateLabel, lines, slugify, today
+  experienceLabel, salaryLabel, postedLabel, dateLabel, lines, slugify, today, CATEGORIES, category
 };

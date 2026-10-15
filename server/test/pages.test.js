@@ -62,9 +62,10 @@ test('old addresses redirect permanently; WordPress leftovers are gone', async (
 
 test('sitemap lists every page; robots.txt points to it and keeps private areas out', async () => {
   const xml = await (await get('/sitemap.xml')).text();
-  for (const p of Object.values(PAGES)) assert.ok(xml.includes(`<loc>https://avanamedical.com${p.path}</loc>`));
+  for (const p of Object.values(PAGES).filter(p => !p.private)) assert.ok(xml.includes(`<loc>https://avanamedical.com${p.path}</loc>`));
   const robots = await (await get('/robots.txt')).text();
   assert.match(robots, /Sitemap: https:\/\/avanamedical\.com\/sitemap\.xml/);
   assert.match(robots, /Disallow: \/admin/);
-  assert.match(robots, /Disallow: \/openings/);
+  assert.match(robots, /Disallow: \/job/);
+  assert.ok(!xml.includes('/job'), 'the private openings page is not in the sitemap');
 });

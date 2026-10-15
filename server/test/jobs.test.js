@@ -78,7 +78,7 @@ const lastEmail = () => {
   const files = fs.readdirSync(outbox()).sort();
   return fs.readFileSync(path.join(outbox(), files[files.length - 1]), 'utf8');
 };
-const linkIn = html => html.match(/href="(https:\/\/new\.avanamedical\.com\/openings\?t=[\w-]+)"/)[1];
+const linkIn = html => html.match(/href="(https:\/\/new\.avanamedical\.com\/job\?t=[\w-]+)"/)[1];
 let token;   // Priya's current openings link token
 
 test('posting a job: validation; the public Careers page only invites people to ask for the openings', async () => {
@@ -125,7 +125,8 @@ test('asking for the openings: validation, then an email with a personal link', 
   assert.ok(!mail.includes('Draft role'));
   token = new URL(linkIn(mail)).searchParams.get('t');
   assert.ok(token.length >= 30);
-  assert.ok(mail.includes(`openings?t=${token}&amp;job=territory-manager-sports-medicine`), 'each job links straight to its details');
+  assert.ok(mail.includes(`job?t=${token}&amp;job=territory-manager-sports-medicine`), 'each job links straight to its details');
+  assert.ok(mail.includes('Sales &amp; Marketing') && !mail.includes('Other roles'), 'grouped like the /job page; empty groups left out');
 
   // only a hash of the token is stored
   const row = db.prepare('SELECT * FROM job_leads').get();
@@ -135,7 +136,7 @@ test('asking for the openings: validation, then an email with a personal link', 
 });
 
 test('the personal link shows the openings; a wrong link shows the "expired" note', async () => {
-  const res = await fetch(`${base}/openings?t=${token}`);
+  const res = await fetch(`${base}/job?t=${token}`);
   assert.strictEqual(res.headers.get('x-robots-tag'), 'noindex, nofollow');
   assert.strictEqual(res.headers.get('referrer-policy'), 'no-referrer');
   const html = await res.text();
@@ -144,10 +145,20 @@ test('the personal link shows the openings; a wrong link shows the "expired" not
   assert.ok(!html.includes('Draft role'), 'drafts stay off the website');
   assert.match(html, /1 open position</);
   assert.ok(html.includes('Hi Priya, here are our current openings.'));
+  assert.ok(html.includes('Sales &amp; Marketing <span class="job-cat-n">1 open</span>'), 'the Sales job sits in Sales & Marketing');
+  assert.ok(html.includes('Other roles <span class="job-cat-n">0 open</span>'));
+  assert.ok(html.includes('data-route="jobs"'));
+  const careers = await (await fetch(`${base}/careers/`)).text();
+  assert.ok(!careers.includes('Territory Manager – Sports Medicine') && careers.includes('We have 1 open position right now.'),
+    'the Careers page shows only the count');
+  // links emailed before the page moved still work
+  const moved = await fetch(`${base}/openings?t=${token}&job=x`, { redirect: 'manual' });
+  assert.strictEqual(moved.status, 301);
+  assert.strictEqual(moved.headers.get('location'), `/job?t=${token}&job=x`);
   assert.ok(html.includes(`data-openings-token="${token}"`));
   assert.strictEqual(db.prepare('SELECT visits FROM job_leads').get().visits, 1);
 
-  const bad = await (await fetch(`${base}/openings?t=not-a-real-token-1234567890`)).text();
+  const bad = await (await fetch(`${base}/job?t=not-a-real-token-1234567890`)).text();
   assert.ok(!bad.includes('Territory Manager – Sports Medicine'));
   assert.ok(bad.includes('That openings link has expired'));
 });
@@ -204,8 +215,8 @@ test('admin: requests list, resend gives a fresh link (old one stops), delete ke
   assert.strictEqual(re.body.status, 'not_configured');
   const fresh = new URL(re.body.link).searchParams.get('t');
   assert.notStrictEqual(fresh, token);
-  assert.ok((await (await fetch(`${base}/openings?t=${token}`)).text()).includes('That openings link has expired'), 'old link stops working');
-  assert.ok((await (await fetch(`${base}/openings?t=${fresh}`)).text()).includes('Territory Manager – Sports Medicine'));
+  assert.ok((await (await fetch(`${base}/job?t=${token}`)).text()).includes('That openings link has expired'), 'old link stops working');
+  assert.ok((await (await fetch(`${base}/job?t=${fresh}`)).text()).includes('Territory Manager – Sports Medicine'));
   token = fresh;
 
   // asking again with the same email updates the same request instead of adding another
@@ -218,7 +229,7 @@ test('admin: requests list, resend gives a fresh link (old one stops), delete ke
 
   // expired link
   db.prepare("UPDATE job_leads SET expires_at = datetime('now', '-1 minute')").run();
-  assert.ok((await (await fetch(`${base}/openings?t=${token}`)).text()).includes('That openings link has expired'));
+  assert.ok((await (await fetch(`${base}/job?t=${token}`)).text()).includes('That openings link has expired'));
   assert.strictEqual((await client()('POST', '/api/apply/territory-manager-sports-medicine', cvForm(Object.assign({ token }, CANDIDATE)))).status, 403);
   db.prepare("UPDATE job_leads SET expires_at = datetime('now', '+30 days')").run();
 
@@ -233,11 +244,11 @@ test('admin: requests list, resend gives a fresh link (old one stops), delete ke
 test('closed or expired jobs leave the site and refuse applications', async () => {
   const j = jobs.getBySlug('territory-manager-sports-medicine');
   await admin('PUT', `/api/admin/jobs/${j.id}`, { closes_at: '2020-01-01' });
-  assert.ok(!(await (await fetch(`${base}/openings?t=${token}`)).text()).includes('Territory Manager – Sports Medicine'), 'expired job hidden');
+  assert.ok(!(await (await fetch(`${base}/job?t=${token}`)).text()).includes('Territory Manager – Sports Medicine'), 'expired job hidden');
   assert.strictEqual((await client()('POST', '/api/apply/territory-manager-sports-medicine', cvForm(Object.assign({ token }, CANDIDATE)))).status, 410);
 
   await admin('PUT', `/api/admin/jobs/${j.id}`, { closes_at: '', status: 'closed' });
-  assert.ok((await (await fetch(`${base}/openings?t=${token}`)).text()).includes('There are no open positions right now.'));
+  assert.ok((await (await fetch(`${base}/job?t=${token}`)).text()).includes('There are no open positions right now.'));
   assert.ok(!(await (await fetch(base + '/')).text()).includes('open position right now'));
 
   // deleting a job keeps its applications
@@ -249,7 +260,7 @@ test('closed or expired jobs leave the site and refuse applications', async () =
 
 test('job titles and names are escaped on the website and in the email', async () => {
   await admin('POST', '/api/admin/jobs', Object.assign({}, JOB, { title: '<img src=x onerror=alert(1)>' }));
-  const page = await (await fetch(`${base}/openings?t=${token}`)).text();
+  const page = await (await fetch(`${base}/job?t=${token}`)).text();
   assert.ok(!page.includes('<img src=x onerror=alert(1)>'));
   assert.ok(page.includes('&lt;img src=x onerror=alert(1)&gt;'));
 
@@ -258,6 +269,6 @@ test('job titles and names are escaped on the website and in the email', async (
   assert.ok(!mail.includes('<b>Eve</b>') && mail.includes('&lt;b&gt;Eve&lt;/b&gt;'));
   assert.ok(!mail.includes('<img src=x'));
   const t = new URL(linkIn(mail)).searchParams.get('t');
-  const own = await (await fetch(`${base}/openings?t=${t}`)).text();
+  const own = await (await fetch(`${base}/job?t=${t}`)).text();
   assert.ok(!own.includes('<b>Eve</b>'));
 });

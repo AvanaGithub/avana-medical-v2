@@ -1,9 +1,8 @@
-/* Careers: job list filters, job details dialog and online application.
-   The job list is written into the page by the server, and only on a job seeker's personal
-   openings link (/openings?t=…, see server/src/render-jobs.js). Applying needs that link's token. */
+/* Careers: the job list on the /job page, the job details dialog and the online application.
+   The job list is written by the server on the /job page, reached only from the personal link we email
+   (/job?t=…, see server/src/render-jobs.js). Applying needs that link's token. */
 (function () {
   var token = document.body.getAttribute('data-openings-token');
-  var list = document.getElementById('jobsList');
   var dlg = document.getElementById('jobDialog');
   if (!dlg) return;
 
@@ -15,36 +14,17 @@
   var submit = document.getElementById('applySubmit');
   var current = null;   // { slug, title }
 
-  /* ---------- filters ---------- */
-  if (list) {
-    var q = document.getElementById('jobSearch'), dept = document.getElementById('jobDept'), cityF = document.getElementById('jobCity');
-    var none = document.getElementById('jobsNone'), count = document.getElementById('jobsCount');
-    var total = list.children.length;
-    function filter() {
-      var words = (q.value || '').toLowerCase().split(/\s+/).filter(Boolean), shown = 0;
-      [].forEach.call(list.children, function (li) {
-        var ok = (!dept.value || li.getAttribute('data-dept') === dept.value)
-          && (!cityF.value || li.getAttribute('data-cities').split('|').indexOf(cityF.value) > -1)
-          && words.every(function (w) { return li.getAttribute('data-search').indexOf(w) > -1; });
-        li.hidden = !ok;
-        if (ok) shown++;
-      });
-      none.hidden = shown > 0;
-      count.textContent = shown === total ? total + (total === 1 ? ' open position' : ' open positions') : 'Showing ' + shown + ' of ' + total;
-    }
-    [q, dept, cityF].forEach(function (el) { el.addEventListener('input', filter); });
-
-    list.addEventListener('click', function (e) {
-      var a = e.target.closest('a[data-job]');
-      if (!a) return;
-      e.preventDefault();
-      open(a.getAttribute('data-job'));
-    });
-  }
+  /* ---------- job list: a job's link opens its details ---------- */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-job]');
+    if (!a) return;
+    e.preventDefault();
+    open(a.getAttribute('data-job'));
+  });
 
   /* ---------- dialog ---------- */
   function cardFor(slug) {
-    var a = list && list.querySelector('a[data-job="' + slug.replace(/"/g, '') + '"]');
+    var a = document.querySelector('.jobs-list a[data-job="' + slug.replace(/"/g, '') + '"]');
     return a ? a.closest('li') : null;
   }
 
@@ -136,13 +116,7 @@
     });
   });
 
-  /* ---------- arriving from the emailed link: show the openings (and a job, if the email linked one) ---------- */
-  if (token || document.body.hasAttribute('data-openings-expired')) {
-    if (location.hash !== '#careers') location.hash = 'careers';
-    setTimeout(function () {
-      var slug = (location.search.match(/[?&]job=([\w-]+)/) || [])[1];
-      if (token && slug && cardFor(slug)) open(slug);
-      else document.getElementById('openings').scrollIntoView();
-    }, 80);
-  }
+  /* ---------- arriving from the emailed link: open the job it pointed to, if any ---------- */
+  var slug = (location.search.match(/[?&]job=([w-]+)/) || [])[1];
+  if (token && slug) setTimeout(function () { if (cardFor(slug)) open(slug); }, 80);
 })();

@@ -45,6 +45,13 @@ const PAGES = {
     title: 'Careers at Avana – Medical Device Jobs in India',
     description: 'Join Avana Medical Devices in sales, medical education and service. Great Place To Work certified. Request our current openings by email.'
   },
+  // The openings page, reached only from the personal link we email; never listed or indexed
+  jobs: {
+    path: '/job',
+    private: true,
+    title: 'Current Openings – Avana Medical Devices',
+    description: 'Current openings at Avana Medical Devices in sales, marketing, medical education and service.'
+  },
   contact: {
     path: '/contact-us/',
     title: 'Contact Us – Avana Medical Devices',
@@ -119,8 +126,10 @@ function seoHead(html, { route, siteUrl }) {
 }
 
 function sitemapXml(siteUrl) {
-  const urls = Object.values(PAGES).map(p => `  <url><loc>${esc(siteUrl + p.path)}</loc></url>`).join('\n');
+  const urls = Object.values(PAGES).filter(p => !p.private).map(p => `  <url><loc>${esc(siteUrl + p.path)}</loc></url>`).join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
 }
 
-module.exports = { PAGES, byPath, REDIRECTS, GONE, seoHead, sitemapXml };
+const PUBLIC_PATHS = Object.values(PAGES).filter(p => !p.private).map(p => p.path);
+
+module.exports = { PUBLIC_PATHS, PAGES, byPath, REDIRECTS, GONE, seoHead, sitemapXml };

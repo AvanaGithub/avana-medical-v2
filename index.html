@@ -158,7 +158,7 @@
     </div>
   </section>
 
-  <!-- Current openings: the server shows the job list only on a personal emailed link (/openings?t=…); everyone else gets an invitation to request it -->
+  <!-- Current openings: only how many there are, and the form to get them by email. The list itself is on the /job page. -->
   <section class="jobs-sec" id="openings" aria-labelledby="jobs-h">
     <div class="wrap">
       <div class="jobs-head">
@@ -168,14 +168,13 @@
           <div class="title-rule" aria-hidden="true"></div>
           <p class="jobs-lead">From field sales to medical education and service, find a role that fits you.</p>
         </div>
-        <p class="jobs-count" id="jobsCount" aria-live="polite"></p>
       </div>
-      <!-- jobs:list -->
+      <!-- jobs:gate -->
       <div class="jobs-gate">
         <p class="jobs-gate-lead">Share a few details and we will email you a personal link to all our current openings, where you can see the full details and apply online.</p>
         <button type="button" class="btn" data-open-careers>Email me the openings</button>
       </div>
-      <!-- /jobs:list -->
+      <!-- /jobs:gate -->
     </div>
   </section>
 
@@ -192,6 +191,29 @@
     </div>
   </section>
 
+</div>
+
+<!-- ============ JOB OPENINGS (/job — only from the personal link we email) ============ -->
+<div data-page="jobs" hidden>
+  <section class="jobs-hero" aria-labelledby="jp-h">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><a href="#careers" data-route="careers">Careers</a><span aria-hidden="true">›</span><span aria-current="page">Current openings</span></nav>
+      <h1 id="jp-h" tabindex="-1">Current openings</h1>
+      <div class="title-rule" aria-hidden="true"></div>
+      <p class="jobs-lead" id="jobsLead">Select a role to see the full details and apply online.</p>
+      <p class="jobs-count" id="jobsCount" aria-live="polite"></p>
+    </div>
+  </section>
+  <section class="jobs-sec" id="openings" aria-labelledby="jp-h">
+    <div class="wrap">
+      <!-- jobs:list -->
+      <div class="jobs-gate">
+        <p class="jobs-gate-lead">Our openings are sent by email. Share a few details and we will email you a personal link to all our current openings.</p>
+        <button type="button" class="btn" data-open-careers>Email me the openings</button>
+      </div>
+      <!-- /jobs:list -->
+    </div>
+  </section>
 </div>
 
 <!-- ============ ABOUT ============ -->

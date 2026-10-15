@@ -63,7 +63,7 @@
     pages.forEach(function(p){p.hidden=p.getAttribute('data-page')!==route});
     document.querySelectorAll('[aria-current="page"].nav-link,.menu a[aria-current="page"]').forEach(function(a){a.removeAttribute('aria-current')});
     document.querySelectorAll('.nav-link.active').forEach(function(a){a.classList.remove('active')});
-    if(route==='careers'||route==='events'||route==='contact'){document.querySelector('.nav-link[data-route="'+route+'"]').setAttribute('aria-current','page')}
+    if(route==='careers'||route==='jobs'||route==='events'||route==='contact'){document.querySelector('.nav-link[data-route="'+(route==='jobs'?'careers':route)+'"]').setAttribute('aria-current','page')}
     if(route==='about'||route==='team'){document.getElementById('btn-about').classList.add('active');var am=document.querySelector('#menu-about a[data-route="'+route+'"]');am&&am.setAttribute('aria-current','page')}
     if(['arthrex','echi','movmedix'].indexOf(route)>-1){
       document.getElementById('btn-prod').classList.add('active');

@@ -1,6 +1,6 @@
-// Renders the Careers page openings (between <!-- jobs:list --> markers in index.html).
-// The list itself is only shown on a job seeker's personal link (/openings?t=<token>, see leads.js);
-// everyone else sees an invitation to request the openings by email.
+// Renders the openings: the Careers page shows only how many there are (between <!-- jobs:gate --> markers);
+// the list itself is on the /job page (<!-- jobs:list -->), reached only from the personal link we email (see leads.js),
+// grouped as Sales & Marketing and Other roles.
 const jobs = require('./jobs');
 
 const esc = s => String(s ?? '')
@@ -63,9 +63,8 @@ function card(j, token) {
     [ICON.clock, j.work_mode],
     [ICON.rupee, jobs.salaryLabel(j)]
   ].filter(c => c[1]);
-  const search = [j.title, j.department, j.role_category, j.locations.join(' '), j.skills.join(' '), j.ref_code].join(' ').toLowerCase();
-  return `<li class="job" data-dept="${esc(j.department)}" data-cities="${esc(j.locations.map(city).join('|'))}" data-search="${esc(search)}">
-          <a class="job-row" href="/openings?t=${esc(token)}&amp;job=${esc(j.slug)}" data-job="${esc(j.slug)}" aria-haspopup="dialog">
+  return `<li class="job">
+          <a class="job-row" href="/job?t=${esc(token)}&amp;job=${esc(j.slug)}" data-job="${esc(j.slug)}" aria-haspopup="dialog">
             <span class="job-main">
               <span class="job-dept">${esc(j.department)}</span>
               <span class="job-title">${esc(j.title)}</span>
@@ -73,13 +72,14 @@ function card(j, token) {
             </span>
             <span class="job-side">
               <span class="job-posted">${esc(jobs.postedLabel(j))}</span>
-              <span class="job-go">View &amp; apply<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+              <span class="job-go">View details<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
             </span>
           </a>
           <template data-detail>${detail(j)}</template>
         </li>`;
 }
 
+// The /job page list: Sales & Marketing first, then Other roles
 function listHtml(items, token) {
   if (!items.length) {
     return `<div class="jobs-empty">
@@ -87,47 +87,53 @@ function listHtml(items, token) {
         <p>New roles appear on this page as soon as they are posted. You are welcome to send your CV to <a href="mailto:info@avanamedical.com">info@avanamedical.com</a> for future openings.</p>
       </div>`;
   }
-  const depts = [...new Set(items.map(j => j.department).filter(Boolean))].sort();
-  const cities = [...new Set(items.flatMap(j => j.locations.map(city)))].sort();
-  return `<div class="jobs-filters" role="search">
-        <label class="jf-search"><span class="sr-only">Search jobs</span>
-          <input type="search" id="jobSearch" placeholder="Search by title, skill or city" autocomplete="off"></label>
-        <label><span class="sr-only">Department</span>
-          <select id="jobDept"><option value="">All departments</option>${depts.map(d => `<option>${esc(d)}</option>`).join('')}</select></label>
-        <label><span class="sr-only">Location</span>
-          <select id="jobCity"><option value="">All locations</option>${cities.map(c => `<option>${esc(c)}</option>`).join('')}</select></label>
-      </div>
-      <ul class="jobs-list" id="jobsList">
-        ${items.map(j => card(j, token)).join('\n        ')}
-      </ul>
-      <p class="jobs-none" id="jobsNone" hidden>No openings match your search. Try another department or location.</p>`;
+  return jobs.CATEGORIES.map((cat, i) => {
+    const list = items.filter(j => jobs.category(j) === cat);
+    return `<section class="job-cat" aria-labelledby="jobcat-${i}">
+        <h2 class="job-cat-h" id="jobcat-${i}">${esc(cat)} <span class="job-cat-n">${list.length} open</span></h2>
+        ${list.length
+          ? `<ul class="jobs-list">\n          ${list.map(j => card(j, token)).join('\n          ')}\n        </ul>`
+          : '<p class="jobs-none">No openings in this area right now.</p>'}
+      </section>`;
+  }).join('\n      ');
 }
 
-// What everyone else sees: the invitation to get the openings by email
-function gateHtml(count, expired) {
+// The Careers page: how many openings there are, and the button to get them by email
+function gateHtml(count) {
   return `<div class="jobs-gate">
-        ${expired ? '<p class="jobs-gate-note" role="status">That openings link has expired or is no longer valid. Request a new one below and we will email it to you.</p>' : ''}
         <p class="jobs-gate-lead">${count ? `<strong>We have ${count} open position${count === 1 ? '' : 's'} right now.</strong> ` : ''}Share a few details and we will email you a personal link to all our current openings, where you can see the full details and apply online.</p>
         <button type="button" class="btn" data-open-careers>Email me the openings</button>
       </div>`;
 }
 
-// opts: { lead, token } on a personal openings link; { expired: true } when a link was not valid
+// The /job page when the link is missing, wrong or expired
+function expiredHtml() {
+  return `<div class="jobs-gate">
+        <p class="jobs-gate-note" role="status">That openings link has expired or is no longer valid.</p>
+        <p class="jobs-gate-lead">Share a few details and we will email you a new link to all our current openings.</p>
+        <button type="button" class="btn" data-open-careers>Email me the openings</button>
+      </div>`;
+}
+
+// opts: { lead, token } on the /job page with a valid link; { expired: true } on /job without one
 function renderJobsInto(html, opts = {}) {
   const items = jobs.listPublic();
   const personal = !!opts.lead;
-  html = html.replace(/<!-- jobs:list -->[\s\S]*?<!-- \/jobs:list -->/,
-    `<!-- jobs:list -->\n      ${personal ? listHtml(items, opts.token) : gateHtml(items.length, opts.expired)}\n      <!-- /jobs:list -->`);
-  html = html.replace(/(<p class="jobs-count" id="jobsCount"[^>]*>)[\s\S]*?(<\/p>)/,
-    `$1${personal && items.length ? `${items.length} open position${items.length === 1 ? '' : 's'}` : ''}$2`);
+  html = html.replace(/<!-- jobs:gate -->[\s\S]*?<!-- \/jobs:gate -->/,
+    `<!-- jobs:gate -->\n      ${gateHtml(items.length)}\n      <!-- /jobs:gate -->`);
+  if (personal || opts.expired) {
+    html = html.replace(/<!-- jobs:list -->[\s\S]*?<!-- \/jobs:list -->/,
+      `<!-- jobs:list -->\n      ${personal ? listHtml(items, opts.token) : expiredHtml()}\n      <!-- /jobs:list -->`);
+  }
   if (personal) {
+    html = html.replace(/(<p class="jobs-count" id="jobsCount"[^>]*>)[\s\S]*?(<\/p>)/,
+      `$1${items.length ? `${items.length} open position${items.length === 1 ? '' : 's'}` : ''}$2`);
     const first = opts.lead.name.trim().split(/\s+/)[0];
-    html = html.replace(/(<p class="jobs-lead">)[\s\S]*?(<\/p>)/,
-      `$1Hi ${esc(first)}, here are our current openings. Select a job to see the full details and apply online.$2`);
+    html = html.replace(/(<p class="jobs-lead" id="jobsLead">)[\s\S]*?(<\/p>)/,
+      `$1Hi ${esc(first)}, here are our current openings. Select a role to see the full details and apply online.$2`);
     html = html.replace(/<body([^>]*)>/i,
       `<body$1 data-openings-token="${esc(opts.token)}" data-lead-name="${esc(opts.lead.name)}" data-lead-email="${esc(opts.lead.email)}" data-lead-education="${esc(opts.lead.education)}">`);
   }
-  if (opts.expired) html = html.replace(/<body([^>]*)>/i, '<body$1 data-openings-expired>');
   return html;
 }
 

@@ -1,5 +1,5 @@
 // "See open positions" requests: a job seeker shares a few details and gets a personal link to the
-// current openings by email. The link (/openings?t=<token>) is the only way to see and apply for jobs.
+// current openings by email. The link (/job?t=<token>) is the only way to see and apply for jobs.
 // Only a SHA-256 hash of each token is stored, so the database alone can't be used to open anyone's link.
 const crypto = require('crypto');
 const { db } = require('./db');
@@ -89,12 +89,14 @@ function openingsEmail(lead, url, items) {
   const subject = items.length
     ? `${items.length} open position${items.length === 1 ? '' : 's'} at Avana Medical Devices`
     : 'Openings at Avana Medical Devices';
+  // same two groups as the /job page; a group with no jobs is left out
+  const groups = jobs.CATEGORIES.map(c => [c, items.filter(j => jobs.category(j) === c)]).filter(g => g[1].length);
 
   const text = [
     `Hi ${firstName(lead.name)},`, '',
     'Thank you for your interest in joining Avana Medical Devices.', '',
     items.length ? 'Here are our current openings:' : 'We have no open positions right now, but new roles appear on your link as soon as they are posted.',
-    ...items.map(j => `\n- ${j.title}\n  ${jobLine(j)}\n  ${url}&job=${j.slug}`), '',
+    ...groups.map(([cat, list]) => `\n${cat.toUpperCase()}\n` + list.map(j => `\n- ${j.title}\n  ${jobLine(j)}\n  ${url}&job=${j.slug}`).join('\n')), '',
     `See all openings and apply: ${url}`, '',
     `This link is personal to you and works for ${days} days. Please don't forward it.`,
     'You received this email because you asked for our openings on avanamedical.com. If that wasn\'t you, you can ignore it.', '',
@@ -121,8 +123,10 @@ function openingsEmail(lead, url, items) {
           ? 'Here are the positions open right now. Select one to see the full details and apply online.'
           : 'We have no open positions right now, but new roles will appear on your link as soon as they are posted.'}</p>
       </td></tr>
-      ${items.length ? `<tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${items.map(row).join('')}
-      </table></td></tr>` : ''}
+      ${groups.map(([cat, list]) => `<tr><td style="padding:10px 32px 0">
+        <div style="font:700 13px/1 Arial,Helvetica,sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:#8A6209;padding:8px 0">${esc(cat)}</div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${list.map(row).join('')}
+        </table></td></tr>`).join('\n      ')}
       <tr><td style="padding:22px 32px 8px">
         <a href="${esc(url)}" style="display:inline-block;background:#B27F0D;color:#ffffff;font:700 15px/1 Arial,Helvetica,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:16px 26px">View openings and apply</a>
       </td></tr>
@@ -139,7 +143,7 @@ function openingsEmail(lead, url, items) {
   return { subject, text, html };
 }
 
-const linkFor = (siteUrl, token) => `${siteUrl}/openings?t=${token}`;
+const linkFor = (siteUrl, token) => `${siteUrl}/job?t=${token}`;
 
 // Emails the openings link and records how it went. Returns the mailer result.
 async function sendLink(lead, token, siteUrl) {

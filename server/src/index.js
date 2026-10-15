@@ -31,7 +31,7 @@ const siteUrlOf = req => config.siteUrl || `${req.protocol}://${req.get('host')}
 app.get('/robots.txt', (req, res) => {
   res.type('text').send(config.noindex
     ? 'User-agent: *\nDisallow: /\n'
-    : `User-agent: *\nDisallow: /admin\nDisallow: /api/\nDisallow: /openings\n\nSitemap: ${siteUrlOf(req)}/sitemap.xml\n`);
+    : `User-agent: *\nDisallow: /admin\nDisallow: /api/\nDisallow: /job\nDisallow: /openings\n\nSitemap: ${siteUrlOf(req)}/sitemap.xml\n`);
 });
 app.get('/sitemap.xml', (req, res) => res.type('application/xml').send(pages.sitemapXml(siteUrlOf(req))));
 app.use(cookieParser());
@@ -51,25 +51,28 @@ app.use((req, res, next) => {
 });
 
 // Every section of the site has its own address; each serves the same page with that section open
-app.get(Object.values(pages.PAGES).map(p => p.path), (req, res, next) => {
+app.get(pages.PUBLIC_PATHS, (req, res, next) => {
   try {
     res.set('Cache-Control', 'no-cache');
     res.type('html').send(renderIndex({ route: pages.byPath[req.path], siteUrl: siteUrlOf(req) }));
   } catch (e) { next(e); }
 });
 
-// A job seeker's personal openings page, from the link we email them: the Careers page with the job list.
-// The link is private, so it is never cached, indexed or passed on to other sites.
+// The openings page (/job), from the personal link we email: the jobs in two groups, each with details and Apply.
+// The link is private, so the page is never cached, indexed or passed on to other sites.
 const leads = require('./leads');
-app.get('/openings', (req, res, next) => {
+app.get(['/job', '/job/'], (req, res, next) => {
   try {
     res.set({ 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'no-referrer' });
     const token = String(req.query.t || '');
     const lead = leads.findByToken(token);
     if (lead) leads.recordVisit(lead.id);
-    res.type('html').send(renderIndex(lead ? { lead, token } : { expired: true }));
+    const base = { route: 'jobs', siteUrl: siteUrlOf(req) };
+    res.type('html').send(renderIndex(Object.assign(base, lead ? { lead, token } : { expired: true })));
   } catch (e) { next(e); }
 });
+// Links sent before the page moved to /job
+app.get('/openings', (req, res) => res.redirect(301, '/job' + req.originalUrl.slice(req.path.length)));
 
 // Job pages used to be public; the openings are now only on the emailed link
 app.get('/jobs/:slug', (req, res) => res.redirect(301, '/careers/'));

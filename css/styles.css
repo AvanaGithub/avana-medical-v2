@@ -939,9 +939,6 @@ html.cm-lock{overflow:hidden}
 .jobs-head .title-rule{margin:18px 0 16px}
 .jobs-lead{margin:0;color:var(--body);max-width:60ch}
 .jobs-count{margin:0;font:700 14px/1 var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk)}
-.jobs-filters{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr);gap:12px;margin-bottom:18px}
-.jobs-filters input,.jobs-filters select{width:100%;padding:14px 16px;border:1.5px solid var(--line);background:#fff;font:500 16px/1.2 var(--f-body);color:var(--ink);border-radius:0}
-.jobs-filters input:focus,.jobs-filters select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(178,127,13,.18)}
 .jobs-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
 .job-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 26px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);color:inherit;text-decoration:none;transition:box-shadow .2s,transform .2s}
 .job-row:hover{box-shadow:0 14px 34px rgba(23,32,37,.1);transform:translateY(-2px)}
@@ -960,6 +957,16 @@ html.cm-lock{overflow:hidden}
 .jobs-none,.jobs-empty{padding:28px;background:#fff;border:1px dashed var(--sand);text-align:center;color:var(--body)}
 .jobs-empty p{margin:4px 0}
 .jobs-empty a{color:var(--gold-dk);font-weight:700}
+/* /job: the openings page reached from the emailed link, grouped in two */
+.jobs-hero{background:var(--charcoal);color:#fff;padding-block:56px 46px}
+.jobs-hero .crumbs,.jobs-hero .crumbs span{color:var(--grey)}
+.jobs-hero .crumbs a{color:var(--gold-hi)}
+.jobs-hero h1{color:#fff;margin-top:14px}
+.jobs-hero .jobs-lead{color:var(--sand);max-width:60ch}
+.jobs-hero .jobs-count{margin:10px 0 0;font:700 13px/1 var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-hi)}
+.job-cat+.job-cat{margin-top:44px}
+.job-cat-h{display:flex;align-items:baseline;gap:14px;margin:0 0 16px;padding-bottom:12px;border-bottom:2px solid var(--gold);font:800 clamp(22px,2.4vw,28px)/1.2 var(--f-display);color:var(--charcoal)}
+.job-cat-n{font:700 12px/1 var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dk)}
 /* Careers: invitation to get the openings by email (shown instead of the list, see server/src/render-jobs.js) */
 .jobs-gate{padding:34px 32px;background:#fff;border:1px solid rgba(178,127,13,.35);box-shadow:0 14px 30px rgba(23,32,37,.06);display:flex;align-items:center;justify-content:space-between;gap:20px 36px;flex-wrap:wrap}
 .jobs-gate-lead{margin:0;max-width:62ch;color:var(--body);line-height:1.65}
@@ -1020,7 +1027,6 @@ html.cm-lock{overflow:hidden}
 .apply-done p{max-width:52ch;margin:0 auto 24px;color:var(--body)}
 @media (max-width:760px){
   .jobs-sec{padding-block:64px 70px}
-  .jobs-filters{grid-template-columns:1fr}
   .job-row{flex-direction:column;align-items:flex-start;padding:18px 18px 18px 16px}
   .job-side{flex-direction:row;align-items:center;justify-content:space-between;width:100%}
   .job-dlg-in{padding:30px 20px 0}
