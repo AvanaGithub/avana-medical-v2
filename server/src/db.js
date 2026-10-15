@@ -131,6 +131,30 @@ const migrations = [
     updated_by      INTEGER REFERENCES users(id) ON DELETE SET NULL
   );
   CREATE INDEX applications_job ON applications(job_id, status);
+  `,
+  // 3: openings by email — job seekers request the list of openings and get a personal link
+  `
+  CREATE TABLE job_leads (
+    id              INTEGER PRIMARY KEY,
+    name            TEXT NOT NULL,
+    email           TEXT NOT NULL UNIQUE,          -- one row per person; asking again refreshes it
+    age             INTEGER NOT NULL,
+    marital_status  TEXT NOT NULL,
+    education       TEXT NOT NULL,
+    why_join        TEXT NOT NULL DEFAULT '',
+    token_hash      TEXT NOT NULL UNIQUE,          -- SHA-256 of the link token; the token itself is only in the email
+    expires_at      TEXT NOT NULL,                 -- the link stops working after this (UTC, 'YYYY-MM-DD HH:MM:SS')
+    requests        INTEGER NOT NULL DEFAULT 1,
+    email_status    TEXT NOT NULL DEFAULT 'pending' CHECK (email_status IN ('pending','sent','failed','not_configured')),
+    email_error     TEXT NOT NULL DEFAULT '',
+    emailed_at      TEXT,
+    visits          INTEGER NOT NULL DEFAULT 0,
+    last_visit_at   TEXT,
+    consent_at      TEXT NOT NULL,
+    created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at      TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  ALTER TABLE applications ADD COLUMN lead_id INTEGER REFERENCES job_leads(id) ON DELETE SET NULL;
   `
 ];
 

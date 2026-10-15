@@ -1,6 +1,8 @@
 /* Careers: job list filters, job details dialog and online application.
-   The job list itself is written into the page by the server (see server/src/render-jobs.js). */
+   The job list is written into the page by the server, and only on a job seeker's personal
+   openings link (/openings?t=…, see server/src/render-jobs.js). Applying needs that link's token. */
 (function () {
+  var token = document.body.getAttribute('data-openings-token');
   var list = document.getElementById('jobsList');
   var dlg = document.getElementById('jobDialog');
   if (!dlg) return;
@@ -61,33 +63,31 @@
     document.getElementById('applyTitle').textContent = current.title;
     show('view');
     if (!dlg.open) dlg.showModal();
-    try { history.replaceState(null, '', 'jobs/' + slug); } catch (e) { /* file:// */ }
   }
 
   function close() {
     if (dlg.open) dlg.close();
   }
-  dlg.addEventListener('close', function () {
-    try { if (/\/jobs\//.test(location.pathname)) history.replaceState(null, '', '/#careers'); } catch (e) { /* ignore */ }
-  });
   dlg.addEventListener('click', function (e) {
     if (e.target === dlg || e.target.closest('[data-job-close]')) close();
   });
 
+  // the details they gave when asking for the openings
+  function prefill() {
+    var f = form.elements;
+    if (!f.name.value) f.name.value = document.body.getAttribute('data-lead-name') || '';
+    if (!f.email.value) f.email.value = document.body.getAttribute('data-lead-email') || '';
+    if (!f.qualification.value) f.qualification.value = document.body.getAttribute('data-lead-education') || '';
+  }
+
   document.getElementById('jobApplyBtn').addEventListener('click', function () {
+    prefill();
     show('form');
     err.hidden = true;
-    form.querySelector('input[name="name"]').focus();
+    var first = [].filter.call(form.querySelectorAll('input[required]'), function (i) { return !i.value && i.type !== 'file'; })[0];
+    (first || form.querySelector('input[name="name"]')).focus();
   });
   document.getElementById('applyBack').addEventListener('click', function () { show('view'); });
-
-  document.getElementById('jobShareBtn').addEventListener('click', function () {
-    var btn = this, url = location.origin + '/jobs/' + current.slug;
-    var fallback = function () { window.prompt('Copy this link:', url); };
-    if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () {
-      btn.textContent = 'Link copied'; setTimeout(function () { btn.textContent = 'Copy link'; }, 2000);
-    }, fallback); else fallback();
-  });
 
   /* ---------- application ---------- */
   function fieldError(name, msg) {
@@ -114,6 +114,7 @@
     if (cv.size > 5 * 1024 * 1024) return fieldError('cv', 'Your CV must be smaller than 5 MB.');
     if (!f.consent.checked) return fieldError('consent', 'Please agree to the privacy notice so we can review your application.');
 
+    document.getElementById('applyToken').value = token || '';
     submit.disabled = true;
     submit.textContent = 'Sending…';
     fetch('/api/apply/' + encodeURIComponent(current.slug), {
@@ -135,10 +136,13 @@
     });
   });
 
-  /* ---------- opened from a job link (/jobs/<slug>) ---------- */
-  var slug = document.body.getAttribute('data-open-job');
-  if (slug) {
-    location.hash = 'careers';
-    setTimeout(function () { open(slug); }, 60);
+  /* ---------- arriving from the emailed link: show the openings (and a job, if the email linked one) ---------- */
+  if (token || document.body.hasAttribute('data-openings-expired')) {
+    if (location.hash !== '#careers') location.hash = 'careers';
+    setTimeout(function () {
+      var slug = (location.search.match(/[?&]job=([\w-]+)/) || [])[1];
+      if (token && slug && cardFor(slug)) open(slug);
+      else document.getElementById('openings').scrollIntoView();
+    }, 80);
   }
 })();

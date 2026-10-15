@@ -57,13 +57,13 @@ function cvPath(file) {
   return path.join(CV_DIR, file);
 }
 
-function create(job, a, cv) {
+function create(job, a, cv, leadId = null) {
   const info = db.prepare(`
     INSERT INTO applications (job_id, job_title, name, email, phone, city, total_exp, current_ctc, expected_ctc, notice_period,
-      current_employer, current_role, qualification, linkedin, cover_note, cv_file, cv_name, consent_at)
+      current_employer, current_role, qualification, linkedin, cover_note, cv_file, cv_name, lead_id, consent_at)
     VALUES (@job_id, @job_title, @name, @email, @phone, @city, @total_exp, @current_ctc, @expected_ctc, @notice_period,
-      @current_employer, @current_role, @qualification, @linkedin, @cover_note, @cv_file, @cv_name, datetime('now'))`)
-    .run(Object.assign({}, a, { job_id: job.id, job_title: job.title, cv_file: cv.file, cv_name: cv.name }));
+      @current_employer, @current_role, @qualification, @linkedin, @cover_note, @cv_file, @cv_name, @lead_id, datetime('now'))`)
+    .run(Object.assign({}, a, { job_id: job.id, job_title: job.title, cv_file: cv.file, cv_name: cv.name, lead_id: leadId }));
   return info.lastInsertRowid;
 }
 
@@ -72,8 +72,8 @@ function list({ jobId, status } = {}) {
   if (jobId) { where.push('a.job_id = ?'); args.push(jobId); }
   if (status) { where.push('a.status = ?'); args.push(status); }
   return db.prepare(`
-    SELECT a.*, j.ref_code, u.name AS updated_by_name FROM applications a
-    LEFT JOIN jobs j ON j.id = a.job_id LEFT JOIN users u ON u.id = a.updated_by
+    SELECT a.*, j.ref_code, u.name AS updated_by_name, l.age AS lead_age, l.marital_status AS lead_marital, l.education AS lead_education
+    FROM applications a LEFT JOIN jobs j ON j.id = a.job_id LEFT JOIN users u ON u.id = a.updated_by LEFT JOIN job_leads l ON l.id = a.lead_id
     ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY a.created_at DESC, a.id DESC`).all(...args);
 }
 

@@ -97,12 +97,13 @@
 
   function route() {
     let view = (location.hash || '#events').slice(1);
-    if (!['events', 'jobs', 'applications', 'users', 'account'].includes(view) || (view === 'users' && state.user.role !== 'admin')) view = 'events';
+    if (!['events', 'jobs', 'requests', 'applications', 'users', 'account'].includes(view) || (view === 'users' && state.user.role !== 'admin')) view = 'events';
     document.querySelectorAll('[data-view-panel]').forEach(p => { p.hidden = p.dataset.viewPanel !== view; });
     document.querySelectorAll('.tabs a').forEach(a => a.toggleAttribute('aria-current', a.dataset.view === view));
     document.querySelectorAll('.tabs a[aria-current]').forEach(a => a.setAttribute('aria-current', 'page'));
     if (view === 'events') loadEvents();
     if (view === 'jobs') loadJobs();
+    if (view === 'requests') loadLeads();
     if (view === 'applications') loadApplications();
     if (view === 'users') loadUsers();
     refreshBadge();
@@ -500,6 +501,70 @@
     } finally { btn.disabled = false; btn.textContent = 'Save job'; }
   });
 
+  /* ---------- openings requests ---------- */
+
+  const EMAIL_STATUS = {
+    sent: ['chip-live', 'Sent'], failed: ['chip-warn', 'Failed'], not_configured: ['chip-off', 'Not sent'], pending: ['chip-off', 'Pending']
+  };
+  let leads = [];
+
+  async function loadLeads() {
+    try {
+      const r = await api('GET', '/admin/leads');
+      leads = r.leads;
+      $('mailOffWarn').hidden = r.mailConfigured;
+      renderLeads();
+    } catch (e) { toast(e.message, true); }
+  }
+
+  function renderLeads() {
+    const q = $('leadSearch').value.trim().toLowerCase();
+    const shown = leads.filter(l => !q || [l.name, l.email, l.education].join(' ').toLowerCase().includes(q));
+    $('leadsEmpty').hidden = leads.length > 0;
+    $('leadRows').innerHTML = shown.map(l => {
+      const [cls, label] = EMAIL_STATUS[l.email_status] || EMAIL_STATUS.pending;
+      const link = l.link_active
+        ? `<span class="chip chip-live">Active</span><small>${l.visits ? `Opened ${l.visits}× · ${ago(l.last_visit_at)}` : 'Not opened yet'}</small>`
+        : '<span class="chip chip-off">Expired</span>';
+      return `<tr data-id="${l.id}">
+        <td><span class="cand">${esc(l.name)}</span><small><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></small></td>
+        <td>${esc(l.age)}</td>
+        <td>${esc(l.marital_status)}</td>
+        <td>${esc(l.education)}${l.why_join ? `<small title="${esc(l.why_join)}">“${esc(l.why_join.length > 40 ? l.why_join.slice(0, 40) + '…' : l.why_join)}”</small>` : ''}</td>
+        <td>${ago(l.updated_at)}${l.requests > 1 ? `<small>Asked ${l.requests} times</small>` : ''}</td>
+        <td><span class="chip ${cls}"${l.email_error ? ` title="${esc(l.email_error)}"` : ''}>${label}</span></td>
+        <td>${link}</td>
+        <td>${l.applications ? `<a class="link" href="#applications">${l.applications}</a>` : '–'}</td>
+        <td><button class="btn btn-ghost btn-sm" type="button" data-act="resend">New link</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-act="delete">Delete</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  $('leadSearch').addEventListener('input', renderLeads);
+  $('leadRows').addEventListener('click', async e => {
+    const btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    const l = leads.find(x => x.id === Number(btn.closest('tr').dataset.id));
+    if (btn.dataset.act === 'resend') {
+      if (!await confirmDialog('Send a new link?', `${l.name} gets a fresh link to the current openings. Their previous link stops working.`, 'Send new link')) return;
+      try {
+        btn.disabled = true;
+        const r = await api('POST', `/admin/leads/${l.id}/resend`);
+        if (r.status === 'sent') toast(`New link emailed to ${l.email}.`);
+        else {
+          try { await navigator.clipboard.writeText(r.link); } catch (err) { /* clipboard blocked */ }
+          window.prompt(`The email could not be sent${r.error ? ' (' + r.error + ')' : ''}. Copy this link and send it to ${l.email} yourself:`, r.link);
+        }
+        loadLeads();
+      } catch (err) { toast(err.message, true); } finally { btn.disabled = false; }
+    }
+    if (btn.dataset.act === 'delete') {
+      if (!await confirmDialog('Delete this request?', `${l.name}'s details will be permanently deleted and their link stops working (for example, when someone asks for their data to be removed). Any applications they sent are kept.`)) return;
+      try { await api('DELETE', `/admin/leads/${l.id}`); toast('Request deleted.'); loadLeads(); } catch (err) { toast(err.message, true); }
+    }
+  });
+
   /* ---------- applications ---------- */
 
   const STATUS = { new: 'New', shortlisted: 'Shortlisted', interview: 'Interview', offered: 'Offered', hired: 'Hired', rejected: 'Rejected' };
@@ -554,6 +619,7 @@
       ['Current employer', esc(a.current_employer || '–')],
       ['Current designation', esc(a.current_role || '–')],
       ['Qualification', esc(a.qualification || '–')],
+      ...(a.lead_age ? [['Age', esc(a.lead_age)], ['Marital status', esc(a.lead_marital)]] : []),
       ['LinkedIn', a.linkedin ? `<a href="${esc(a.linkedin)}" target="_blank" rel="noopener noreferrer">${esc(a.linkedin)}</a>` : '–'],
       ['CV file', esc(a.cv_name)],
       ['Consent given', esc(a.consent_at) + ' (UTC)']

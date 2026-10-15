@@ -61,6 +61,16 @@ sudo -u avana npm run create-admin -- you@avanamedical.com "Your Name"
 ```
 It asks for a password (at least 10 characters, letters and numbers). After that, add everyone else from **Admin → Users**.
 
+## Step 4b — Set up email (needed for "See open positions")
+
+Job seekers get the openings as a personal link by email, so the server must be able to send email. Until this is done, requests still appear in **Admin → Openings requests**, and HR can use **New link** there to copy a person's link and send it themselves.
+
+DigitalOcean blocks the usual email ports (25, 465, 587) on new droplets, so use a sending service that also listens on port 2525, such as Brevo (free tier: 300 emails a day):
+
+1. Create the account, then add and verify the domain `avanamedical.com`. It gives you DNS records (DKIM, SPF) to add in GoDaddy. **Add them; don't change the existing MX or Microsoft 365 records.**
+2. Create an SMTP key, then in `/var/www/avana-medical/server/.env` uncomment and fill in `SMTP_HOST`, `SMTP_PORT=2525`, `SMTP_USER`, `SMTP_PASS`. Optionally set `HR_NOTIFY_EMAIL` to get a copy of each request.
+3. `systemctl restart avana-medical`, then request the openings yourself on the Careers page and check that the email arrives (and isn't in spam).
+
 ## Step 5 — Go live on avanamedical.com (when everyone is happy)
 
 1. DNS: point the `@` (and `www`) A records to the droplet IP.
@@ -75,7 +85,8 @@ It asks for a password (at least 10 characters, letters and numbers). After that
 | Task | How |
 |---|---|
 | Add or change events | `https://<site>/admin` → News & Events |
-| Post, edit or close a job | Admin → Jobs (Draft = hidden, Open = on the Careers page, Closed = hidden). After the "last date to apply" a job hides itself |
+| Post, edit or close a job | Admin → Jobs (Draft = hidden, Open = on the emailed openings links, Closed = hidden). After the "last date to apply" a job hides itself |
+| See who asked for the openings, resend a link | Admin → Openings requests. A link works for 30 days (`OPENINGS_LINK_DAYS` in `.env`) |
 | Review applicants | Admin → Applications: filter by job/status, open a candidate, download the CV, set status (New → Shortlisted → Interview → Offered → Hired / Rejected), add internal notes |
 | A candidate asks for their data to be deleted | Admin → Applications → open them → **Delete application** (removes the record and the CV) |
 | Add a team member | Admin → Users → **Add user** (Editor = events only, Admin = events + users) |

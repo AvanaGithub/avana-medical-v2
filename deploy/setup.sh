@@ -41,6 +41,13 @@ SITE_URL=https://$DOMAIN
 NOINDEX=$NOINDEX
 DATA_DIR=$DATA_DIR/data
 UPLOADS_DIR=$DATA_DIR/uploads
+# Email for the "See open positions" links (see DEPLOY.md, "Set up email"). Until set, links are not emailed.
+# SMTP_HOST=smtp-relay.brevo.com
+# SMTP_PORT=2525
+# SMTP_USER=
+# SMTP_PASS=
+# MAIL_FROM=Avana Medical Devices <noreply@avanamedical.com>
+# HR_NOTIFY_EMAIL=
 EOF
   chown "$APP_USER:$APP_USER" "$APP_DIR/server/.env"; chmod 600 "$APP_DIR/server/.env"
 fi

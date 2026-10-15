@@ -25,5 +25,18 @@ module.exports = {
   // NOINDEX=true keeps a test site (e.g. test.avanamedical.com) out of Google and other search engines
   noindex: process.env.NOINDEX === 'true',
   // When true, cookies are marked Secure (HTTPS only). Set COOKIE_SECURE=false only for plain-HTTP testing.
-  cookieSecure: process.env.COOKIE_SECURE ? process.env.COOKIE_SECURE === 'true' : process.env.NODE_ENV === 'production'
+  cookieSecure: process.env.COOKIE_SECURE ? process.env.COOKIE_SECURE === 'true' : process.env.NODE_ENV === 'production',
+  // Outgoing email (the openings link sent to job seekers). Without SMTP_HOST, emails are saved to DATA_DIR/outbox instead.
+  mail: {
+    host: process.env.SMTP_HOST || '',
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: process.env.SMTP_SECURE === 'true',                     // true for port 465; 587 and 2525 use STARTTLS
+    user: process.env.SMTP_USER || '',
+    pass: process.env.SMTP_PASS || '',
+    from: process.env.MAIL_FROM || 'Avana Medical Devices <noreply@avanamedical.com>',
+    replyTo: process.env.MAIL_REPLY_TO || 'info@avanamedical.com',
+    hrNotify: process.env.HR_NOTIFY_EMAIL || ''                     // optional: also tell HR about each new request
+  },
+  // How long the emailed "current openings" link keeps working
+  openingsLinkDays: Number(process.env.OPENINGS_LINK_DAYS) || 30
 };

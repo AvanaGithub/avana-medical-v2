@@ -7,6 +7,9 @@ const events = require('./events');
 const images = require('./images');
 const jobs = require('./jobs');
 const apps = require('./applications');
+const leads = require('./leads');
+const mailer = require('./mailer');
+const config = require('./config');
 
 const router = express.Router();
 router.use(express.json({ limit: '100kb' }));
@@ -48,7 +51,28 @@ router.post('/auth/password', auth.requireUser, (req, res) => {
   ok(res);
 });
 
-/* ---------- public: apply for a job ---------- */
+const siteUrl = req => config.siteUrl || `${req.protocol}://${req.get('host')}`;
+
+/* ---------- public: ask for the current openings by email ---------- */
+
+const requestLog = new Map();   // IP → timestamps, max 5 requests per hour
+router.post('/openings-request', async (req, res, next) => {
+  try {
+    const now = Date.now();
+    const recent = (requestLog.get(req.ip) || []).filter(t => now - t < 3600e3);
+    if (recent.length >= 5) return bad(res, 'Too many requests from your connection. Please try again in an hour.', 429);
+    if (req.body.website) return ok(res, { ok: true, delivered: true });   // honeypot
+    const v = leads.validate(req.body);
+    if (v.error) return res.status(400).json({ error: v.error, field: v.field });
+    recent.push(now); requestLog.set(req.ip, recent);
+    const { lead, token } = leads.save(v.value);
+    const r = await leads.sendLink(lead, token, siteUrl(req));
+    leads.notifyHr(lead, siteUrl(req));
+    ok(res, { ok: true, delivered: r.status === 'sent' });
+  } catch (e) { next(e); }
+});
+
+/* ---------- public: apply for a job (only with a valid openings link) ---------- */
 
 const cvUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: apps.CV_MAX, files: 1, fields: 30 } });
 const applyLog = new Map();   // IP → timestamps, max 6 applications per hour
@@ -58,6 +82,8 @@ router.post('/apply/:slug', (req, res) => {
   if (recent.length >= 6) return bad(res, 'Too many applications from your connection. Please try again in an hour.', 429);
   cvUpload.single('cv')(req, res, err => {
     if (err) return bad(res, err.code === 'LIMIT_FILE_SIZE' ? 'Your CV must be smaller than 5 MB.' : 'Upload failed. Please try again.');
+    const lead = leads.findByToken(req.body.token);
+    if (!lead) return bad(res, 'Your openings link has expired. Request a new one from the Careers page and we will email it to you.', 403);
     const job = jobs.getBySlug(String(req.params.slug));
     if (!jobs.isLive(job)) return bad(res, 'This position is no longer accepting applications.', 410);
     if (req.body.website) return ok(res);                       // hidden "honeypot" field: bots fill it, people don't
@@ -66,7 +92,7 @@ router.post('/apply/:slug', (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Attach your CV (PDF or Word, up to 5 MB).', field: 'cv' });
     const cv = apps.saveCv(req.file.buffer, req.file.originalname);
     if (cv.error) return res.status(400).json({ error: cv.error, field: 'cv' });
-    apps.create(job, v.value, cv);
+    apps.create(job, v.value, cv, lead.id);
     recent.push(now); applyLog.set(req.ip, recent);
     ok(res, { ok: true, job: job.title });
   });
@@ -145,7 +171,8 @@ router.post('/admin/uploads', (req, res) => {
 router.get('/admin/jobs', (req, res) => ok(res, {
   jobs: jobs.listAdmin().map(j => Object.assign(j, { experience: jobs.experienceLabel(j), live: jobs.isLive(j) })),
   options: jobs.OPTIONS,
-  applications: apps.counts()
+  applications: apps.counts(),
+  leads: leads.counts()
 }));
 
 router.post('/admin/jobs', (req, res) => {
@@ -227,6 +254,30 @@ router.get('/admin/applications/:id/cv', (req, res) => {
   audit(req.user.id, 'download_cv', 'application', a.id);
   res.set('Cache-Control', 'no-store');
   res.download(p, `${a.name.replace(/[^\w ]/g, '').trim() || 'candidate'} - CV${require('path').extname(a.cv_file)}`);
+});
+
+/* ---------- openings requests (people who asked for the openings by email) ---------- */
+
+router.get('/admin/leads', (req, res) => ok(res, { leads: leads.list(), mailConfigured: mailer.configured(), linkDays: config.openingsLinkDays }));
+
+// Sends the person a fresh link (the old one stops working). Also returns the link so HR can share it another way.
+router.post('/admin/leads/:id/resend', async (req, res, next) => {
+  try {
+    const lead = leads.get(int(req.params.id));
+    if (!lead) return bad(res, 'That request no longer exists.', 404);
+    const token = leads.newToken(lead.id);
+    const r = await leads.sendLink(lead, token, siteUrl(req));
+    audit(req.user.id, 'resend_link', 'lead', lead.id, { status: r.status });
+    ok(res, { status: r.status, error: r.error || '', link: leads.linkFor(siteUrl(req), token) });
+  } catch (e) { next(e); }
+});
+
+router.delete('/admin/leads/:id', (req, res) => {
+  const lead = leads.get(int(req.params.id));
+  if (!lead) return bad(res, 'That request no longer exists.', 404);
+  leads.remove(lead.id);                   // their applications stay
+  audit(req.user.id, 'delete', 'lead', lead.id);
+  ok(res);
 });
 
 /* ---------- users (admins only) ---------- */

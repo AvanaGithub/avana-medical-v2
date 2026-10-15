@@ -41,17 +41,21 @@ app.get(['/', '/index.html'], (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-// A job's own page: the Careers page with that job open, plus Google Jobs data
-const jobs = require('./jobs');
-app.get('/jobs/:slug', (req, res, next) => {
+// A job seeker's personal openings page, from the link we email them: the Careers page with the job list.
+// The link is private, so it is never cached, indexed or passed on to other sites.
+const leads = require('./leads');
+app.get('/openings', (req, res, next) => {
   try {
-    const job = jobs.getBySlug(String(req.params.slug));
-    if (!jobs.isLive(job)) return res.redirect(302, '/#careers');
-    const siteUrl = config.siteUrl || `${req.protocol}://${req.get('host')}`;
-    res.set('Cache-Control', 'no-cache');
-    res.type('html').send(renderIndex({ job, siteUrl }));
+    res.set({ 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'no-referrer' });
+    const token = String(req.query.t || '');
+    const lead = leads.findByToken(token);
+    if (lead) leads.recordVisit(lead.id);
+    res.type('html').send(renderIndex(lead ? { lead, token } : { expired: true }));
   } catch (e) { next(e); }
 });
+
+// Job pages used to be public; the openings are now only on the emailed link
+app.get('/jobs/:slug', (req, res) => res.redirect(302, '/#careers'));
 
 const day = 24 * 3600e3;
 const pub = (dir, maxAge) => express.static(path.join(config.siteRoot, dir), { maxAge, index: false, dotfiles: 'deny' });

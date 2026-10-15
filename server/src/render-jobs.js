@@ -1,5 +1,6 @@
-// Renders the Careers page job list (between <!-- jobs:list --> markers in index.html)
-// and the extra <head> tags for a single job's page (/jobs/<slug>), including Google Jobs data.
+// Renders the Careers page openings (between <!-- jobs:list --> markers in index.html).
+// The list itself is only shown on a job seeker's personal link (/openings?t=<token>, see leads.js);
+// everyone else sees an invitation to request the openings by email.
 const jobs = require('./jobs');
 
 const esc = s => String(s ?? '')
@@ -55,7 +56,7 @@ function detail(j) {
       <p class="jd-eeo">Avana is an equal opportunity employer. We welcome applications from everyone.</p>`;
 }
 
-function card(j) {
+function card(j, token) {
   const chips = [
     [ICON.pin, locSummary(j)],
     [ICON.bag, [jobs.experienceLabel(j), j.employment_type].filter(Boolean).join(' · ')],
@@ -64,7 +65,7 @@ function card(j) {
   ].filter(c => c[1]);
   const search = [j.title, j.department, j.role_category, j.locations.join(' '), j.skills.join(' '), j.ref_code].join(' ').toLowerCase();
   return `<li class="job" data-dept="${esc(j.department)}" data-cities="${esc(j.locations.map(city).join('|'))}" data-search="${esc(search)}">
-          <a class="job-row" href="jobs/${esc(j.slug)}" data-job="${esc(j.slug)}" aria-haspopup="dialog">
+          <a class="job-row" href="/openings?t=${esc(token)}&amp;job=${esc(j.slug)}" data-job="${esc(j.slug)}" aria-haspopup="dialog">
             <span class="job-main">
               <span class="job-dept">${esc(j.department)}</span>
               <span class="job-title">${esc(j.title)}</span>
@@ -79,11 +80,11 @@ function card(j) {
         </li>`;
 }
 
-function listHtml(items) {
+function listHtml(items, token) {
   if (!items.length) {
     return `<div class="jobs-empty">
         <p><strong>There are no open positions right now.</strong></p>
-        <p>New roles are posted here first. You are welcome to send your CV to <a href="mailto:info@avanamedical.com">info@avanamedical.com</a> for future openings.</p>
+        <p>New roles appear on this page as soon as they are posted. You are welcome to send your CV to <a href="mailto:info@avanamedical.com">info@avanamedical.com</a> for future openings.</p>
       </div>`;
   }
   const depts = [...new Set(items.map(j => j.department).filter(Boolean))].sort();
@@ -97,73 +98,37 @@ function listHtml(items) {
           <select id="jobCity"><option value="">All locations</option>${cities.map(c => `<option>${esc(c)}</option>`).join('')}</select></label>
       </div>
       <ul class="jobs-list" id="jobsList">
-        ${items.map(card).join('\n        ')}
+        ${items.map(j => card(j, token)).join('\n        ')}
       </ul>
       <p class="jobs-none" id="jobsNone" hidden>No openings match your search. Try another department or location.</p>`;
 }
 
-function renderJobsInto(html) {
+// What everyone else sees: the invitation to get the openings by email
+function gateHtml(count, expired) {
+  return `<div class="jobs-gate">
+        ${expired ? '<p class="jobs-gate-note" role="status">That openings link has expired or is no longer valid. Request a new one below and we will email it to you.</p>' : ''}
+        <p class="jobs-gate-lead">${count ? `<strong>We have ${count} open position${count === 1 ? '' : 's'} right now.</strong> ` : ''}Share a few details and we will email you a personal link to all our current openings, where you can see the full details and apply online.</p>
+        <button type="button" class="btn" data-open-careers>Email me the openings</button>
+      </div>`;
+}
+
+// opts: { lead, token } on a personal openings link; { expired: true } when a link was not valid
+function renderJobsInto(html, opts = {}) {
   const items = jobs.listPublic();
-  html = html.replace(/<!-- jobs:list -->[\s\S]*?<!-- \/jobs:list -->/, `<!-- jobs:list -->\n      ${listHtml(items)}\n      <!-- /jobs:list -->`);
+  const personal = !!opts.lead;
+  html = html.replace(/<!-- jobs:list -->[\s\S]*?<!-- \/jobs:list -->/,
+    `<!-- jobs:list -->\n      ${personal ? listHtml(items, opts.token) : gateHtml(items.length, opts.expired)}\n      <!-- /jobs:list -->`);
   html = html.replace(/(<p class="jobs-count" id="jobsCount"[^>]*>)[\s\S]*?(<\/p>)/,
-    `$1${items.length ? `${items.length} open position${items.length === 1 ? '' : 's'}` : ''}$2`);
+    `$1${personal && items.length ? `${items.length} open position${items.length === 1 ? '' : 's'}` : ''}$2`);
+  if (personal) {
+    const first = opts.lead.name.trim().split(/\s+/)[0];
+    html = html.replace(/(<p class="jobs-lead">)[\s\S]*?(<\/p>)/,
+      `$1Hi ${esc(first)}, here are our current openings. Select a job to see the full details and apply online.$2`);
+    html = html.replace(/<body([^>]*)>/i,
+      `<body$1 data-openings-token="${esc(opts.token)}" data-lead-name="${esc(opts.lead.name)}" data-lead-email="${esc(opts.lead.email)}" data-lead-education="${esc(opts.lead.education)}">`);
+  }
+  if (opts.expired) html = html.replace(/<body([^>]*)>/i, '<body$1 data-openings-expired>');
   return html;
 }
 
-/* ---------- a single job's page: /jobs/<slug> ---------- */
-
-const EMPLOYMENT = { 'Full-time': 'FULL_TIME', 'Part-time': 'PART_TIME', Contract: 'CONTRACTOR', Internship: 'INTERN', Temporary: 'TEMPORARY' };
-
-function jobPostingJsonLd(j, siteUrl) {
-  const places = j.locations.map(l => {
-    const parts = l.split(',').map(s => s.trim());
-    return { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: parts[0], addressRegion: parts[1] || undefined, addressCountry: 'IN' } };
-  });
-  const desc = [j.summary, ...['responsibilities', 'requirements', 'preferred', 'benefits'].map(k => jobs.lines(j[k]).join('\n'))]
-    .filter(Boolean).join('\n\n');
-  const data = {
-    '@context': 'https://schema.org/',
-    '@type': 'JobPosting',
-    title: j.title,
-    description: `<p>${esc(desc).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</p>`,
-    identifier: { '@type': 'PropertyValue', name: 'Avana Medical Devices', value: j.ref_code },
-    datePosted: j.posted_at,
-    validThrough: j.closes_at ? j.closes_at + 'T23:59:59+05:30' : undefined,
-    employmentType: EMPLOYMENT[j.employment_type],
-    hiringOrganization: { '@type': 'Organization', name: 'Avana Medical Devices Pvt. Ltd.', sameAs: siteUrl, logo: siteUrl + '/images/logos/avana-dark.png' },
-    jobLocation: places.length ? places : undefined,
-    jobLocationType: j.work_mode === 'Remote' ? 'TELECOMMUTE' : undefined,
-    applicantLocationRequirements: j.work_mode === 'Remote' ? { '@type': 'Country', name: 'India' } : undefined,
-    directApply: true,
-    industry: 'Medical Devices',
-    occupationalCategory: j.role_category || undefined,
-    educationRequirements: j.education || undefined,
-    skills: j.skills.length ? j.skills.join(', ') : undefined,
-    experienceRequirements: j.exp_min ? { '@type': 'OccupationalExperienceRequirements', monthsOfExperience: Math.round(j.exp_min * 12) } : undefined,
-    baseSalary: j.show_salary && (j.salary_min || j.salary_max) ? {
-      '@type': 'MonetaryAmount', currency: 'INR',
-      value: { '@type': 'QuantitativeValue', minValue: (j.salary_min || j.salary_max) * 1e5, maxValue: (j.salary_max || j.salary_min) * 1e5, unitText: 'YEAR' }
-    } : undefined
-  };
-  // "</" can't appear inside the script tag
-  return JSON.stringify(data).replace(/</g, '\\u003c');
-}
-
-function jobPageHead(html, j, siteUrl) {
-  const title = `${j.title} · Careers · Avana Medical Devices`;
-  const description = (j.summary || `${j.title} at Avana Medical Devices`).replace(/\s+/g, ' ').slice(0, 155);
-  const url = `${siteUrl}/jobs/${j.slug}`;
-  const head = `<base href="/">
-  <link rel="canonical" href="${esc(url)}">
-  <meta name="description" content="${esc(description)}">
-  <meta property="og:title" content="${esc(title)}">
-  <meta property="og:description" content="${esc(description)}">
-  <meta property="og:url" content="${esc(url)}">
-  <script type="application/ld+json">${jobPostingJsonLd(j, siteUrl)}</script>`;
-  return html
-    .replace(/<head>/i, `<head>\n  ${head}`)
-    .replace(/<title>[^<]*<\/title>/i, `<title>${esc(title)}</title>`)
-    .replace(/<body([^>]*)>/i, `<body$1 data-open-job="${esc(j.slug)}">`);
-}
-
-module.exports = { renderJobsInto, jobPageHead, detail };
+module.exports = { renderJobsInto, detail };

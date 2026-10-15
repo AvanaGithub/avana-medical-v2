@@ -955,6 +955,19 @@ html.cm-lock{overflow:hidden}
 .jobs-none,.jobs-empty{padding:28px;background:#fff;border:1px dashed var(--sand);text-align:center;color:var(--body)}
 .jobs-empty p{margin:4px 0}
 .jobs-empty a{color:var(--gold-dk);font-weight:700}
+/* Careers: invitation to get the openings by email (shown instead of the list, see server/src/render-jobs.js) */
+.jobs-gate{padding:34px 32px;background:#fff;border:1px solid rgba(178,127,13,.35);box-shadow:0 14px 30px rgba(23,32,37,.06);display:flex;align-items:center;justify-content:space-between;gap:20px 36px;flex-wrap:wrap}
+.jobs-gate-lead{margin:0;max-width:62ch;color:var(--body);line-height:1.65}
+.jobs-gate-lead strong{color:var(--charcoal)}
+.jobs-gate-note{flex-basis:100%;margin:0;padding:12px 16px;background:#FFF6E2;border-left:3px solid var(--gold);color:var(--charcoal);font-weight:600}
+@media (max-width:640px){.jobs-gate{padding:24px 20px}.jobs-gate .btn{width:100%;justify-content:center}}
+/* "See open positions" form: required marks and the not-ready state of the send button */
+.cm-actions .btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+.cm-actions .btn[aria-disabled="true"]:hover{background:var(--gold);color:#fff}
+.cm-req{color:#B42318;margin-left:3px;font-weight:700}
+.cm-reqnote{margin:0 0 14px;font-size:13px;color:var(--muted)}
+.cm-ready{margin:10px 0 0}
+.cm-ready[hidden]{display:none}
 
 /* job dialog */
 .job-dlg{width:min(860px,calc(100vw - 24px));max-height:calc(100vh - 32px);padding:0;border:0;border-top:5px solid var(--gold);background:#fff;color:var(--ink);box-shadow:0 30px 80px rgba(0,0,0,.35)}

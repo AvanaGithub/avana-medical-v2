@@ -67,10 +67,10 @@ function fillSection(html, section, list, videoUsed) {
   return { html: html.slice(0, a) + block + html.slice(b + close.length), videoUsed };
 }
 
-const { renderJobsInto, jobPageHead } = require('./render-jobs');
+const { renderJobsInto } = require('./render-jobs');
 
-// The site's home page with live News & Events and Careers openings.
-// With { job, siteUrl } it becomes that job's own page (/jobs/<slug>): title, description and Google Jobs data.
+// The site's home page with live News & Events and the Careers openings section.
+// With { lead, token } it is a job seeker's personal openings page; { expired: true } adds the "link expired" note.
 function renderIndex(opts = {}) {
   let html = fs.readFileSync(path.join(config.siteRoot, 'index.html'), 'utf8');
   const all = events.list({ publishedOnly: true });
@@ -79,8 +79,7 @@ function renderIndex(opts = {}) {
     const r = fillSection(html, section, all.filter(e => e.section === section), videoUsed);
     html = r.html; videoUsed = r.videoUsed;
   }
-  html = renderJobsInto(html);
-  if (opts.job) html = jobPageHead(html, opts.job, opts.siteUrl);
+  html = renderJobsInto(html, opts);
   return html;
 }
 

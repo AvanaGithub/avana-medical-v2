@@ -40,6 +40,7 @@
       <nav class="tabs" aria-label="Admin sections">
         <a href="#events" data-view="events">News &amp; Events</a>
         <a href="#jobs" data-view="jobs">Jobs</a>
+        <a href="#requests" data-view="requests">Openings requests</a>
         <a href="#applications" data-view="applications">Applications <span class="badge" id="newAppsBadge" hidden></span></a>
         <a href="#users" data-view="users" data-admin-only>Users</a>
         <a href="#account" data-view="account">My account</a>
@@ -91,6 +92,27 @@
       </div>
       <ol class="event-list" id="jobList"></ol>
       <div class="empty" id="jobsEmpty" hidden><p><strong>No jobs here.</strong></p><p class="muted">Use "Post a job" to add one.</p></div>
+    </section>
+
+    <!-- Openings requests -->
+    <section id="requestsView" data-view-panel="requests" hidden>
+      <div class="page-head">
+        <div>
+          <h1>Openings requests</h1>
+          <p class="muted">People who asked for our openings on the Careers page. Each gets a personal link by email; the jobs are only visible through that link.</p>
+        </div>
+      </div>
+      <p class="warn" id="mailOffWarn" hidden>Email is not set up on this server yet, so links are not being emailed. Use "New link" to get a person's link and send it to them yourself.</p>
+      <div class="filters">
+        <label class="field"><span>Search</span><input type="search" id="leadSearch" placeholder="Name, email or education" autocomplete="off"></label>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Person</th><th>Age</th><th>Marital status</th><th>Education</th><th>Asked</th><th>Email</th><th>Link</th><th>Applied</th><th><span class="sr-only">Actions</span></th></tr></thead>
+          <tbody id="leadRows"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="leadsEmpty" hidden><p><strong>No requests yet.</strong></p><p class="muted">They appear here when someone uses "See open positions" on the Careers page.</p></div>
     </section>
 
     <!-- Applications -->
