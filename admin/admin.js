@@ -527,15 +527,17 @@
         ? `<span class="chip chip-live">Active</span><small>${l.visits ? `Opened ${l.visits}× · ${ago(l.last_visit_at)}` : 'Not opened yet'}</small>`
         : '<span class="chip chip-off">Expired</span>';
       return `<tr data-id="${l.id}">
-        <td><span class="cand">${esc(l.name)}</span><small><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></small></td>
-        <td>${esc(l.age)}</td>
-        <td>${esc(l.marital_status)}</td>
+        <td><span class="cand">${esc(l.name)}</span><small><a href="mailto:${esc(l.email)}">${esc(l.email)}</a>${l.phone ? ' · ' + esc(l.phone) : ''}</small><small>${esc(l.city)}${l.linkedin ? ` · <a href="${esc(l.linkedin)}" target="_blank" rel="noopener noreferrer">LinkedIn</a>` : ''}</small></td>
+        <td>${esc(l.age)}<small>${esc(l.marital_status)}</small></td>
         <td>${esc(l.education)}${l.why_join ? `<small title="${esc(l.why_join)}">“${esc(l.why_join.length > 40 ? l.why_join.slice(0, 40) + '…' : l.why_join)}”</small>` : ''}</td>
+        <td>${l.total_exp === null ? '–' : esc(l.total_exp) + ' yrs'}<small>${esc([l.current_role, l.current_employer].filter(Boolean).join(', '))}${l.notice_period ? ' · ' + esc(l.notice_period) : ''}</small></td>
+        <td>${l.current_ctc === null ? '–' : esc(l.current_ctc) + ' L'} → ${l.expected_ctc === null ? '–' : esc(l.expected_ctc) + ' L'}</td>
         <td>${ago(l.updated_at)}${l.requests > 1 ? `<small>Asked ${l.requests} times</small>` : ''}</td>
         <td><span class="chip ${cls}"${l.email_error ? ` title="${esc(l.email_error)}"` : ''}>${label}</span></td>
         <td>${link}</td>
         <td>${l.applications ? `<a class="link" href="#applications">${l.applications}</a>` : '–'}</td>
-        <td><button class="btn btn-ghost btn-sm" type="button" data-act="resend">New link</button>
+        <td>${l.has_cv ? `<a class="btn btn-ghost btn-sm" href="/api/admin/leads/${l.id}/cv" title="${esc(l.cv_name)}">CV</a>` : ''}
+            <button class="btn btn-ghost btn-sm" type="button" data-act="resend">New link</button>
             <button class="btn btn-ghost btn-sm" type="button" data-act="delete">Delete</button></td>
       </tr>`;
     }).join('');

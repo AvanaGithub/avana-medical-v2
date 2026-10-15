@@ -155,6 +155,21 @@ const migrations = [
     updated_at      TEXT NOT NULL DEFAULT (datetime('now'))
   );
   ALTER TABLE applications ADD COLUMN lead_id INTEGER REFERENCES job_leads(id) ON DELETE SET NULL;
+  `,
+  // 4: the request form takes the full profile and CV, so applying for a job is one click
+  `
+  ALTER TABLE job_leads ADD COLUMN phone            TEXT NOT NULL DEFAULT '';
+  ALTER TABLE job_leads ADD COLUMN city             TEXT NOT NULL DEFAULT '';
+  ALTER TABLE job_leads ADD COLUMN total_exp        REAL;
+  ALTER TABLE job_leads ADD COLUMN current_ctc      REAL;
+  ALTER TABLE job_leads ADD COLUMN expected_ctc     REAL;
+  ALTER TABLE job_leads ADD COLUMN notice_period    TEXT NOT NULL DEFAULT '';
+  ALTER TABLE job_leads ADD COLUMN current_employer TEXT NOT NULL DEFAULT '';
+  ALTER TABLE job_leads ADD COLUMN current_role     TEXT NOT NULL DEFAULT '';
+  ALTER TABLE job_leads ADD COLUMN linkedin         TEXT NOT NULL DEFAULT '';
+  ALTER TABLE job_leads ADD COLUMN cv_file          TEXT NOT NULL DEFAULT '';   -- inside DATA_DIR/cv, never public
+  ALTER TABLE job_leads ADD COLUMN cv_name          TEXT NOT NULL DEFAULT '';
+  CREATE UNIQUE INDEX applications_one_per_job ON applications(lead_id, job_id) WHERE lead_id IS NOT NULL AND job_id IS NOT NULL;
   `
 ];
 

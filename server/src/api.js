@@ -55,44 +55,54 @@ const siteUrl = req => config.siteUrl || `${req.protocol}://${req.get('host')}`;
 
 /* ---------- public: ask for the current openings by email ---------- */
 
+const cvUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: apps.CV_MAX, files: 1, fields: 30 } });
+const cvError = err => (err.code === 'LIMIT_FILE_SIZE' ? 'Your CV must be smaller than 5 MB.' : 'Upload failed. Please try again.');
+
+// The request form: full profile + CV (multipart). One row per email; asking again updates it.
 const requestLog = new Map();   // IP → timestamps, max 5 requests per hour
-router.post('/openings-request', async (req, res, next) => {
-  try {
-    const now = Date.now();
-    const recent = (requestLog.get(req.ip) || []).filter(t => now - t < 3600e3);
-    if (recent.length >= 5) return bad(res, 'Too many requests from your connection. Please try again in an hour.', 429);
-    if (req.body.website) return ok(res, { ok: true, delivered: true });   // honeypot
-    const v = leads.validate(req.body);
-    if (v.error) return res.status(400).json({ error: v.error, field: v.field });
-    recent.push(now); requestLog.set(req.ip, recent);
-    const { lead, token } = leads.save(v.value);
-    const r = await leads.sendLink(lead, token, siteUrl(req));
-    leads.notifyHr(lead, siteUrl(req));
-    ok(res, { ok: true, delivered: r.status === 'sent' });
-  } catch (e) { next(e); }
+router.post('/openings-request', (req, res, next) => {
+  const now = Date.now();
+  const recent = (requestLog.get(req.ip) || []).filter(t => now - t < 3600e3);
+  if (recent.length >= 5) return bad(res, 'Too many requests from your connection. Please try again in an hour.', 429);
+  cvUpload.single('cv')(req, res, async err => {
+    try {
+      if (err) return res.status(400).json({ error: cvError(err), field: 'cv' });
+      if (req.body.website) return ok(res, { ok: true, delivered: true });   // honeypot
+      const v = leads.validate(req.body);
+      if (v.error) return res.status(400).json({ error: v.error, field: v.field });
+      if (!req.file) return res.status(400).json({ error: 'Please attach your CV (PDF or Word, up to 5 MB).', field: 'cv' });
+      const cv = apps.saveCv(req.file.buffer, req.file.originalname);
+      if (cv.error) return res.status(400).json({ error: cv.error, field: 'cv' });
+      recent.push(now); requestLog.set(req.ip, recent);
+      const { lead, token } = leads.save(v.value, cv);
+      const r = await leads.sendLink(lead, token, siteUrl(req));
+      leads.notifyHr(lead, siteUrl(req));
+      ok(res, { ok: true, delivered: r.status === 'sent' });
+    } catch (e) { next(e); }
+  });
 });
 
-/* ---------- public: apply for a job (only with a valid openings link) ---------- */
+/* ---------- public: apply for a job (only with a valid openings link; reuses the saved profile and CV) ---------- */
 
-const cvUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: apps.CV_MAX, files: 1, fields: 30 } });
-const applyLog = new Map();   // IP → timestamps, max 6 applications per hour
+const applyLog = new Map();   // IP → timestamps, max 10 applications per hour
 router.post('/apply/:slug', (req, res) => {
   const now = Date.now();
   const recent = (applyLog.get(req.ip) || []).filter(t => now - t < 3600e3);
-  if (recent.length >= 6) return bad(res, 'Too many applications from your connection. Please try again in an hour.', 429);
+  if (recent.length >= 10) return bad(res, 'Too many applications from your connection. Please try again in an hour.', 429);
   cvUpload.single('cv')(req, res, err => {
-    if (err) return bad(res, err.code === 'LIMIT_FILE_SIZE' ? 'Your CV must be smaller than 5 MB.' : 'Upload failed. Please try again.');
-    const lead = leads.findByToken(req.body.token);
+    if (err) return res.status(400).json({ error: cvError(err), field: 'cv' });
+    let lead = leads.findByToken(req.body.token);
     if (!lead) return bad(res, 'Your openings link has expired. Request a new one from the Careers page and we will email it to you.', 403);
     const job = jobs.getBySlug(String(req.params.slug));
     if (!jobs.isLive(job)) return bad(res, 'This position is no longer accepting applications.', 410);
     if (req.body.website) return ok(res);                       // hidden "honeypot" field: bots fill it, people don't
-    const v = apps.validate(req.body);
-    if (v.error) return res.status(400).json({ error: v.error, field: v.field });
-    if (!req.file) return res.status(400).json({ error: 'Attach your CV (PDF or Word, up to 5 MB).', field: 'cv' });
-    const cv = apps.saveCv(req.file.buffer, req.file.originalname);
-    if (cv.error) return res.status(400).json({ error: cv.error, field: 'cv' });
-    apps.create(job, v.value, cv, lead.id);
+    if (req.file) {                                             // optional: a newer CV for this and later applications
+      const cv = apps.saveCv(req.file.buffer, req.file.originalname);
+      if (cv.error) return res.status(400).json({ error: cv.error, field: 'cv' });
+      lead = leads.replaceCv(lead, cv);
+    }
+    const r = leads.apply(lead, job, req.body.cover_note);
+    if (r.error) return res.status(r.code).json({ error: r.error, field: r.field });
     recent.push(now); applyLog.set(req.ip, recent);
     ok(res, { ok: true, job: job.title });
   });
@@ -270,6 +280,15 @@ router.post('/admin/leads/:id/resend', async (req, res, next) => {
     audit(req.user.id, 'resend_link', 'lead', lead.id, { status: r.status });
     ok(res, { status: r.status, error: r.error || '', link: leads.linkFor(siteUrl(req), token) });
   } catch (e) { next(e); }
+});
+
+router.get('/admin/leads/:id/cv', (req, res) => {
+  const l = leads.get(int(req.params.id));
+  const p = l && apps.cvPath(l.cv_file);
+  if (!p || !require('fs').existsSync(p)) return bad(res, 'CV not found.', 404);
+  audit(req.user.id, 'download_cv', 'lead', l.id);
+  res.set('Cache-Control', 'no-store');
+  res.download(p, `${l.name.replace(/[^\w ]/g, '').trim() || 'candidate'} - CV${require('path').extname(l.cv_file)}`);
 });
 
 router.delete('/admin/leads/:id', (req, res) => {

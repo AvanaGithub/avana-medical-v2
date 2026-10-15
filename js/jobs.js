@@ -38,9 +38,12 @@
   function open(slug) {
     var li = cardFor(slug);
     if (!li) return;
-    current = { slug: slug, title: li.querySelector('.job-title').textContent };
+    current = { slug: slug, title: li.querySelector('.job-title').textContent, li: li };
     detail.innerHTML = li.querySelector('template[data-detail]').innerHTML;
     document.getElementById('applyTitle').textContent = current.title;
+    var applied = li.hasAttribute('data-applied');
+    applyBtn.disabled = applied;
+    applyBtn.textContent = applied ? 'You have applied for this job' : 'Apply for this job';
     show('view');
     if (!dlg.open) dlg.showModal();
   }
@@ -52,24 +55,20 @@
     if (e.target === dlg || e.target.closest('[data-job-close]')) close();
   });
 
-  // the details they gave when asking for the openings
-  function prefill() {
-    var f = form.elements;
-    if (!f.name.value) f.name.value = document.body.getAttribute('data-lead-name') || '';
-    if (!f.email.value) f.email.value = document.body.getAttribute('data-lead-email') || '';
-    if (!f.qualification.value) f.qualification.value = document.body.getAttribute('data-lead-education') || '';
-  }
+  /* ---------- one-click apply: the profile and CV they gave when asking for the openings ---------- */
+  var me = function (k) { return document.body.getAttribute('data-lead-' + k) || ''; };
+  document.getElementById('applyMeName').textContent = me('name');
+  document.getElementById('applyMeSub').textContent = [me('email'), me('phone'), me('city')].filter(Boolean).join(' · ');
+  document.getElementById('applyMeCv').textContent = me('cv') || 'the CV you sent us';
 
-  document.getElementById('jobApplyBtn').addEventListener('click', function () {
-    prefill();
+  var applyBtn = document.getElementById('jobApplyBtn');
+  applyBtn.addEventListener('click', function () {
     show('form');
     err.hidden = true;
-    var first = [].filter.call(form.querySelectorAll('input[required]'), function (i) { return !i.value && i.type !== 'file'; })[0];
-    (first || form.querySelector('input[name="name"]')).focus();
+    submit.focus();
   });
   document.getElementById('applyBack').addEventListener('click', function () { show('view'); });
 
-  /* ---------- application ---------- */
   function fieldError(name, msg) {
     err.textContent = msg;
     err.hidden = false;
@@ -81,18 +80,9 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     err.hidden = true;
-    var f = form.elements;
-    // Quick checks in the browser; the server checks everything again
-    if (f.name.value.trim().length < 2) return fieldError('name', 'Enter your full name.');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.value.trim())) return fieldError('email', 'Enter a valid email address.');
-    if (f.phone.value.replace(/\D/g, '').length < 10) return fieldError('phone', 'Enter a valid mobile number (10 digits).');
-    if (!f.city.value.trim()) return fieldError('city', 'Enter your current city.');
-    if (f.total_exp.value === '') return fieldError('total_exp', 'Enter your total experience in years (0 for freshers).');
-    var cv = f.cv.files[0];
-    if (!cv) return fieldError('cv', 'Attach your CV (PDF or Word, up to 5 MB).');
-    if (!/\.(pdf|docx?)$/i.test(cv.name)) return fieldError('cv', 'Upload your CV as a PDF or Word file.');
-    if (cv.size > 5 * 1024 * 1024) return fieldError('cv', 'Your CV must be smaller than 5 MB.');
-    if (!f.consent.checked) return fieldError('consent', 'Please agree to the privacy notice so we can review your application.');
+    var cv = form.elements.cv.files[0];          // optional newer CV; the server checks it again
+    if (cv && !/\.(pdf|docx?)$/i.test(cv.name)) return fieldError('cv', 'Upload your CV as a PDF or Word file.');
+    if (cv && cv.size > 5 * 1024 * 1024) return fieldError('cv', 'Your CV must be smaller than 5 MB.');
 
     document.getElementById('applyToken').value = token || '';
     submit.disabled = true;
@@ -100,10 +90,12 @@
     fetch('/api/apply/' + encodeURIComponent(current.slug), {
       method: 'POST', body: new FormData(form), headers: { 'X-Requested-With': 'fetch' }, credentials: 'same-origin'
     }).then(function (r) {
-      return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; });
+      return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, d: d }; });
     }).then(function (res) {
-      if (!res.ok) return fieldError(res.d.field, res.d.error || 'We could not send your application. Please try again.');
-      document.getElementById('applyDoneName').textContent = f.name.value.trim().split(' ')[0];
+      if (!res.ok && res.status !== 409) return fieldError(res.d.field, res.d.error || 'We could not send your application. Please try again.');
+      if (cv) document.getElementById('applyMeCv').textContent = cv.name;
+      markApplied(current.li);
+      document.getElementById('applyDoneName').textContent = me('name').split(' ')[0];
       document.getElementById('applyDoneJob').textContent = current.title;
       form.reset();
       show('done');
@@ -116,7 +108,14 @@
     });
   });
 
+  function markApplied(li) {
+    li.setAttribute('data-applied', '');
+    li.classList.add('job-applied');
+    var side = li.querySelector('.job-posted');
+    if (side) side.outerHTML = '<span class="job-badge">Applied</span>';
+  }
+
   /* ---------- arriving from the emailed link: open the job it pointed to, if any ---------- */
-  var slug = (location.search.match(/[?&]job=([w-]+)/) || [])[1];
+  var slug = (location.search.match(/[?&]job=([\w-]+)/) || [])[1];
   if (token && slug) setTimeout(function () { if (cardFor(slug)) open(slug); }, 80);
 })();

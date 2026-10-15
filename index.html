@@ -861,7 +861,7 @@
       <img class="cm-logo" src="images/logos/avana-white.png" alt="Avana">
       <span class="eyebrow">Careers at Avana</span>
       <h2 id="cm-h">See our open positions</h2>
-      <p id="cm-intro">You're one step closer to joining the Avana family. Tell us a little about yourself, and we'll email you a link to all our current openings.</p>
+      <p id="cm-intro">You're one step closer to joining the Avana family. Tell us about yourself and attach your CV. We'll email you a link to all our current openings, and you can apply for any of them in one click.</p>
     </div>
     <form class="cm-form" id="cmForm" novalidate>
       <p class="cm-reqnote">Fields marked <span class="cm-req" aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.</p>
@@ -897,6 +897,62 @@
         <input id="cm-edu" name="education" type="text" required minlength="2" maxlength="120" placeholder="Highest qualification, e.g. B.Pharm, MBA (Marketing)">
         <p class="cm-err" id="cm-edu-e"></p>
       </div>
+      <div class="cm-row">
+        <div class="cm-field">
+          <label for="cm-phone">Mobile number<span class="cm-req" aria-hidden="true">*</span></label>
+          <input id="cm-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+91" required>
+          <p class="cm-err" id="cm-phone-e"></p>
+        </div>
+        <div class="cm-field">
+          <label for="cm-city">Current city<span class="cm-req" aria-hidden="true">*</span></label>
+          <input id="cm-city" name="city" type="text" autocomplete="address-level2" maxlength="60" required>
+          <p class="cm-err" id="cm-city-e"></p>
+        </div>
+      </div>
+      <div class="cm-row">
+        <div class="cm-field">
+          <label for="cm-exp">Total experience (years)<span class="cm-req" aria-hidden="true">*</span></label>
+          <input id="cm-exp" name="total_exp" type="number" min="0" max="50" step="0.5" inputmode="decimal" placeholder="0 for freshers" required>
+          <p class="cm-err" id="cm-exp-e"></p>
+        </div>
+        <div class="cm-field">
+          <label for="cm-notice">Notice period <span class="cm-opt">Optional</span></label>
+          <select id="cm-notice" name="notice_period"><option value="">Select</option><option>Immediate</option><option>15 days</option><option>30 days</option><option>60 days</option><option>90 days</option><option>More than 90 days</option><option>Currently serving notice</option></select>
+        </div>
+      </div>
+      <div class="cm-row">
+        <div class="cm-field">
+          <label for="cm-employer">Current employer <span class="cm-opt">Optional</span></label>
+          <input id="cm-employer" name="current_employer" type="text" autocomplete="organization" maxlength="100">
+        </div>
+        <div class="cm-field">
+          <label for="cm-role">Current designation <span class="cm-opt">Optional</span></label>
+          <input id="cm-role" name="current_role" type="text" autocomplete="organization-title" maxlength="100">
+        </div>
+      </div>
+      <div class="cm-row">
+        <div class="cm-field">
+          <label for="cm-ctc">Current CTC (₹ lakh per annum) <span class="cm-opt">Optional</span></label>
+          <input id="cm-ctc" name="current_ctc" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 6.5">
+          <p class="cm-err" id="cm-ctc-e"></p>
+        </div>
+        <div class="cm-field">
+          <label for="cm-ectc">Expected CTC (₹ lakh per annum) <span class="cm-opt">Optional</span></label>
+          <input id="cm-ectc" name="expected_ctc" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 8">
+          <p class="cm-err" id="cm-ectc-e"></p>
+        </div>
+      </div>
+      <div class="cm-field">
+        <label for="cm-linkedin">LinkedIn profile <span class="cm-opt">Optional</span></label>
+        <input id="cm-linkedin" name="linkedin" type="url" maxlength="200" placeholder="https://linkedin.com/in/…">
+        <p class="cm-err" id="cm-linkedin-e"></p>
+      </div>
+      <div class="cm-field">
+        <label for="cm-cv">CV / résumé<span class="cm-req" aria-hidden="true">*</span></label>
+        <input id="cm-cv" name="cv" type="file" required accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+        <p class="cm-hint">PDF or Word, up to 5 MB. We'll use it for every job you apply for.</p>
+        <p class="cm-err" id="cm-cv-e"></p>
+      </div>
       <div class="cm-field">
         <label for="cm-why">Why do you want to join our team? <span class="cm-opt">Optional</span></label>
         <textarea id="cm-why" name="why_join" rows="2" maxlength="600"></textarea>
@@ -918,7 +974,7 @@
         <button type="submit" class="btn" id="cmSubmit" aria-disabled="true" aria-describedby="cmReadyHint">Send me the link</button>
         <button type="button" class="btn ghost" id="cmCancel">Cancel</button>
       </div>
-      <p class="cm-hint cm-ready" id="cmReadyHint">Fill in all required fields and tick both boxes to get the link.</p>
+      <p class="cm-hint cm-ready" id="cmReadyHint">Fill in all required fields, attach your CV and tick both boxes to get the link.</p>
     </form>
     <div class="cm-done" id="cmDone" hidden tabindex="-1">
       <span class="cm-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
@@ -954,27 +1010,19 @@
       <p class="jd-kicker">Apply for</p>
       <h2 class="jd-title" id="applyTitle"></h2>
 
+      <div class="apply-me">
+        <p class="apply-me-k">Applying as</p>
+        <p class="apply-me-name" id="applyMeName"></p>
+        <p class="apply-me-sub" id="applyMeSub"></p>
+        <p class="apply-me-cv">CV: <b id="applyMeCv"></b></p>
+        <p class="apply-me-note">We'll send HR the details and CV you gave when you asked for our openings. Details changed? Request the openings again from the Careers page with your new details.</p>
+      </div>
       <div class="apply-grid">
-        <label class="af"><span>Full name <b aria-hidden="true">*</b></span><input name="name" autocomplete="name" maxlength="80" required></label>
-        <label class="af"><span>Email <b aria-hidden="true">*</b></span><input name="email" type="email" autocomplete="email" maxlength="120" required></label>
-        <label class="af"><span>Mobile number <b aria-hidden="true">*</b></span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+91" required></label>
-        <label class="af"><span>Current city <b aria-hidden="true">*</b></span><input name="city" autocomplete="address-level2" maxlength="60" required></label>
-        <label class="af"><span>Total experience (years) <b aria-hidden="true">*</b></span><input name="total_exp" type="number" min="0" max="50" step="0.5" inputmode="decimal" placeholder="0 for freshers" required></label>
-        <label class="af"><span>Notice period</span>
-          <select name="notice_period"><option value="">Select</option><option>Immediate</option><option>15 days</option><option>30 days</option><option>60 days</option><option>90 days</option><option>More than 90 days</option><option>Currently serving notice</option></select></label>
-        <label class="af"><span>Current CTC (₹ lakh per annum)</span><input name="current_ctc" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 6.5"></label>
-        <label class="af"><span>Expected CTC (₹ lakh per annum)</span><input name="expected_ctc" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 8"></label>
-        <label class="af"><span>Current employer</span><input name="current_employer" autocomplete="organization" maxlength="100"></label>
-        <label class="af"><span>Current designation</span><input name="current_role" autocomplete="organization-title" maxlength="100"></label>
-        <label class="af"><span>Highest qualification</span><input name="qualification" maxlength="120" placeholder="e.g. B.Pharm, B.E. Biomedical, MBA"></label>
-        <label class="af"><span>LinkedIn profile</span><input name="linkedin" type="url" maxlength="200" placeholder="https://linkedin.com/in/…"></label>
-        <label class="af af-wide"><span>Why are you interested in this role?</span><textarea name="cover_note" rows="3" maxlength="1500"></textarea></label>
-        <label class="af af-wide af-file"><span>CV / résumé <b aria-hidden="true">*</b> <small>PDF or Word, up to 5 MB</small></span>
-          <input name="cv" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required></label>
+        <label class="af af-wide"><span>Why are you interested in this role? <small>Optional</small></span><textarea name="cover_note" rows="3" maxlength="1500"></textarea></label>
+        <label class="af af-wide af-file"><span>Use a different CV <small>Optional · PDF or Word, up to 5 MB</small></span>
+          <input name="cv" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
         <label class="af-hp" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
         <input type="hidden" name="token" id="applyToken">
-        <label class="af-consent af-wide"><input type="checkbox" name="consent" value="yes" required>
-          <span>I agree that Avana Medical Devices Pvt. Ltd. may store and use my details and CV to assess my application and contact me about it, in line with the Digital Personal Data Protection Act, 2023. I can ask for my data to be deleted at any time by writing to <a href="mailto:info@avanamedical.com">info@avanamedical.com</a>.</span></label>
       </div>
       <p class="apply-err" id="applyErr" role="alert" hidden></p>
       <div class="job-dlg-foot">

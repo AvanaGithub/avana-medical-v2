@@ -1,4 +1,4 @@
-/* Careers: the "See open positions" form. The job seeker shares a few details and the server emails
+/* Careers: the "See open positions" form. The job seeker gives their profile and CV once, and the server emails
    them a personal link to the current openings (see server/src/leads.js). Any [data-open-careers] button opens it. */
 (function () {
   var ov = document.getElementById('careersModal');
@@ -15,11 +15,24 @@
     'cm-age': function (v) { var n = Number(v); return !v ? 'Please enter your age.' : (!Number.isInteger(n) || n < 18 || n > 65 ? 'Please enter an age between 18 and 65.' : ''); },
     'cm-marital': function (v) { return !v ? 'Please choose your marital status.' : ''; },
     'cm-edu': function (v) { return v.length < 2 ? 'Please enter your highest qualification.' : ''; },
+    'cm-phone': function (v) { var d = v.replace(/\D/g, '').length; return !v ? 'Please enter your mobile number.' : (d < 10 || d > 13 ? 'Please enter a valid mobile number (10 digits).' : ''); },
+    'cm-city': function (v) { return !v ? 'Please enter your current city.' : ''; },
+    'cm-exp': function (v) { var n = Number(v); return v === '' ? 'Please enter your total experience in years (0 for freshers).' : (isNaN(n) || n < 0 || n > 50 ? 'Please enter your experience in years, 0 to 50.' : ''); },
+    'cm-ctc': function (v) { return v && (isNaN(Number(v)) || Number(v) < 0 || Number(v) > 500) ? 'Enter CTC in lakh per annum, e.g. 6.5' : ''; },
+    'cm-ectc': function (v) { return v && (isNaN(Number(v)) || Number(v) < 0 || Number(v) > 500) ? 'Enter CTC in lakh per annum, e.g. 8' : ''; },
+    'cm-linkedin': function (v) { return v && !/^https?:\/\/\S+$/i.test(v) ? 'Enter the full LinkedIn link, starting with https://' : ''; },
+    'cm-cv': function (v, el) {
+      var f = el.files && el.files[0];
+      if (!f) return 'Please attach your CV (PDF or Word, up to 5 MB).';
+      if (!/\.(pdf|docx?)$/i.test(f.name)) return 'Please attach your CV as a PDF or Word file.';
+      return f.size > 5 * 1024 * 1024 ? 'Your CV must be smaller than 5 MB.' : '';
+    },
     'cm-consent': function (v, el) { return el.checked ? '' : 'Please tick this box to continue.'; },
     'cm-truth': function (v, el) { return el.checked ? '' : 'Please confirm that your details are truthful to continue.'; }
   };
   // the server names fields by their form name; map them back to the inputs
-  var byName = { name: 'cm-name', email: 'cm-email', age: 'cm-age', marital_status: 'cm-marital', education: 'cm-edu', consent: 'cm-consent', truthful: 'cm-truth' };
+  var byName = { name: 'cm-name', email: 'cm-email', age: 'cm-age', marital_status: 'cm-marital', education: 'cm-edu', consent: 'cm-consent', truthful: 'cm-truth',
+    phone: 'cm-phone', city: 'cm-city', total_exp: 'cm-exp', current_ctc: 'cm-ctc', expected_ctc: 'cm-ectc', linkedin: 'cm-linkedin', cv: 'cm-cv' };
   var ids = Object.keys(rules);
 
   function msgFor(id) { var el = document.getElementById(id); return rules[id](el.type === 'checkbox' ? '' : el.value.trim(), el); }
@@ -38,12 +51,12 @@
 
   ids.forEach(function (id) {
     var el = document.getElementById(id);
-    el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', function () {
+    el.addEventListener(el.type === 'checkbox' || el.type === 'file' || el.tagName === 'SELECT' ? 'change' : 'input', function () {
       if (el.getAttribute('aria-invalid') === 'true' || el.type === 'checkbox')
         setErr(id, el.type === 'checkbox' && !el.checked && el.getAttribute('aria-invalid') !== 'true' ? '' : msgFor(id));
       refresh();
     });
-    if (el.type !== 'checkbox') el.addEventListener('blur', function () { if (el.value.trim() || el.getAttribute('aria-invalid') === 'true') setErr(id, msgFor(id)); });
+    if (el.type !== 'checkbox' && el.type !== 'file') el.addEventListener('blur', function () { if (el.value.trim() || el.getAttribute('aria-invalid') === 'true') setErr(id, msgFor(id)); });
   });
   why.addEventListener('input', function () { whyN.textContent = why.value.length; });
 
@@ -86,9 +99,7 @@
     var bad = [];
     ids.forEach(function (id) { var m = msgFor(id); setErr(id, m); if (m) bad.push(id); });
     if (bad.length) { document.getElementById(bad[0]).focus(); return null; }
-    var v = function (id) { return document.getElementById(id).value.trim(); };
-    return { name: v('cm-name'), email: v('cm-email'), age: Number(v('cm-age')), marital_status: v('cm-marital'), education: v('cm-edu'),
-      why_join: why.value.trim(), consent: true, truthful: true, website: document.getElementById('cm-website').value };
+    return { name: document.getElementById('cm-name').value.trim(), email: document.getElementById('cm-email').value.trim() };
   }
   function success(d, delivered) {
     form.hidden = true; done.hidden = false;
@@ -113,8 +124,8 @@
     sending = true; sub.disabled = true; sub.removeAttribute('aria-disabled'); sub.textContent = 'Sending…';
     fetch('/api/openings-request', {
       method: 'POST', credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'fetch' },
-      body: JSON.stringify(d)
+      headers: { 'X-Requested-With': 'fetch' },
+      body: new FormData(form)                       // every field + the CV file
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (b) { return { ok: r.ok, b: b }; });
     }).then(function (res) {

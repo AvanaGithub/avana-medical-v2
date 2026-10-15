@@ -1,10 +1,13 @@
-// "See open positions" requests: a job seeker shares a few details and gets a personal link to the
-// current openings by email. The link (/job?t=<token>) is the only way to see and apply for jobs.
-// Only a SHA-256 hash of each token is stored, so the database alone can't be used to open anyone's link.
+// "See open positions" requests: a job seeker gives their full profile and CV once and gets a personal link to the
+// current openings by email. The link (/job?t=<token>) is the only way to see and apply for jobs; applying reuses the
+// saved profile and CV, so it is one click. Only a SHA-256 hash of each token is stored, so the database alone can't
+// be used to open anyone's link.
+const fs = require('fs');
 const crypto = require('crypto');
 const { db } = require('./db');
 const config = require('./config');
 const jobs = require('./jobs');
+const apps = require('./applications');
 const mailer = require('./mailer');
 
 const MARITAL = ['Single', 'Married', 'Prefer not to say'];
@@ -13,6 +16,8 @@ const hash = t => crypto.createHash('sha256').update(String(t)).digest('hex');
 const sqlTime = d => d.toISOString().slice(0, 19).replace('T', ' ');
 const yes = v => v === true || v === 'yes' || v === 'on' || v === 'true';
 
+// The request form: who they are (age, marital status, education, why Avana) plus the same profile an
+// application needs (phone, city, experience, CTC, notice period, employer, LinkedIn). The CV is checked separately.
 function validate(b) {
   const l = {
     name: str(b.name, 80), email: str(b.email, 120).toLowerCase(), age: Number(b.age),
@@ -23,9 +28,11 @@ function validate(b) {
   if (!Number.isInteger(l.age) || l.age < 18 || l.age > 65) return { error: 'Please enter an age between 18 and 65.', field: 'age' };
   if (!MARITAL.includes(l.marital_status)) return { error: 'Please choose your marital status.', field: 'marital_status' };
   if (l.education.length < 2) return { error: 'Please enter your highest qualification.', field: 'education' };
-  if (!yes(b.consent)) return { error: 'Please tick this box to continue.', field: 'consent' };
+  const p = apps.validate(Object.assign({}, b, { qualification: l.education, cover_note: '' }));
+  if (p.error) return p;
   if (!yes(b.truthful)) return { error: 'Please confirm that your details are truthful to continue.', field: 'truthful' };
-  return { value: l };
+  const { phone, city, total_exp, current_ctc, expected_ctc, notice_period, current_employer, current_role, linkedin } = p.value;
+  return { value: Object.assign(l, { phone, city, total_exp, current_ctc, expected_ctc, notice_period, current_employer, current_role, linkedin }) };
 }
 
 function newToken(id) {
@@ -35,22 +42,55 @@ function newToken(id) {
   return token;
 }
 
-// Saves the request (one row per email address; asking again updates it) and returns { lead, token }
-function save(l) {
-  const old = db.prepare('SELECT id FROM job_leads WHERE email = ?').get(l.email);
+const PROFILE = ['name', 'age', 'marital_status', 'education', 'why_join', 'phone', 'city', 'total_exp', 'current_ctc', 'expected_ctc',
+  'notice_period', 'current_employer', 'current_role', 'linkedin'];
+
+function dropCv(file) { const p = file && apps.cvPath(file); if (p) fs.rm(p, { force: true }, () => {}); }
+
+// Saves the request with its CV ({ file, name } from apps.saveCv). One row per email address: asking again
+// updates the profile and replaces the CV. Returns { lead, token }.
+function save(l, cv) {
+  const old = db.prepare('SELECT id, cv_file FROM job_leads WHERE email = ?').get(l.email);
+  const row = Object.assign({}, l, { cv_file: cv.file, cv_name: cv.name });
   let id;
   if (old) {
     id = old.id;
-    db.prepare(`UPDATE job_leads SET name = @name, age = @age, marital_status = @marital_status, education = @education,
-      why_join = @why_join, requests = requests + 1, consent_at = datetime('now'), updated_at = datetime('now') WHERE id = @id`)
-      .run(Object.assign({ id }, l));
+    db.prepare(`UPDATE job_leads SET ${PROFILE.map(k => `${k} = @${k}`).join(', ')}, cv_file = @cv_file, cv_name = @cv_name,
+      requests = requests + 1, consent_at = datetime('now'), updated_at = datetime('now') WHERE id = @id`).run(Object.assign({ id }, row));
+    if (old.cv_file !== cv.file) dropCv(old.cv_file);
   } else {
-    id = db.prepare(`INSERT INTO job_leads (name, email, age, marital_status, education, why_join, token_hash, expires_at, consent_at)
-      VALUES (@name, @email, @age, @marital_status, @education, @why_join, @tmp, datetime('now'), datetime('now'))`)
-      .run(Object.assign({ tmp: 'new-' + crypto.randomBytes(8).toString('hex') }, l)).lastInsertRowid;
+    id = db.prepare(`INSERT INTO job_leads (email, ${PROFILE.join(', ')}, cv_file, cv_name, token_hash, expires_at, consent_at)
+      VALUES (@email, ${PROFILE.map(k => '@' + k).join(', ')}, @cv_file, @cv_name, @tmp, datetime('now'), datetime('now'))`)
+      .run(Object.assign({ tmp: 'new-' + crypto.randomBytes(8).toString('hex') }, row)).lastInsertRowid;
   }
   return { lead: get(id), token: newToken(id) };
 }
+
+// A replacement CV given while applying becomes their CV from then on
+function replaceCv(lead, cv) {
+  db.prepare("UPDATE job_leads SET cv_file = ?, cv_name = ?, updated_at = datetime('now') WHERE id = ?").run(cv.file, cv.name, lead.id);
+  dropCv(lead.cv_file);
+  return get(lead.id);
+}
+
+// An application built from the saved profile. The CV is copied, so the application keeps it even if the
+// request is later deleted or the CV replaced. Returns { id } or { error, code, field? }.
+function apply(lead, job, coverNote) {
+  if (db.prepare('SELECT 1 FROM applications WHERE lead_id = ? AND job_id = ?').get(lead.id, job.id)) {
+    return { error: 'You have already applied for this position. Our HR team will contact you if your profile matches.', code: 409 };
+  }
+  const src = apps.cvPath(lead.cv_file);
+  if (!src || !fs.existsSync(src)) return { error: 'Please attach your CV (PDF or Word, up to 5 MB).', code: 400, field: 'cv' };
+  const copy = apps.saveCv(fs.readFileSync(src), lead.cv_name);
+  const a = {
+    name: lead.name, email: lead.email, phone: lead.phone, city: lead.city, total_exp: lead.total_exp, current_ctc: lead.current_ctc,
+    expected_ctc: lead.expected_ctc, notice_period: lead.notice_period, current_employer: lead.current_employer,
+    current_role: lead.current_role, qualification: lead.education, linkedin: lead.linkedin, cover_note: str(coverNote, 1500)
+  };
+  return { id: apps.create(job, a, copy, lead.id) };
+}
+
+const appliedJobIds = leadId => db.prepare('SELECT job_id FROM applications WHERE lead_id = ? AND job_id IS NOT NULL').all(leadId).map(r => r.job_id);
 
 const get = id => db.prepare('SELECT * FROM job_leads WHERE id = ?').get(id);
 
@@ -67,14 +107,19 @@ function recordVisit(id) {
 
 function list() {
   return db.prepare(`
-    SELECT l.id, l.name, l.email, l.age, l.marital_status, l.education, l.why_join, l.expires_at, l.requests, l.email_status,
-      l.email_error, l.emailed_at, l.visits, l.last_visit_at, l.created_at, l.updated_at,
+    SELECT l.id, l.name, l.email, l.age, l.marital_status, l.education, l.why_join, l.phone, l.city, l.total_exp, l.current_ctc,
+      l.expected_ctc, l.notice_period, l.current_employer, l.current_role, l.linkedin, l.cv_name, l.cv_file != '' AS has_cv,
+      l.expires_at, l.requests, l.email_status, l.email_error, l.emailed_at, l.visits, l.last_visit_at, l.created_at, l.updated_at,
       l.expires_at > datetime('now') AS link_active,
       (SELECT COUNT(*) FROM applications a WHERE a.lead_id = l.id) AS applications
     FROM job_leads l ORDER BY l.updated_at DESC, l.id DESC`).all();
 }
 
-function remove(id) { db.prepare('DELETE FROM job_leads WHERE id = ?').run(id); }
+function remove(id) {
+  const l = get(id);
+  db.prepare('DELETE FROM job_leads WHERE id = ?').run(id);
+  if (l) dropCv(l.cv_file);                 // applications keep their own copy
+}
 
 const counts = () => db.prepare("SELECT COUNT(*) total, SUM(created_at > datetime('now','-7 days')) week FROM job_leads").get();
 
@@ -163,4 +208,4 @@ function notifyHr(lead, siteUrl) {
   mailer.send({ to: config.mail.hrNotify, subject: `Openings request: ${lead.name}`, text }).catch(() => {});
 }
 
-module.exports = { validate, save, get, newToken, findByToken, recordVisit, list, remove, counts, sendLink, notifyHr, openingsEmail, linkFor, MARITAL };
+module.exports = { validate, save, replaceCv, apply, appliedJobIds, get, newToken, findByToken, recordVisit, list, remove, counts, sendLink, notifyHr, openingsEmail, linkFor, MARITAL };

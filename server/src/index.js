@@ -68,7 +68,7 @@ app.get(['/job', '/job/'], (req, res, next) => {
     const lead = leads.findByToken(token);
     if (lead) leads.recordVisit(lead.id);
     const base = { route: 'jobs', siteUrl: siteUrlOf(req) };
-    res.type('html').send(renderIndex(Object.assign(base, lead ? { lead, token } : { expired: true })));
+    res.type('html').send(renderIndex(Object.assign(base, lead ? { lead, token, applied: leads.appliedJobIds(lead.id) } : { expired: true })));
   } catch (e) { next(e); }
 });
 // Links sent before the page moved to /job

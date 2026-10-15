@@ -964,6 +964,17 @@ html.cm-lock{overflow:hidden}
 .jobs-hero h1{color:#fff;margin-top:14px}
 .jobs-hero .jobs-lead{color:var(--sand);max-width:60ch}
 .jobs-hero .jobs-count{margin:10px 0 0;font:700 13px/1 var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-hi)}
+.job-badge{display:inline-block;padding:6px 10px;background:var(--ok-bg,#E7F4EC);color:var(--ok,#1E6B3A);font:700 11px/1 var(--f-display);letter-spacing:.12em;text-transform:uppercase}
+.job-applied .job-row{border-left-color:var(--grey)}
+.job-dlg-foot .btn:disabled{opacity:.55;cursor:default}
+/* one-click apply: the saved profile the application will use */
+.apply-me{margin:18px 0 20px;padding:18px 20px;background:var(--sand-lt,#F7F3EA);border-left:4px solid var(--gold)}
+.apply-me p{margin:0}
+.apply-me-k{font:700 12px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dk)}
+.apply-me-name{margin-top:8px!important;font:800 20px/1.25 var(--f-display);color:var(--charcoal)}
+.apply-me-sub{margin-top:4px!important;color:var(--body);overflow-wrap:anywhere}
+.apply-me-cv{margin-top:10px!important;color:var(--body)}
+.apply-me-note{margin-top:10px!important;font-size:13.5px;color:var(--muted)}
 .job-cat+.job-cat{margin-top:44px}
 .job-cat-h{display:flex;align-items:baseline;gap:14px;margin:0 0 16px;padding-bottom:12px;border-bottom:2px solid var(--gold);font:800 clamp(22px,2.4vw,28px)/1.2 var(--f-display);color:var(--charcoal)}
 .job-cat-n{font:700 12px/1 var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dk)}
