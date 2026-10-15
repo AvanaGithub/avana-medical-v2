@@ -47,6 +47,17 @@
   menuBtn.addEventListener('click',function(){setMobile(!nav.classList.contains('open'))});
 
   /* ---- Router ---- */
+  // On the server each section has its own address (about → /about-us/), title and description, given in body[data-pages].
+  // Without it (the static copy) sections use #about-style addresses.
+  var PAGES=null;try{PAGES=JSON.parse(document.body.getAttribute('data-pages')||'null')}catch(err){}
+  function urlFor(route){return PAGES&&PAGES[route]?PAGES[route].path:'#'+route}
+  function routeFromPath(){if(PAGES)for(var r in PAGES){if(PAGES[r].path===location.pathname)return r}return null}
+  function setMeta(route){
+    var p=PAGES[route],d=document.querySelector('meta[name="description"]'),c=document.querySelector('link[rel="canonical"]');
+    document.title=p.title;
+    if(d)d.setAttribute('content',p.description);
+    if(c)c.setAttribute('href',c.href.replace(/^(https?:\/\/[^/]+).*$/,'$1')+p.path);
+  }
   function show(route,scrollTo){
     if(routes.indexOf(route)<0)route='home';
     pages.forEach(function(p){p.hidden=p.getAttribute('data-page')!==route});
@@ -59,7 +70,7 @@
       var a=document.querySelector('#menu-prod a[data-route="'+route+'"]');a&&a.setAttribute('aria-current','page');
     }
     var cta=document.getElementById('cta');if(cta)cta.hidden=(route==='contact');
-    document.title=(names[route]||'Home')+' · Avana Medical Devices';
+    if(PAGES&&PAGES[route])setMeta(route);else document.title=(names[route]||'Home')+' · Avana Medical Devices';
     closeAll();setMobile(false);
     if(scrollTo){var t=document.getElementById(scrollTo);if(t){t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});t.setAttribute('tabindex','-1');t.focus({preventScroll:true});return}}
     window.scrollTo(0,0);
@@ -70,17 +81,27 @@
     var a=e.target.closest('a[href^="#"]');if(!a)return;
     var r=a.getAttribute('data-route'),s=a.getAttribute('data-scroll');
     var href=a.getAttribute('href').slice(1);
-    if(href==='main')return;
     e.preventDefault();
+    if(href==='main'){var m=document.getElementById('main');m.focus();m.scrollIntoView();return}
     if(s==='contact'){closeAll();setMobile(false);var c=document.getElementById('contact');c.scrollIntoView({behavior:'smooth'});c.setAttribute('tabindex','-1');c.focus({preventScroll:true});return}
     var route=r||(routes.indexOf(href)>-1?href:'home');
     if(s&&route==='home'&&!document.querySelector('[data-page="home"]').hidden){show('home',s);return}
-    try{history.pushState(null,'','#'+route)}catch(err){location.hash=route}
+    try{history.pushState(null,'',urlFor(route))}catch(err){location.hash=route}
     show(route,s);
   });
-  window.addEventListener('popstate',function(){show(location.hash.slice(1)||'home')});
-  window.addEventListener('hashchange',function(){show(location.hash.slice(1)||'home')});
-  var init=location.hash.slice(1);if(routes.indexOf(init)>-1&&init!=='home'){pages.forEach(function(p){p.hidden=p.getAttribute('data-page')!==init})}
+  window.addEventListener('popstate',function(){show(PAGES?(routeFromPath()||'home'):(location.hash.slice(1)||'home'))});
+  window.addEventListener('hashchange',function(){
+    var r=location.hash.slice(1);
+    if(PAGES&&routes.indexOf(r)>-1){try{history.replaceState(null,'',urlFor(r))}catch(err){}}
+    show(PAGES?(routes.indexOf(r)>-1?r:routeFromPath()||'home'):(r||'home'));
+  });
+  var init=location.hash.slice(1);
+  if(PAGES){
+    // old #about-style links → the section's real address
+    if(routes.indexOf(init)>-1){try{history.replaceState(null,'',urlFor(init))}catch(err){}}
+    else init=document.body.getAttribute('data-route')||routeFromPath()||'home';
+  }
+  if(routes.indexOf(init)>-1&&init!=='home'){pages.forEach(function(p){p.hidden=p.getAttribute('data-page')!==init})}
   show(routes.indexOf(init)>-1?init:'home');
   window.scrollTo(0,0);
 

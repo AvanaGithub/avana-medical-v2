@@ -24,20 +24,37 @@ app.use((req, res, next) => {
   next();
 });
 
-// Test sites tell search engines to stay away; the real site allows them (but never /admin or /api)
+const pages = require('./pages');
+const siteUrlOf = req => config.siteUrl || `${req.protocol}://${req.get('host')}`;
+
+// Test sites tell search engines to stay away; the real site allows them (but never /admin, /api or personal links)
 app.get('/robots.txt', (req, res) => {
   res.type('text').send(config.noindex
     ? 'User-agent: *\nDisallow: /\n'
-    : 'User-agent: *\nDisallow: /admin\nDisallow: /api/\n');
+    : `User-agent: *\nDisallow: /admin\nDisallow: /api/\nDisallow: /openings\n\nSitemap: ${siteUrlOf(req)}/sitemap.xml\n`);
 });
+app.get('/sitemap.xml', (req, res) => res.type('application/xml').send(pages.sitemapXml(siteUrlOf(req))));
 app.use(cookieParser());
 
 /* ---------- website ---------- */
 
-app.get(['/', '/index.html'], (req, res, next) => {
+// Old addresses and missing trailing slashes → the page's real address; WordPress leftovers → 410 Gone
+app.use((req, res, next) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+  const p = req.path;
+  const qs = req.originalUrl.slice(req.path.length);
+  if (pages.GONE.test(p)) return res.status(410).type('text').send('This page has been removed.');
+  const slash = p.endsWith('/') ? p : p + '/';
+  const to = pages.REDIRECTS[p] || pages.REDIRECTS[slash] || (p !== slash && pages.byPath[slash] ? slash : null);
+  if (to) return res.redirect(301, to + qs);
+  next();
+});
+
+// Every section of the site has its own address; each serves the same page with that section open
+app.get(Object.values(pages.PAGES).map(p => p.path), (req, res, next) => {
   try {
     res.set('Cache-Control', 'no-cache');
-    res.type('html').send(renderIndex());
+    res.type('html').send(renderIndex({ route: pages.byPath[req.path], siteUrl: siteUrlOf(req) }));
   } catch (e) { next(e); }
 });
 
@@ -55,12 +72,12 @@ app.get('/openings', (req, res, next) => {
 });
 
 // Job pages used to be public; the openings are now only on the emailed link
-app.get('/jobs/:slug', (req, res) => res.redirect(302, '/#careers'));
+app.get('/jobs/:slug', (req, res) => res.redirect(301, '/careers/'));
 
 const day = 24 * 3600e3;
 const pub = (dir, maxAge) => express.static(path.join(config.siteRoot, dir), { maxAge, index: false, dotfiles: 'deny' });
-app.use('/css', pub('css', 3600e3));
-app.use('/js', pub('js', 3600e3));
+app.use('/css', pub('css', 0));             // always re-checked (cheap with ETags) so an update never mixes old and new files
+app.use('/js', pub('js', 0));
 app.use('/images', pub('images', 7 * day));
 app.use('/videos', pub('videos', 7 * day));
 app.use('/uploads', express.static(config.uploadsDir, { maxAge: 30 * day, index: false, dotfiles: 'deny', immutable: true }));

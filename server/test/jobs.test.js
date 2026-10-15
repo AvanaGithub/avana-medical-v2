@@ -101,8 +101,8 @@ test('posting a job: validation; the public Careers page only invites people to 
 
   // old public job links go to the Careers page
   const old = await fetch(base + '/jobs/territory-manager-sports-medicine', { redirect: 'manual' });
-  assert.strictEqual(old.status, 302);
-  assert.strictEqual(old.headers.get('location'), '/#careers');
+  assert.strictEqual(old.status, 301);
+  assert.strictEqual(old.headers.get('location'), '/careers/');
 });
 
 test('asking for the openings: validation, then an email with a personal link', async () => {

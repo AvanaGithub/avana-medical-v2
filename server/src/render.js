@@ -68,8 +68,10 @@ function fillSection(html, section, list, videoUsed) {
 }
 
 const { renderJobsInto } = require('./render-jobs');
+const { seoHead } = require('./pages');
 
 // The site's home page with live News & Events and the Careers openings section.
+// With { route, siteUrl } it opens that section with its own title and description (see pages.js).
 // With { lead, token } it is a job seeker's personal openings page; { expired: true } adds the "link expired" note.
 function renderIndex(opts = {}) {
   let html = fs.readFileSync(path.join(config.siteRoot, 'index.html'), 'utf8');
@@ -80,6 +82,7 @@ function renderIndex(opts = {}) {
     html = r.html; videoUsed = r.videoUsed;
   }
   html = renderJobsInto(html, opts);
+  if (opts.route) html = seoHead(html, opts);
   return html;
 }
 
