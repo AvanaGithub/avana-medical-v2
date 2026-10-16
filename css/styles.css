@@ -685,7 +685,7 @@ html.cm-lock{overflow:hidden}
 /* the banner film is low resolution: a soft focus hides its compression speckle behind the text */
 .gl-bgvid{filter:blur(2px);transform:scale(1.04)}
 /* About Us and Meet the Team play the full-HD Arthro Knee film: show it sharp (Contact keeps the soft focus until its video is replaced) */
-#aboutBg.gl-bgvid,#teamBg.gl-bgvid{filter:none;transform:none}
+#aboutBg.gl-bgvid,#teamBg.gl-bgvid,#contactBg.gl-bgvid{filter:none;transform:none}
 #glHero .gl-glow,#tmHero .gl-glow{background:radial-gradient(55% 75% at 50% 40%,rgba(17,24,28,.45),rgba(17,24,28,0) 75%),linear-gradient(180deg,rgba(23,32,37,.45) 0%,rgba(17,24,28,.55) 100%)}
 .gl-hero .gl-glow{background:radial-gradient(60% 70% at 78% 105%,rgba(178,127,13,.30),rgba(178,127,13,0) 70%),radial-gradient(55% 75% at 50% 35%,rgba(17,24,28,.55),rgba(17,24,28,0) 75%),linear-gradient(180deg,rgba(23,32,37,.80) 0%,rgba(17,24,28,.86) 100%)}
 .gl-hero .vid-toggle{z-index:2}

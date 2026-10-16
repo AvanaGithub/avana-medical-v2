@@ -59,6 +59,6 @@
   // (About Us now plays the Marina Beach film, see js/about-leaders.js)
   lazy(pick('about-arthroknee', 3), ['teamBg'], ['teamBgToggle'], ['team']);
 
-  // Contact: abstract background video
-  lazy('page-background.mp4', ['contactBg'], ['contactBgToggle'], ['contact'], ['contactBg']);
+  // Contact: Arthro Knee 2026 montage (same 8 shots as the old page-background.mp4, re-cut from the HD original)
+  lazy(pick('page-background', 2), ['contactBg'], ['contactBgToggle'], ['contact'], ['contactBg']);
 })();
