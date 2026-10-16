@@ -131,32 +131,20 @@ const counts = () => db.prepare("SELECT COUNT(*) total, SUM(created_at > datetim
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const firstName = n => String(n).trim().split(/\s+/)[0];
 
-function openingsEmail(lead, url, items) {
+// No list or count of jobs in the email: "View jobs" opens the /job page, which shows every opening in its two groups.
+function openingsEmail(lead, url) {
   const days = config.openingsLinkDays;
-  const jobLine = j => [j.department, j.locations.join(' · '), jobs.experienceLabel(j)].filter(Boolean).join(' | ');
   const closer = 'You’re one step closer to joining the Avana family';
-  const subject = items.length
-    ? `${closer} – ${items.length} open position${items.length === 1 ? '' : 's'}`
-    : `${closer} – our openings`;
-  // same two groups as the /job page; a group with no jobs is left out
-  const groups = jobs.CATEGORIES.map(c => [c, items.filter(j => jobs.category(j) === c)]).filter(g => g[1].length);
+  const subject = closer;
 
   const text = [
     `Hi ${firstName(lead.name)},`, '',
     'Thank you for your interest in joining Avana Medical Devices.', '',
-    items.length ? 'Here are our current openings:' : 'We have no open positions right now, but new roles appear on your link as soon as they are posted.',
-    ...groups.map(([cat, list]) => `\n${cat.toUpperCase()}\n` + list.map(j => `\n- ${j.title}\n  ${jobLine(j)}\n  ${url}&job=${j.slug}`).join('\n')), '',
-    `See all openings and apply: ${url}`, '',
+    `View our current openings and apply online: ${url}`, '',
     `This link is personal to you and works for ${days} days. Please don't forward it.`,
     'You received this email because you asked for our openings on avanamedical.com. If that wasn\'t you, you can ignore it.', '',
     'Avana Medical Devices Pvt. Ltd. · Chennai, India'
   ].join('\n');
-
-  const row = j => `
-          <tr><td style="padding:14px 0;border-top:1px solid #E7E1D2">
-            <a href="${esc(url)}&amp;job=${esc(j.slug)}" style="font:700 17px/1.35 Arial,Helvetica,sans-serif;color:#172025;text-decoration:none">${esc(j.title)}</a>
-            <div style="font:14px/1.5 Arial,Helvetica,sans-serif;color:#5B6266;margin-top:3px">${esc(jobLine(j))}</div>
-          </td></tr>`;
 
   const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${esc(subject)}</title></head>
 <body style="margin:0;padding:0;background:#F3EFE5">
@@ -168,16 +156,10 @@ function openingsEmail(lead, url, items) {
       </td></tr>
       <tr><td style="padding:28px 32px 8px;font:16px/1.6 Arial,Helvetica,sans-serif;color:#2E3538">
         <p style="margin:0 0 14px">Hi ${esc(firstName(lead.name))},</p>
-        <p style="margin:0 0 14px">Thank you for your interest in joining Avana Medical Devices. ${items.length
-          ? 'Here are the positions open right now. Select one to see the full details and apply online.'
-          : 'We have no open positions right now, but new roles will appear on your link as soon as they are posted.'}</p>
+        <p style="margin:0 0 14px">Thank you for your interest in joining Avana Medical Devices. Click the button below to see our current openings, with the full details of each role, and apply online.</p>
       </td></tr>
-      ${groups.map(([cat, list]) => `<tr><td style="padding:10px 32px 0">
-        <div style="font:700 13px/1 Arial,Helvetica,sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:#8A6209;padding:8px 0">${esc(cat)}</div>
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${list.map(row).join('')}
-        </table></td></tr>`).join('\n      ')}
-      <tr><td style="padding:22px 32px 8px">
-        <a href="${esc(url)}" style="display:inline-block;background:#B27F0D;color:#ffffff;font:700 15px/1 Arial,Helvetica,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:16px 26px">View openings and apply</a>
+      <tr><td style="padding:14px 32px 8px">
+        <a href="${esc(url)}" style="display:inline-block;background:#B27F0D;color:#ffffff;font:700 15px/1 Arial,Helvetica,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:16px 26px">View jobs</a>
       </td></tr>
       <tr><td style="padding:16px 32px 28px;font:13px/1.6 Arial,Helvetica,sans-serif;color:#6B7275">
         This link is personal to you and works for ${days} days. Please don't forward it.<br>
@@ -196,7 +178,7 @@ const linkFor = (siteUrl, token) => `${siteUrl}/job?t=${token}`;
 
 // Emails the openings link and records how it went. Returns the mailer result.
 async function sendLink(lead, token, siteUrl) {
-  const mail = openingsEmail(lead, linkFor(siteUrl, token), jobs.listPublic());
+  const mail = openingsEmail(lead, linkFor(siteUrl, token));
   const r = await mailer.send(Object.assign({ to: lead.email }, mail));
   db.prepare(`UPDATE job_leads SET email_status = ?, email_error = ?, emailed_at = CASE WHEN ? = 'sent' THEN datetime('now') ELSE emailed_at END
     WHERE id = ?`).run(r.status, r.error || '', r.status, lead.id);

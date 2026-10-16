@@ -93,7 +93,7 @@ function organizationJsonLd(siteUrl) {
       addressLocality: 'Chennai', postalCode: '600032', addressRegion: 'Tamil Nadu', addressCountry: 'IN'
     },
     sameAs: ['https://www.linkedin.com/company/avana-medical/', 'https://www.facebook.com/AvanaMedical',
-      'https://www.instagram.com/avanamedical', 'https://twitter.com/AvanaPvt']
+      'https://www.instagram.com/avanamedical']
   }).replace(/</g, '\\u003c');
 }
 

@@ -103,7 +103,7 @@ test('posting a job: validation; the public Careers page only invites people to 
 
   const page = await (await fetch(base + '/')).text();
   assert.ok(!page.includes('Territory Manager – Sports Medicine'), 'jobs are not listed publicly');
-  assert.ok(page.includes('We have 1 open position right now.'));
+  assert.ok(!page.includes('open position right now'), 'the Careers page does not count them either');
   assert.ok(page.includes('data-open-careers'));
 
   // old public job links go to the Careers page
@@ -132,15 +132,15 @@ test('asking for the openings: full profile and CV, then an email with a persona
 
   const mail = lastEmail();
   assert.match(mail, /To: priya@example\.com/);
-  assert.match(mail, /Subject: You’re one step closer to joining the Avana family – 1 open position/);
+  assert.match(mail, /Subject: You’re one step closer to joining the Avana family -->/);
   assert.ok(mail.includes('one step closer to joining the Avana family</div>'), 'also the heading');
   assert.ok(mail.includes('Hi Priya,'));
-  assert.ok(mail.includes('Territory Manager – Sports Medicine'));
+  assert.ok(mail.includes('>View jobs</a>'));
+  assert.ok(!mail.includes('Territory Manager – Sports Medicine') && !mail.includes('Marketing &amp; Sales'),
+    'no jobs or categories in the email: they are on the /job page');
   assert.ok(!mail.includes('Draft role'));
   token = new URL(linkIn(mail)).searchParams.get('t');
   assert.ok(token.length >= 30);
-  assert.ok(mail.includes(`job?t=${token}&amp;job=territory-manager-sports-medicine`), 'each job links straight to its details');
-  assert.ok(mail.includes('Marketing &amp; Sales') && !mail.includes('>Others<'), 'grouped like the /job page; empty groups left out');
 
   const row = db.prepare('SELECT * FROM job_leads').get();
   assert.ok(!JSON.stringify(row).includes(token), 'only a hash of the token is stored');
@@ -169,8 +169,8 @@ test('the personal link shows the openings; a wrong link shows the "expired" not
   assert.ok(html.includes('data-lead-cv="Priya CV.pdf"'), 'the page knows which CV will be sent');
   assert.strictEqual(db.prepare('SELECT visits FROM job_leads').get().visits, 1);
   const careers = await (await fetch(`${base}/careers/`)).text();
-  assert.ok(!careers.includes('Territory Manager – Sports Medicine') && careers.includes('We have 1 open position right now.'),
-    'the Careers page shows only the count');
+  assert.ok(!careers.includes('Territory Manager – Sports Medicine') && !careers.includes('open position right now'),
+    'the Careers page shows neither the jobs nor a count');
   // links emailed before the page moved still work
   const moved = await fetch(`${base}/openings?t=${token}&job=x`, { redirect: 'manual' });
   assert.strictEqual(moved.status, 301);

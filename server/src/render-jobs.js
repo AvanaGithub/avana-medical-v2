@@ -1,5 +1,5 @@
-// Renders the openings: the Careers page shows only how many there are (between <!-- jobs:gate --> markers);
-// the list itself is on the /job page (<!-- jobs:list -->), reached only from the personal link we email (see leads.js),
+// Renders the openings. The Careers page does not list or count them: candidates ask for them with the form,
+// and the list is on the /job page (<!-- jobs:list -->), reached only from the personal link we email (see leads.js),
 // grouped as Marketing & Sales and Others. On /job the rest of the site is hidden (body[data-portal]).
 const jobs = require('./jobs');
 
@@ -99,13 +99,6 @@ function listHtml(items, token, applied = []) {
 }
 
 // The Careers page: how many openings there are, and the button to get them by email
-function gateHtml(count) {
-  return `<div class="jobs-gate">
-        <p class="jobs-gate-lead">${count ? `<strong>We have ${count} open position${count === 1 ? '' : 's'} right now.</strong> ` : ''}Share a few details and we will email you a personal link to all our current openings, where you can see the full details and apply online.</p>
-        <button type="button" class="btn" data-open-careers>Email me the openings</button>
-      </div>`;
-}
-
 // The /job page when the link is missing, wrong or expired
 function expiredHtml() {
   return `<div class="jobs-gate">
@@ -119,8 +112,6 @@ function expiredHtml() {
 function renderJobsInto(html, opts = {}) {
   const items = jobs.listPublic();
   const personal = !!opts.lead;
-  html = html.replace(/<!-- jobs:gate -->[\s\S]*?<!-- \/jobs:gate -->/,
-    `<!-- jobs:gate -->\n      ${gateHtml(items.length)}\n      <!-- /jobs:gate -->`);
   if (personal || opts.expired) {
     html = html.replace(/<body([^>]*)>/i, `<body$1 data-portal${personal && items.length ? ' data-portal-list' : ''}>`);
     html = html.replace(/<!-- jobs:list -->[\s\S]*?<!-- \/jobs:list -->/,

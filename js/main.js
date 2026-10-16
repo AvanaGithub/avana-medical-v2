@@ -72,7 +72,6 @@
       document.getElementById('btn-prod').classList.add('active');
       var a=document.querySelector('#menu-prod a[data-route="'+route+'"]');a&&a.setAttribute('aria-current','page');
     }
-    var cta=document.getElementById('cta');if(cta)cta.hidden=(route==='contact');
     if(PAGES&&PAGES[route])setMeta(route);else document.title=(names[route]||'Home')+' · Avana Medical Devices';
     document.body.classList.toggle('route-about',route==='about');
     closeAll();setMobile(false);
