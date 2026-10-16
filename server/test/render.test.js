@@ -7,6 +7,8 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
+// Tests never send real email, whatever server/.env says: messages go to the outbox folder instead
+process.env.SMTP_HOST = '';
 process.env.DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'avana-test-'));
 process.env.UPLOADS_DIR = path.join(process.env.DATA_DIR, 'uploads');
 const config = require('../src/config');

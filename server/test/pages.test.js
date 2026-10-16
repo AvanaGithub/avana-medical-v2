@@ -6,6 +6,8 @@ const os = require('os');
 const path = require('path');
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'avana-pages-'));
+// Tests never send real email, whatever server/.env says: messages go to the outbox folder instead
+process.env.SMTP_HOST = '';
 process.env.DATA_DIR = tmp;
 process.env.UPLOADS_DIR = path.join(tmp, 'uploads');
 process.env.SITE_URL = 'https://avanamedical.com';
