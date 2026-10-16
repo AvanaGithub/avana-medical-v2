@@ -11,7 +11,9 @@
     // copies before and after the real cards make the loop endless on laptops and tablets
     var pre=document.createDocumentFragment(), post=document.createDocumentFragment();
     orig.forEach(function(li){
-      [0,1].forEach(function(k){var c=li.cloneNode(true);c.classList.add('lt-clone');c.setAttribute('aria-hidden','true');c.setAttribute('inert','');
+      [0,1].forEach(function(k){var c=li.cloneNode(true);c.classList.add('lt-clone');c.setAttribute('aria-hidden','true');
+        // copies stay clickable (so any leader can be picked after the last one), but are skipped by the keyboard and screen readers
+        [].forEach.call(c.querySelectorAll('a,button'),function(e){e.setAttribute('tabindex','-1')});
         [].forEach.call(c.querySelectorAll('[id]'),function(e){e.removeAttribute('id')});(k?post:pre).appendChild(c)});
     });
     track.insertBefore(pre,track.firstChild);track.appendChild(post);
