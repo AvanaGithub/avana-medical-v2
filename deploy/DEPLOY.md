@@ -1,13 +1,13 @@
 # Putting the Avana Medical website on DigitalOcean
 
-The website and its **News & Events admin panel** run together on one small DigitalOcean server (a "droplet") in the **Avana Medical** DigitalOcean account. It is separate from the Avana Surgical servers.
+The website and its **admin panel** run together on one small DigitalOcean server (a "droplet") in the **Avana Medical** DigitalOcean account. It is separate from the Avana Surgical servers.
 
 ## What runs on the server
 
 | Part | What it does |
 |---|---|
-| **Website** | The same pages as today. News & Events cards are filled in from the database on every visit. |
-| **Admin panel** (`/admin`) | Sign in, then add, edit, hide, reorder or delete events, with a 16:10 image cropper. |
+| **Website** | All the pages, each at its own address, plus the careers flow (openings by email, the /job page, one-click apply). |
+| **Admin panel** (`/admin`) | Sign in to post jobs, see openings requests and applications (with CVs), and manage users. |
 | **Database** | One SQLite file: `/var/lib/avana-medical/data/app.db` |
 | **Uploaded photos** | `/var/lib/avana-medical/uploads/` (resized to 1600×1000 and 800×500 automatically) |
 | **Job board** | Jobs posted in Admin → Jobs appear under "Current openings" on the Careers page; each open job also has its own page `/jobs/<name>` with Google Jobs data |
@@ -86,12 +86,11 @@ DigitalOcean blocks the usual email ports (25, 465, 587) on new droplets, so use
 
 | Task | How |
 |---|---|
-| Add or change events | `https://<site>/admin` → News & Events |
 | Post, edit or close a job | Admin → Jobs (Draft = hidden, Open = on the emailed openings links, Closed = hidden). After the "last date to apply" a job hides itself |
 | See who asked for the openings, resend a link | Admin → Openings requests. A link works for 30 days (`OPENINGS_LINK_DAYS` in `.env`) |
 | Review applicants | Admin → Applications: filter by job/status, open a candidate, download the CV, set status (New → Shortlisted → Interview → Offered → Hired / Rejected), add internal notes |
 | A candidate asks for their data to be deleted | Admin → Applications → open them → **Delete application** (removes the record and the CV) |
-| Add a team member | Admin → Users → **Add user** (Editor = events only, Admin = events + users) |
+| Add a team member | Admin → Users → **Add user** (Editor = jobs and candidates, Admin = also users) |
 | Someone forgot their password | An admin opens Users → Edit → set a new password |
 | Deploy new code from GitHub | `bash /var/www/avana-medical/deploy/update.sh` |
 | Check it is running | `systemctl status avana-medical` · logs: `journalctl -u avana-medical -n 100` |

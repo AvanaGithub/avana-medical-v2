@@ -35,11 +35,6 @@ const PAGES = {
     title: 'MovMedix LARS Ligaments in India – Avana Medical',
     description: 'MovMedix LARS synthetic ligaments from France for knee, shoulder, foot and ankle and soft-tissue reconstruction, available in India through Avana.'
   },
-  events: {
-    path: '/news-events/',
-    title: 'News & Events – Avana Medical Devices',
-    description: 'Upcoming events, academic programmes and recognitions from across the Avana family, from dealer meets to knee surgery programmes.'
-  },
   careers: {
     path: '/careers/',
     title: 'Careers at Avana – Medical Device Jobs in India',
@@ -69,7 +64,8 @@ const REDIRECTS = {
   '/team/': '/leadership/', '/leaders/': '/leadership/', '/meet-the-team/': '/leadership/',
   '/contact/': '/contact-us/', '/find-a-doctor/': '/contact-us/',
   '/career/': '/careers/', '/jobs/': '/careers/',
-  '/news/': '/news-events/', '/events/': '/news-events/', '/gallary/': '/news-events/', '/gallery/': '/news-events/',
+  // News & Events was removed (16 Oct 2026): its old addresses go to the home page
+  '/news-events/': '/', '/news/': '/', '/events/': '/', '/gallary/': '/', '/gallery/': '/',
   '/products/': '/products/arthrex/', '/arthrex/': '/products/arthrex/', '/whats-new-at-arthrex/': '/products/arthrex/',
   '/new-techniques-of-the-month/': '/products/arthrex/', '/clavicle/': '/products/arthrex/', '/research-publications-old/': '/products/arthrex/',
   '/echi/': '/products/echi/', '/movmedix/': '/products/movmedix/'

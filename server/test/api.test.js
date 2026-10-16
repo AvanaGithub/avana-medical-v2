@@ -61,7 +61,7 @@ test('too many wrong passwords are blocked', async () => {
   assert.strictEqual((await c('POST', '/api/auth/login', { email: 'nobody@test.local', password: 'wrongpass99' })).status, 429);
 });
 
-test('event lifecycle: upload + crop, create, show on site, edit, reorder, hide, delete', async () => {
+test('event records (kept in the database; News & Events is no longer on the website): upload + crop, create, edit, reorder, hide, delete', async () => {
   const c = client();
   await c('POST', '/api/auth/login', ADMIN);
 
@@ -89,10 +89,11 @@ test('event lifecycle: upload + crop, create, show on site, edit, reorder, hide,
   const b = (await c('POST', '/api/admin/events', { section: 'upcoming', title: 'Second event', date_note: 'Dates to be announced' })).body.event;
   assert.ok(a.id && b.id);
 
-  let page = (await c('GET', '/')).body;
-  assert.ok(page.includes('Arthro Knee 2027') && page.includes('6–8 Aug 2027 · Mumbai'), 'new event on the site with its date label');
-  assert.ok(page.includes(up.body.image_small + ' 800w'), 'small image offered to phones');
-  assert.ok(page.indexOf('Arthro Knee 2027') < page.indexOf('Second event'));
+  const order = async () => (await c('GET', '/api/admin/events')).body.events.filter(e => e.section === 'upcoming').map(e => e.title);
+  assert.deepStrictEqual(await order(), ['Arthro Knee 2027', 'Second event']);
+  assert.strictEqual((await c('GET', '/api/admin/events')).body.events[0].when, '6–8 Aug 2027 · Mumbai');
+  assert.ok(!(await c('GET', '/')).body.includes('Arthro Knee 2027'), 'events are not shown on the website any more');
+  assert.strictEqual((await fetch(base + '/news-events/', { redirect: 'manual' })).headers.get('location'), '/', 'the old page goes home');
 
   // uploaded image is served
   const img = await fetch(base + '/' + up.body.image);
@@ -103,14 +104,13 @@ test('event lifecycle: upload + crop, create, show on site, edit, reorder, hide,
 
   // reorder: second first
   await c('POST', '/api/admin/events/reorder', { section: 'upcoming', ids: [b.id, a.id] });
-  page = (await c('GET', '/')).body;
-  assert.ok(page.indexOf('Second event') < page.indexOf('Arthro Knee 2027'));
+  assert.deepStrictEqual(await order(), ['Second event', 'Arthro Knee 2027']);
 
   // hide, then delete
   await c('PUT', `/api/admin/events/${b.id}`, { published: false });
-  assert.ok(!(await c('GET', '/')).body.includes('Second event'));
+  assert.strictEqual((await c('GET', '/api/admin/events')).body.events.find(e => e.id === b.id).published, 0);
   await c('DELETE', `/api/admin/events/${a.id}`);
-  assert.ok(!(await c('GET', '/')).body.includes('Arthro Knee 2027'));
+  assert.ok(!(await c('GET', '/api/admin/events')).body.events.some(e => e.id === a.id));
   assert.ok(!fs.existsSync(path.join(process.env.UPLOADS_DIR, up.body.image.slice(8))), 'deleted event removes its uploaded image');
 
   // audit trail records who did what

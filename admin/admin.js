@@ -96,12 +96,12 @@
   }
 
   function route() {
-    let view = (location.hash || '#events').slice(1);
-    if (!['events', 'jobs', 'requests', 'applications', 'users', 'account'].includes(view) || (view === 'users' && state.user.role !== 'admin')) view = 'events';
+    let view = (location.hash || '#jobs').slice(1);
+    // News & Events is no longer on the website (removed 16 Oct 2026), so its tab is hidden; the events stay in the database
+    if (!['jobs', 'requests', 'applications', 'users', 'account'].includes(view) || (view === 'users' && state.user.role !== 'admin')) view = 'jobs';
     document.querySelectorAll('[data-view-panel]').forEach(p => { p.hidden = p.dataset.viewPanel !== view; });
     document.querySelectorAll('.tabs a').forEach(a => a.toggleAttribute('aria-current', a.dataset.view === view));
     document.querySelectorAll('.tabs a[aria-current]').forEach(a => a.setAttribute('aria-current', 'page'));
-    if (view === 'events') loadEvents();
     if (view === 'jobs') loadJobs();
     if (view === 'requests') loadLeads();
     if (view === 'applications') loadApplications();

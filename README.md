@@ -23,7 +23,7 @@ Avana_medical_v2/
 │   ├── team/               Leadership photos
 │   ├── events/             Company events and team life (Careers, About)
 │   ├── careers/            Photo sets for the Careers cards: discover/, creativity/, growth/
-│   ├── news/               News & Events cards: upcoming/ (On the horizon) and past/ (Moments we've shared)
+│   ├── news/               Photos from the former News & Events page (not used since 16 Oct 2026)
 │   ├── posters/            Still frame shown while each video loads
 │   ├── icons/              Small UI graphics
 │   └── textures/           Background texture
@@ -33,7 +33,7 @@ Avana_medical_v2/
 
 ## Pages
 
-The site is a single page. The address after `#` picks the section, and `js/main.js` shows that section and hides the rest:
+The site is a single page. On the server each section has its own address (`/about-us/`, `/leadership/` …, see `server/src/pages.js`); in the static copy the address after `#` picks the section. Either way `js/main.js` shows that section and hides the rest:
 
 | Address        | Section in index.html            |
 |----------------|----------------------------------|
@@ -45,7 +45,6 @@ The site is a single page. The address after `#` picks the section, and `js/main
 | `#echi`        | `<div data-page="echi">`         |
 | `#movmedix`    | `<div data-page="movmedix">`     |
 | `#careers`     | `<div data-page="careers">`      |
-| `#events`      | `<div data-page="events">`       |
 
 Links between sections use `href="#about" data-route="about"`.
 
@@ -67,20 +66,23 @@ Then open http://localhost:8097. Use the server rather than double-clicking `ind
 - **Video:** replace the `.mp4` in `videos/` with one of the same name. Keep videos short, muted and under about 3 MB, and update the matching still in `images/posters/`.
 - **Full-length source videos** (for example `Arthroknee Post Event Video Final.mp4`, 268 MB) stay on your computer only: `.gitignore` keeps files with "Final" in the name out of git, because GitHub rejects files over 100 MB. `videos/about-arthroknee.mp4` (the About Us background) is the full 92-second video, muted and compressed to 720p (6.7 MB).
 - **Colours and fonts:** change the variables at the top of `css/styles.css` (`--gold`, `--charcoal`, `--sand`, …).
-- **News & Events:** each event is one `<li class="ev-card">` inside `#evAheadTrack` (upcoming) or `#evPastTrack` (past) in `index.html`; photos go in `images/news/upcoming/` or `images/news/past/`. Update the `/ 05` count and the `aria-label` numbers when adding or removing a card.
 - **Product highlight of the month:** the hero block at the top of `<div data-page="home">`.
 
-## News & Events admin panel
+## Server and admin panel
 
-The `server/` folder runs the site with an admin panel at `/admin` for managing News & Events (title, description, category, dates, location, 16:10 cropped images, publish/hide, order) and the **job board**: jobs posted in Admin → Jobs appear under "Current openings" on the Careers page (between the `<!-- jobs:list -->` markers in `index.html`), candidates apply online with a CV, and applications are reviewed in Admin → Applications. Each open job also has its own page at `/jobs/<slug>` with Google Jobs (JobPosting) data. Site-side behaviour is in `js/jobs.js`. It is meant for the DigitalOcean droplet; see **deploy/DEPLOY.md**. GitHub Pages can't run it, so there the page keeps showing the cards written in `index.html`.
+The `server/` folder runs the site with an admin panel at `/admin` for the **careers process**: HR posts jobs in Admin → Jobs; the Careers page shows only how many there are; a job seeker fills in "See open positions" (profile + CV) and is emailed a personal link to the `/job` page (openings grouped Sales & Marketing / Other roles), where applying is one click. Admin → Openings requests and Admin → Applications show the candidates and their CVs (stored privately). Email goes through Brevo (SMTP settings in `server/.env`). It is meant for the DigitalOcean droplet; see **deploy/DEPLOY.md**. GitHub Pages can't run it, so there the Careers form can't send anything.
+
+News & Events was removed from the website on 16 Oct 2026 (the MD's decision). Its events stay in the database and its admin tab is hidden.
 
 ```
 server/
-├── src/index.js      Web server: serves the site, renders events into index.html, /admin, /api
-├── src/api.js        Admin API (sign-in, events, image upload, users)
-├── src/render.js     Fills the two carousels between the <!-- events:… --> markers in index.html
-├── src/images.js     Crops uploads to 16:10, saves 1600×1000 + 800×500 JPEGs
-├── scripts/          create-admin.js, seed-events.js (imports the cards in index.html once)
+├── src/index.js      Web server: page addresses, redirects, sitemap, /job, /admin, /api
+├── src/pages.js      Each page's address, title and description; old-site redirects
+├── src/api.js        Admin API (sign-in, jobs, openings requests, applications, users)
+├── src/leads.js      "See open positions" requests, the emailed link and one-click apply
+├── src/mailer.js     Sends email through SMTP (Brevo); saves to DATA_DIR/outbox when not set up
+├── src/render.js     Builds the page: Careers openings + each page's title and description
+├── scripts/          create-admin.js
 └── test/             npm test
 admin/                Admin panel (index.html, admin.css, admin.js)
 deploy/               setup.sh, update.sh, backup.sh, nginx + systemd config, DEPLOY.md
@@ -91,7 +93,6 @@ Run it locally:
 ```
 cd server
 npm install
-npm run seed-events
 npm run create-admin -- you@example.com "Your Name"
 npm start            # http://localhost:3000 (or PORT in server/.env), admin at /admin
 ```

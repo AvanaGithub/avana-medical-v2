@@ -8,7 +8,6 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "create-admin": "node scripts/create-admin.js",
-    "seed-events": "node scripts/seed-events.js",
     "test": "node --test"
   },
   "engines": {

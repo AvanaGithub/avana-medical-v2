@@ -46,7 +46,7 @@ test('every page has its own title, description, canonical address and preview t
 
 test('old addresses redirect permanently; WordPress leftovers are gone', async () => {
   const cases = {
-    '/about-us': '/about-us/', '/career/': '/careers/', '/gallary/': '/news-events/', '/products/': '/products/arthrex/',
+    '/about-us': '/about-us/', '/career/': '/careers/', '/gallary/': '/', '/news-events/': '/', '/products/': '/products/arthrex/',
     '/whats-new-at-arthrex/': '/products/arthrex/', '/find-a-doctor/': '/contact-us/', '/index.php': '/', '/index.html': '/',
     '/contact/?utm_source=x': '/contact-us/?utm_source=x', '/jobs/some-old-job': '/careers/'
   };

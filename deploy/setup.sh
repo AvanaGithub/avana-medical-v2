@@ -52,10 +52,9 @@ EOF
   chown "$APP_USER:$APP_USER" "$APP_DIR/server/.env"; chmod 600 "$APP_DIR/server/.env"
 fi
 
-echo "==> Install packages, load the starting events"
+echo "==> Install packages"
 cd "$APP_DIR/server"
 sudo -u "$APP_USER" npm ci --omit=dev --no-fund --no-audit
-sudo -u "$APP_USER" node scripts/seed-events.js
 
 echo "==> Service (starts on boot, restarts if it crashes)"
 cp "$APP_DIR/deploy/avana-medical.service" /etc/systemd/system/avana-medical.service
