@@ -24,12 +24,12 @@ Status as of 15 Oct 2026. Tick items off as they are done.
 
 ## 3. Test site (test.avanamedical.com)
 
-- [ ] **Hosting account.** Add a payment method to the Avana Medical DigitalOcean account and create the droplet (Bangalore, Ubuntu 24.04).
-- [ ] **Droplet IP.** Send the IP to set up the server.
-- [ ] **DNS.** In GoDaddy, add an A record so that `test` points to the droplet IP. Don't touch `@`, `www` or the MX records.
+- [x] **Hosting account.** Droplet avanamedical-website-droplet (Ubuntu 24.04, 1 GB) in the Avana Medical DigitalOcean account.
+- [x] **Droplet IP.** 168.144.88.82 (also added to Brevo authorised IPs).
+- [x] **DNS.** test.avanamedical.com → 168.144.88.82 in GoDaddy.
 - [x] **Code on GitHub.** Pushed 15 Oct (team bios, colleague's updates, careers email flow, SEO pages).
-- [ ] **Install.** Run the setup script, set up HTTPS with certbot, and create the first admin and the HR users.
-- [ ] **Email settings.** Add the SMTP settings to the server and send a test openings request to yourself.
+- [x] **Install.** Site, HTTPS certificate, firewall, nightly backups and admin user in place; updated to the latest code on 16 Oct.
+- [x] **Email settings.** Brevo settings on the server; test email from the droplet reached the inbox (16 Oct).
 - [ ] **Phone testing.** Test on a real iPhone and a real Android phone (Safari and Chrome).
 - [ ] **Stakeholder review.** Share the test site with stakeholders and collect feedback.
 
