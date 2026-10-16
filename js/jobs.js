@@ -14,6 +14,19 @@
   var submit = document.getElementById('applySubmit');
   var current = null;   // { slug, title }
 
+  /* ---------- the /job page is self-contained: category buttons scroll to their group, the logo goes back to the top ---------- */
+  if (document.body.hasAttribute('data-portal')) {
+    document.addEventListener('click', function (e) {
+      var cat = e.target.closest('[data-jobcat]'), logo = e.target.closest('a.logo');
+      if (!cat && !logo) return;
+      e.preventDefault(); e.stopPropagation();
+      var nav = document.getElementById('nav');
+      if (nav.classList.contains('open')) document.getElementById('menuBtn').click();
+      if (cat) document.getElementById('jobcat-' + cat.getAttribute('data-jobcat')).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, true);   // capture: handled before the site's page router sees the click
+  }
+
   /* ---------- job list: a job's link opens its details ---------- */
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[data-job]');

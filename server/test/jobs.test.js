@@ -140,7 +140,7 @@ test('asking for the openings: full profile and CV, then an email with a persona
   token = new URL(linkIn(mail)).searchParams.get('t');
   assert.ok(token.length >= 30);
   assert.ok(mail.includes(`job?t=${token}&amp;job=territory-manager-sports-medicine`), 'each job links straight to its details');
-  assert.ok(mail.includes('Sales &amp; Marketing') && !mail.includes('Other roles'), 'grouped like the /job page; empty groups left out');
+  assert.ok(mail.includes('Marketing &amp; Sales') && !mail.includes('>Others<'), 'grouped like the /job page; empty groups left out');
 
   const row = db.prepare('SELECT * FROM job_leads').get();
   assert.ok(!JSON.stringify(row).includes(token), 'only a hash of the token is stored');
@@ -161,9 +161,10 @@ test('the personal link shows the openings; a wrong link shows the "expired" not
   assert.ok(!html.includes('Draft role'), 'drafts stay off the website');
   assert.match(html, /1 open position</);
   assert.ok(html.includes('Hi Priya, here are our current openings.'));
-  assert.ok(html.includes('Sales &amp; Marketing <span class="job-cat-n">1 open</span>'), 'the Sales job sits in Sales & Marketing');
-  assert.ok(html.includes('Other roles <span class="job-cat-n">0 open</span>'));
+  assert.ok(html.includes('Marketing &amp; Sales <span class="job-cat-n">1 open</span>'), 'the Sales job sits in Marketing & Sales');
+  assert.ok(html.includes('Others <span class="job-cat-n">0 open</span>'));
   assert.ok(html.includes('data-route="jobs"'));
+  assert.match(html, /<body[^>]* data-portal data-portal-list/, 'the focused jobs page: only the job categories in the menu');
   assert.ok(html.includes(`data-openings-token="${token}"`));
   assert.ok(html.includes('data-lead-cv="Priya CV.pdf"'), 'the page knows which CV will be sent');
   assert.strictEqual(db.prepare('SELECT visits FROM job_leads').get().visits, 1);
@@ -236,7 +237,7 @@ test('applying with a different CV: checked, then used from then on', async () =
   assert.strictEqual(ok.status, 200, JSON.stringify(ok.body));
   assert.strictEqual(db.prepare('SELECT cv_name FROM job_leads').get().cv_name, 'Priya CV 2026.pdf');
   const html = await (await fetch(`${base}/job?t=${token}`)).text();
-  assert.ok(html.includes('Other roles <span class="job-cat-n">1 open</span>'), 'Medical Education sits in Other roles');
+  assert.ok(html.includes('Others <span class="job-cat-n">1 open</span>'), 'Medical Education sits in Others');
   await admin('DELETE', `/api/admin/jobs/${jobs.getBySlug('product-specialist-knee').id}`);
 });
 

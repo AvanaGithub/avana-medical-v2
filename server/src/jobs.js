@@ -205,8 +205,8 @@ function postedLabel(j) {
 }
 const lines = s => String(s || '').split(/\r?\n/).map(x => x.replace(/^\s*[-•*]\s*/, '').trim()).filter(Boolean);
 
-// The openings page groups jobs in two: anything in a Sales or Marketing department, and everything else
-const CATEGORIES = ['Sales & Marketing', 'Other roles'];
+// The openings page groups jobs in two: Marketing & Sales (any Sales or Marketing department) and Others
+const CATEGORIES = ['Marketing & Sales', 'Others'];
 const category = j => (/sales|marketing/i.test(j.department || '') ? CATEGORIES[0] : CATEGORIES[1]);
 
 module.exports = {

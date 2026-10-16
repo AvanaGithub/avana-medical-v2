@@ -1,6 +1,6 @@
 // Renders the openings: the Careers page shows only how many there are (between <!-- jobs:gate --> markers);
 // the list itself is on the /job page (<!-- jobs:list -->), reached only from the personal link we email (see leads.js),
-// grouped as Sales & Marketing and Other roles.
+// grouped as Marketing & Sales and Others. On /job the rest of the site is hidden (body[data-portal]).
 const jobs = require('./jobs');
 
 const esc = s => String(s ?? '')
@@ -79,7 +79,7 @@ function card(j, token, applied) {
         </li>`;
 }
 
-// The /job page list: Sales & Marketing first, then Other roles
+// The /job page list: Marketing & Sales first, then Others
 function listHtml(items, token, applied = []) {
   if (!items.length) {
     return `<div class="jobs-empty">
@@ -122,6 +122,7 @@ function renderJobsInto(html, opts = {}) {
   html = html.replace(/<!-- jobs:gate -->[\s\S]*?<!-- \/jobs:gate -->/,
     `<!-- jobs:gate -->\n      ${gateHtml(items.length)}\n      <!-- /jobs:gate -->`);
   if (personal || opts.expired) {
+    html = html.replace(/<body([^>]*)>/i, `<body$1 data-portal${personal && items.length ? ' data-portal-list' : ''}>`);
     html = html.replace(/<!-- jobs:list -->[\s\S]*?<!-- \/jobs:list -->/,
       `<!-- jobs:list -->\n      ${personal ? listHtml(items, opts.token, opts.applied) : expiredHtml()}\n      <!-- /jobs:list -->`);
   }
