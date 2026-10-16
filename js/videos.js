@@ -57,7 +57,9 @@
   // About Us: Arthro Knee 2026 event video (full 92 s, muted web versions of "Arthroknee Post Event Video Final.mp4":
   // 1080p for large screens, 720p for phones). Bump "?v=" whenever a file is replaced, so browsers don't show a cached copy.
   lazy(pick('about-arthroknee', 3), ['aboutBg'], ['aboutBgToggle'], ['about']);
+  // Meet the Team uses the same film (the browser downloads it once for both pages)
+  lazy(pick('about-arthroknee', 3), ['teamBg'], ['teamBgToggle'], ['team']);
 
-  // Meet the Team and Contact share one background video.
-  lazy('page-background.mp4', ['teamBg','contactBg'], ['teamBgToggle','contactBgToggle'], ['team','contact'], ['teamBg','contactBg']);
+  // Contact: abstract background video
+  lazy('page-background.mp4', ['contactBg'], ['contactBgToggle'], ['contact'], ['contactBg']);
 })();

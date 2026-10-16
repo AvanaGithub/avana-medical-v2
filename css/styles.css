@@ -681,9 +681,9 @@ html.cm-lock{overflow:hidden}
 .gl-bgvid{position:absolute;inset:0;width:100%;height:100%;z-index:-3;max-width:none;object-fit:cover;object-position:50% 12%}
 /* the banner film is low resolution: a soft focus hides its compression speckle behind the text */
 .gl-bgvid{filter:blur(2px);transform:scale(1.04)}
-/* About Us now plays a full-HD film: show it sharp (Team and Contact keep the soft focus until their video is replaced) */
-#aboutBg.gl-bgvid{filter:none;transform:none}
-#glHero .gl-glow{background:radial-gradient(55% 75% at 50% 40%,rgba(17,24,28,.45),rgba(17,24,28,0) 75%),linear-gradient(180deg,rgba(23,32,37,.45) 0%,rgba(17,24,28,.55) 100%)}
+/* About Us and Meet the Team play the full-HD Arthro Knee film: show it sharp (Contact keeps the soft focus until its video is replaced) */
+#aboutBg.gl-bgvid,#teamBg.gl-bgvid{filter:none;transform:none}
+#glHero .gl-glow,#tmHero .gl-glow{background:radial-gradient(55% 75% at 50% 40%,rgba(17,24,28,.45),rgba(17,24,28,0) 75%),linear-gradient(180deg,rgba(23,32,37,.45) 0%,rgba(17,24,28,.55) 100%)}
 .gl-hero .gl-glow{background:radial-gradient(60% 70% at 78% 105%,rgba(178,127,13,.30),rgba(178,127,13,0) 70%),radial-gradient(55% 75% at 50% 35%,rgba(17,24,28,.55),rgba(17,24,28,0) 75%),linear-gradient(180deg,rgba(23,32,37,.80) 0%,rgba(17,24,28,.86) 100%)}
 .gl-hero .vid-toggle{z-index:2}
 .gl-sub.team-intro{min-height:1.7em;margin-bottom:0}
