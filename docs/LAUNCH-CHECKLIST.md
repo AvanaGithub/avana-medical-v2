@@ -20,7 +20,7 @@ Status as of 15 Oct 2026. Tick items off as they are done.
 - [x] **Real page addresses** (/about-us/, /careers/, /leadership/, /products/arthrex/ …), each with its own title and meta description. Done 15 Oct; the wording is in `server/src/pages.js`.
 - [x] **301 redirects** from the old WordPress addresses, plus 410 responses for junk pages. Still to add: the 4 education and research pages once their targets are decided.
 - [x] **sitemap.xml**, and robots.txt pointing to it.
-- [ ] **Email sending** (Brevo or similar on port 2525) so that openings links are actually emailed. This needs an account and two DNS records in GoDaddy.
+- [x] **Email sending.** Brevo set up 16 Oct: domain records (SPF fixed, DKIM, Brevo code) in GoDaddy; SMTP login + key in server/.env; test email reached the inbox. Before launch: create a fresh SMTP key (the current one was shared in chat).
 
 ## 3. Test site (test.avanamedical.com)
 
