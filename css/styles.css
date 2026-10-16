@@ -1042,3 +1042,212 @@ body[data-portal] #nav>ul>li.portal-only .nav-link{background:none;border:0;curs
 body[data-portal]:not([data-portal-list]) .menu-btn{display:none}
 body[data-portal] .cta,body[data-portal] footer .top>nav,body[data-portal] .jobs-hero .crumbs{display:none}
 
+
+/* ============ From the MD's October 2026 design: About Us film, Meet our Leaders slider, Careers GPTW badge ============ */
+/* ================= About Us only: the header floats over the page, its tabs folded into three lines top right ================= */
+header.main .logo{position:relative}
+header.main .logo .logo-light{display:none}
+body.route-about header.main{position:fixed;left:0;right:0;top:0;background:rgba(255,255,255,0);border-bottom-color:transparent;
+  transition:background-color .25s ease,border-color .25s ease,box-shadow .25s ease}
+body.route-about header.main.ov-open{background:var(--paper);border-bottom-color:var(--line);box-shadow:0 12px 32px rgba(0,0,0,.28)}
+body.route-about header.main .logo .logo-light{display:block;position:absolute;left:0;top:0;transition:opacity .25s ease}
+body.route-about header.main .logo .logo-dark{opacity:0;transition:opacity .25s ease}
+body.route-about header.main.ov-open .logo .logo-light{opacity:0}
+body.route-about header.main.ov-open .logo .logo-dark{opacity:1}
+body.route-about header.main .menu-btn{display:block;order:2;align-self:flex-end;color:#fff;border-radius:2px;-webkit-tap-highlight-color:transparent;transition:color .2s}
+body.route-about header.main .menu-btn span{background:currentColor;transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .2s}
+body.route-about header.main.ov-open .menu-btn{color:var(--charcoal)}
+body.route-about header.main.ov-open .menu-btn span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+body.route-about header.main.ov-open .menu-btn span:nth-child(2){opacity:0}
+body.route-about header.main.ov-open .menu-btn span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+body.route-about header.main .menu-btn:focus-visible{outline:2px solid var(--gold-hi);outline-offset:2px}
+@media (hover:hover){body.route-about header.main .menu-btn:hover{color:var(--gold-hi)}body.route-about header.main.ov-open .menu-btn:hover{color:var(--gold-dk)}}
+@media (min-width:1081px){
+  body.route-about header.main nav.primary{order:1;margin-left:auto;opacity:0;visibility:hidden;transform:translateX(14px);
+    transition:opacity .2s ease,transform .3s cubic-bezier(.22,1,.36,1),visibility 0s .3s}
+  body.route-about header.main.ov-open nav.primary{opacity:1;visibility:visible;transform:none;
+    transition:opacity .25s ease .06s,transform .35s cubic-bezier(.22,1,.36,1) .06s,visibility 0s}
+}
+/* once the pinned section has scrolled past, the header gets a charcoal bar so it never sits on top of text */
+body.route-about header.main.ov-solid{background:rgba(23,32,37,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom-color:rgba(255,255,255,.08)}
+body.route-about header.main.ov-open.ov-solid{background:var(--paper);border-bottom-color:var(--line);-webkit-backdrop-filter:none;backdrop-filter:none}
+
+/* ================= About Us: Purpose / Mission / Vision, pinned while you scroll, over the Marina Beach film ================= */
+.pmv-wrap{--night:#0D1316;--on-dark:#fff;--dim:rgba(255,255,255,.16);--rule:rgba(255,255,255,.16);--f:var(--f-display);
+  --pad:max(16px, min(2.3vw, 33px));--gap:16px;--cols:16;
+  --col:calc((min(100vw, 1440px) - 2*var(--pad) - (var(--cols) - 1)*var(--gap)) / var(--cols));
+  --ease:cubic-bezier(.445,.05,.55,.95);
+  position:relative;height:450vh;background:var(--night);color:var(--on-dark)}
+.pmv{position:sticky;top:0;height:100vh;overflow:hidden;color:var(--on-dark);isolation:isolate}
+/* one film behind all three statements, graded to the brand palette; it simply loops, with no zoom or fade */
+.pmv-bg{position:absolute;inset:0;z-index:0;background:var(--night)}
+.pmv-film{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 50%;display:block}
+.pmv-shade{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(23,32,37,.5) 0%,rgba(23,32,37,.24) 34%,rgba(23,32,37,.32) 68%,rgba(13,19,22,.64) 100%)}
+.pmv-vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% 50%, rgba(13,19,22,0) 55%, rgba(13,19,22,.5) 100%)}
+.pmv-place{position:absolute;z-index:3;right:max(var(--pad), env(safe-area-inset-right, 0px));bottom:26px;margin:0;display:flex;align-items:center;gap:8px;pointer-events:none;
+  font:500 12px/1.2 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:rgba(243,239,229,.62)}
+.pmv-place svg{width:12px;height:12px;flex:none;color:var(--gold-hi);opacity:.85}
+
+.pmv-content{position:relative;z-index:2;height:100%;max-width:1440px;margin:0 auto;display:flex;align-items:center;
+  padding-left:max(var(--pad), env(safe-area-inset-left, 0px));padding-right:max(var(--pad), env(safe-area-inset-right, 0px))}
+.pmv-label{position:absolute;top:calc(50% - 40px);left:max(var(--pad), env(safe-area-inset-left, 0px));width:var(--col);
+  font:600 11px/1.3 var(--f);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-hi)}
+.pmv-cwrap{position:relative;width:100%}
+.pmv-line{position:absolute;left:calc(-1*(var(--col) + var(--gap)));right:calc(-1*(var(--col) + var(--gap)));top:calc(33.333% - 20px);height:1px;background:var(--rule);transform-origin:0 50%}
+.pmv-line-prog{width:0;height:100%;background:var(--gold-hi)}
+.pmv-list{list-style:none;margin:0;padding:0;position:relative;transform:translateY(calc((1 - var(--index, 0))*33.333%));transition:transform .45s var(--ease)}
+.pmv-item{display:flex;align-items:center;justify-content:space-between;margin:0 0 0 calc(var(--col) + var(--gap));padding-bottom:40px;color:var(--dim);transition:color .45s var(--ease)}
+.pmv-item.active{color:var(--on-dark)}
+.pmv-title{display:grid;width:calc(var(--col)*5 + var(--gap)*4);opacity:0;transition:transform .4s ease,opacity .45s var(--ease)}
+.pmv-title > *{grid-area:1/1;width:fit-content;margin:0;font:800 clamp(40px,4.3vw,62px)/1.04 var(--f);letter-spacing:.005em;text-transform:uppercase;color:currentColor;text-wrap:nowrap}
+.pmv-t-fill{position:relative;z-index:2;clip-path:inset(0 var(--p, 100%) 0 0)}
+.pmv-t-base{position:relative;z-index:1;opacity:.4}
+.pmv-item.active .pmv-title,.pmv-item.past .pmv-title{opacity:1}
+.pmv-item.far .pmv-title{transform:translateY(36px)}
+.pmv-desc{position:absolute;right:0;width:calc(var(--col)*5 + var(--gap)*4);margin:0;opacity:0;transform:translateY(calc(50% - 20px));
+  font:500 clamp(17px,1.62vw,23px)/1.24 var(--f);color:var(--on-dark);text-wrap:pretty;transition:opacity .45s var(--ease)}
+.pmv-item.active .pmv-desc{opacity:1}
+.pmv-desc .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+.pmv-desc .w > span{display:inline-block;opacity:0;transform:translateY(55%);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.pmv-item.active .pmv-desc .w > span{opacity:1;transform:none;transition-delay:var(--d,0s)}
+/* entrance as the section arrives */
+.pmv .pmv-line{transform:scaleX(0);transition:transform 1.1s cubic-bezier(.22,1,.36,1)}
+.pmv .pmv-label,.pmv .pmv-cwrap{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .9s cubic-bezier(.22,1,.36,1)}
+.pmv .pmv-cwrap{transition-delay:.1s}
+.pmv.seen .pmv-line{transform:scaleX(1)}
+.pmv.seen .pmv-label,.pmv.seen .pmv-cwrap{opacity:1;transform:none}
+/* phones: the film stays pinned and the three statements scroll up over it */
+.pmv-m{display:none}
+@media (max-width:767px){
+  .pmv-wrap{height:auto}
+  .pmv{display:none}
+  .pmv-m{display:block;position:relative;background:var(--night)}
+  .pmv-m-media{position:sticky;top:0;height:100svh;overflow:hidden;z-index:0;background:var(--night)}
+  .pmv-m-film{position:absolute;inset:0}
+  .pmv-m-media .pmv-place{bottom:22px}
+  .pmv-m-cards{position:relative;z-index:1;margin-top:-100svh}
+  .pmv-m-card{position:relative;height:100svh;color:var(--on-dark);display:flex;flex-direction:column;justify-content:space-between;
+    padding:min(110px,13svh) max(16px, env(safe-area-inset-right, 0px)) 72px max(16px, env(safe-area-inset-left, 0px))}
+  .pmv-m-card .eyebrow{font:600 11px/1.3 var(--f);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-hi)}
+  .pmv-m-card h2{margin:12px 0 0;font:800 clamp(38px,12vw,56px)/1.02 var(--f);text-transform:uppercase;color:var(--on-dark)}
+  .pmv-m-card p{margin:0;font:500 clamp(18px,5.2vw,22px)/1.32 var(--f);max-width:30ch;color:var(--on-dark)}
+  .pmv-m-card .pmv-m-rule{height:1px;background:var(--rule);margin:22px 0 0;position:relative}
+  .pmv-m-card .pmv-m-rule i{position:absolute;left:0;top:0;height:1px;background:var(--gold-hi)}
+  .pmv-m.anim .pmv-m-card > *{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .8s cubic-bezier(.22,1,.36,1)}
+  .pmv-m.anim .pmv-m-card > p{transition-delay:.12s}
+  .pmv-m.anim .pmv-m-card.in > *{opacity:1;transform:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .pmv-list,.pmv-item,.pmv-title,.pmv-desc,.pmv-desc .w>span,.pmv-m-card>*,.pmv .pmv-line,.pmv .pmv-label,.pmv .pmv-cwrap,body.route-about header.main,body.route-about header.main *{transition:none!important}
+  .pmv-desc .w > span{opacity:1;transform:none}
+  .pmv-m.anim .pmv-m-card > *{opacity:1;transform:none}
+}
+
+/* ================= Meet our Leaders: people slider (after unitedcarriers.com/about, in the Avana palette) ================= */
+.lt{--u:calc(100vw / 172.8);--pad:calc(var(--u)*4);--gap:calc(var(--u)*2);--cols:16;
+  --col:calc((100vw - var(--sbw, 0px) - 2*var(--pad) - (var(--cols) - 1)*var(--gap)) / var(--cols));
+  --ink:var(--charcoal);--soft:rgba(23,32,37,.72);--note:var(--grey);--hair:rgba(23,32,37,.12);--dis:rgba(23,32,37,.22);
+  --mono:"Space Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  background:var(--sand-lt);color:var(--ink);padding:calc(var(--u)*10) 0 calc(var(--u)*14);overflow:hidden}
+.lt-grid{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));column-gap:var(--gap);padding-inline:var(--pad)}
+.lt-head{grid-column:5 / 17;grid-row:1;display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:calc(var(--u)*4.4);position:relative}
+.lt-head-text{width:min(100%, calc(var(--u)*88.8))}
+.lt-title{margin:0;font:800 clamp(28px,3.4vw,40px)/1.1 var(--f-display);color:var(--ink)}
+.lt .title-rule{margin:22px 0 26px}
+.lt-desc{margin:0;width:min(100%, calc(var(--u)*53.5));font:400 max(14px, calc(var(--u)*1.7))/1.25 var(--f-body);color:var(--soft)}
+.lt-arrow:focus-visible,.lt-slide:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+.lt-sub{grid-column:1 / 6;grid-row:2;position:relative;min-height:calc(1px + var(--u)*40.7)}
+.lt-pagi{display:flex;gap:6px;margin-top:2px;color:var(--muted);font:600 13px/1.4 var(--f-body);letter-spacing:.12em}
+.lt-sub-main{position:absolute;left:0;right:calc(var(--gap)*1.2);top:calc(1px + var(--u)*4);height:calc(var(--u)*36.7);display:grid;overflow:hidden}
+.lt-sub-item{grid-area:1/1;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s .4s}
+.lt-sub-item.active{opacity:1;visibility:visible;transition:opacity .4s ease .05s,visibility 0s}
+.lt-sub-desc{margin:0;font:400 var(--bio-fs, 16px)/1.6 var(--f-body);color:var(--body)}
+
+.lt-main{grid-column:6 / 17;grid-row:2;min-width:0;position:relative}
+.lt-arrow{position:absolute;z-index:3;top:calc(1px + var(--u)*4 + var(--u)*18.35);transform:translateY(-50%);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;padding:0;cursor:pointer;
+  background:rgba(255,255,255,.74);border:1px solid rgba(23,32,37,.12);color:var(--charcoal);box-shadow:0 6px 18px rgba(23,32,37,.12);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  transition:background-color .3s,color .3s,border-color .3s,opacity .3s}
+.lt-arrow svg{width:18px;height:18px}
+.lt-arrow:hover{background:var(--gold);border-color:var(--gold);color:#fff}
+.lt-arrow[disabled]{opacity:.35;cursor:default;pointer-events:none}
+.lt-prev{left:14px}
+.lt-next{right:calc(18px - var(--pad))}
+.lt-line{height:1px;background:var(--hair);position:relative}
+.lt-line-inner{position:absolute;inset:0;background:var(--gold);transform-origin:0 50%;transform:scaleX(0);transition:transform .45s cubic-bezier(.445,.05,.55,.95)}
+.lt-slide{margin-right:calc(var(--pad)*-1);padding-top:calc(var(--u)*4);overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.lt-slide.dragging{cursor:grabbing}
+.lt-track{list-style:none;margin:0;padding:0;display:flex;will-change:transform;transition:transform .6s cubic-bezier(.22,.61,.36,1)}
+.lt-track.no-anim{transition:none}
+.lt-item{flex:none;position:relative;display:flex;flex-direction:column;width:calc(var(--col)*3 + var(--gap)*2);margin-right:var(--gap);outline:none}
+.lt-img-wrap{position:relative;display:grid;width:100%;height:calc(var(--u)*36.7);overflow:hidden;background:#DBD4C1}
+.lt-img{grid-area:1/1;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;-webkit-user-drag:none}
+.lt-mask{grid-area:1/1;width:100%;height:100%;display:block;object-fit:cover;background:var(--sand-lt);transition:opacity .4s ease}
+.lt-item:not(.active){cursor:pointer}
+.lt-item.active .lt-mask{opacity:0}
+.lt-item-text{margin-top:calc(var(--u)*4);opacity:0;pointer-events:none;transition:opacity .4s ease}
+.lt-item.active .lt-item-text{opacity:1;pointer-events:auto}
+.lt-name{margin:0 0 6px;font:700 clamp(20px,1.7vw,24px)/1.2 var(--f-display);color:var(--charcoal)}
+.lt-pos{margin:0;font:400 16px/1.45 var(--f-body);color:var(--body)}
+.lt-in{display:inline-grid;place-items:center;width:28px;height:28px;margin-top:12px;background:var(--gold);border-radius:3px;color:#fff;transition:background-color .3s}
+.lt-in svg{width:16px;height:16px}
+.lt-in:hover{background:var(--charcoal)}
+.lt-in:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+/* reveal as the section arrives */
+.lt .rv{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .9s cubic-bezier(.22,1,.36,1)}
+.lt.in .rv{opacity:1;transform:none}
+.lt.in .rv-1{transition-delay:.1s}.lt.in .rv-2{transition-delay:.2s}.lt.in .rv-3{transition-delay:.4s}
+
+@media (max-width:1279px){
+  .lt-head{grid-column:1 / 17}
+  .lt-head-text{width:auto}
+  .lt-sub{display:contents}
+  .lt-pagi{grid-column:1 / 17;grid-row:2;margin:0 0 10px}
+  .lt-main{grid-column:1 / 17;grid-row:3}
+  .lt-sub-main{position:static;height:auto;overflow:visible;grid-column:1 / 17;grid-row:4;max-width:720px;margin-top:34px}
+  .lt-sub{min-height:0}
+  .lt-sub-desc{font-size:16px}
+}
+@media (max-width:991px){
+  .lt{--u:calc(100vw / 120)}
+  .lt-item{width:calc(var(--col)*4.5 + var(--gap)*4)}
+  .lt-item-text{margin-top:24px}
+  .lt-arrow{width:38px;height:38px}
+}
+@media (max-width:767px){
+  .lt{padding:36px 0 48px}
+  .lt-grid{padding-inline:16px;column-gap:0}
+  .lt-desc{width:100%;font-size:15px}
+  .lt-head{margin-bottom:0;padding-bottom:22px}
+  .lt-pagi{margin:0 0 10px}
+  .lt-slide{margin-right:-16px;padding-top:20px}
+  .lt-item{width:148px;margin-right:16px}
+  .lt-img-wrap{width:128px;height:160px}
+  .lt-item-text{display:flex;flex-direction:column;flex:1;margin:14px 0 0}
+  .lt-name{font-size:16px;margin-bottom:6px}
+  .lt-pos{font-size:13px}
+  .lt-arrow{top:101px;width:34px;height:34px}
+  .lt-arrow svg{width:15px;height:15px}
+  .lt-prev{left:6px}.lt-next{right:6px}
+  .lt-sub-main{margin-top:26px}
+  .lt-sub-desc{font-size:16px}
+  .lt-in{width:26px;height:26px;margin-top:10px}
+  .lt-in svg{width:14px;height:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  .lt .rv,.lt-track,.lt-mask,.lt-item-text,.lt-sub-item,.lt-arrow,.lt-line-inner{transition:none!important}
+}
+
+
+/* Careers banner: Great Place To Work Certified badge in the photo's top-right corner */
+.ph-gptw{position:absolute;z-index:2;top:28px;right:max(20px, calc((100% - var(--wrap)) / 2 + 20px));display:block;line-height:0;transition:transform .3s ease}
+.ph-gptw img{height:clamp(110px,11vw,150px);width:auto;display:block;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4))}
+.ph-gptw:hover{transform:translateY(-3px)}
+.ph-gptw:focus-visible{outline:2px solid var(--gold-hi);outline-offset:4px}
+@media (max-width:900px){.ph-gptw{top:12px;right:16px}.ph-gptw img{height:clamp(64px,20vw,96px)}}
+
+/* Leadership Team heading: same style and size as "Our Offices" */
+.lt-titlebar{grid-column:1 / 17;grid-row:1;margin-bottom:calc(var(--u)*2)}
+.lt-titlebar h2{margin:0;font:800 clamp(28px,3.4vw,40px)/1.1 var(--f-display);color:var(--charcoal)}
+@media (max-width:767px){.lt-titlebar{margin-bottom:6px}}

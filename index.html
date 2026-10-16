@@ -21,7 +21,7 @@
 
 <header class="main">
   <div class="wrap">
-    <a href="#home" class="logo" aria-label="Avana Medical Devices, home"><img src="images/logos/avana-dark.png" alt=""></a>
+    <a href="#home" class="logo" aria-label="Avana Medical Devices, home"><img class="logo-dark" src="images/logos/avana-dark.png" alt=""><img class="logo-light" src="images/logos/avana-white.png" alt=""></a>
     <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
     <nav class="primary" id="nav" aria-label="Main">
       <ul>
@@ -131,6 +131,7 @@
   <section class="page-head ph-photo">
     <img class="ph-bg" src="images/events/achievers-summit-1.jpg" alt="Avana team members at the Annual Achievers Summit">
     <div class="ph-shade" aria-hidden="true"></div>
+    <a class="ph-gptw" href="https://www.greatplacetowork.in/great/company/avana-group" target="_blank" rel="noopener" aria-label="Great Place To Work Certified, January 2026 to January 2027, India (opens in a new tab)"><img src="images/certifications/gptw-badge.png" alt="" width="232" height="379"></a>
     <div class="wrap">
       <img class="ph-logo" src="images/logos/avana-white.png" alt="Avana">
       <div class="ph-copy">
@@ -327,88 +328,54 @@
 
 <!-- ============ About Us ============ -->
 <div data-page="about" class="ab-page" hidden>
-  <section class="gl-hero" id="glHero" aria-labelledby="ab-h">
-    <video class="gl-bgvid" id="aboutBg" autoplay muted loop playsinline preload="auto" poster="images/posters/about-arthroknee.jpg" aria-hidden="true"></video>
-    <div class="gl-glow" aria-hidden="true"></div>
-    <div class="wrap gl-wrap">
-      <div class="gl-left">
-        <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">›</span><span aria-current="page">About Us</span></nav>
-        <h1 id="ab-h" tabindex="-1" class="sr-only">About Us</h1>
-        <a class="gl-cta" href="#team" data-route="team"><span class="gl-cta-t">Meet the Team</span><span class="gl-cta-a" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span></a>
+  <h1 id="ab-h" tabindex="-1" class="sr-only">About Us</h1>
+  <section class="pmv-wrap" id="pmv" aria-label="Our Purpose, Mission and Vision">
+    <div class="pmv" id="pmvStage">
+      <div class="pmv-bg" aria-hidden="true">
+        <video class="pmv-film" id="pmvFilm" muted loop playsinline preload="none" poster="images/posters/pmv-waves-poster.jpg" tabindex="-1"></video>
       </div>
-      <div class="gl-right" aria-hidden="true">
-        <span class="gl-hand-glow"></span>
-        <div class="gl-stage">
-          <img class="gl-logo" src="images/logos/avana-white.png" alt="Avana">
+      <div class="pmv-shade" aria-hidden="true"></div>
+      <div class="pmv-vignette" aria-hidden="true"></div>
+      <p class="pmv-place"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Marina Beach, Chennai, India</p>
+      <div class="pmv-content">
+        <div class="pmv-label" aria-hidden="true">Our</div>
+        <div class="pmv-cwrap">
+          <div class="pmv-line" aria-hidden="true"><div class="pmv-line-prog" id="pmvProg"></div></div>
+          <ol class="pmv-list" id="pmvList">
+          <li class="pmv-item active">
+            <div class="pmv-title"><h2 class="pmv-t-fill" id="ab-purpose">Purpose</h2><span class="pmv-t-base" aria-hidden="true">Purpose</span></div>
+            <p class="pmv-desc">Widening access to world-class care, restoring health and mobility.</p>
+          </li>
+          <li class="pmv-item">
+            <div class="pmv-title"><h2 class="pmv-t-fill" id="ab-mission">Mission</h2><span class="pmv-t-base" aria-hidden="true">Mission</span></div>
+            <p class="pmv-desc">A partner surgeons and hospitals across India can trust, for world-class products, medical education and customer service they can count on.</p>
+          </li>
+          <li class="pmv-item">
+            <div class="pmv-title"><h2 class="pmv-t-fill" id="ab-vision">Vision</h2><span class="pmv-t-base" aria-hidden="true">Vision</span></div>
+            <p class="pmv-desc">To be the most trusted medical company, growing across specialties, known for exceptional talent, real outcomes and the standard we set in all we do.</p>
+          </li>
+          </ol>
         </div>
       </div>
     </div>
-    <button class="vid-toggle" id="aboutBgToggle" aria-label="Pause background video" aria-pressed="false">
-      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" fill="currentColor"/></svg>
-      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
-    </button>
-  </section>
-
-  <div class="ab-body">
-    <section class="wrap ab-trio" aria-label="Our Purpose, Mission and Vision">
-      <figure class="ab-feat ab-feat--tall">
-        <img src="images/events/md-speaking-achievers-summit.jpg" alt="P. Sundararajan, Managing Director, speaking at the Annual Achievers Summit FY26" loading="lazy">
-        <figcaption class="ab-feat-cap">
-          <h2 id="ab-purpose">Our Purpose</h2>
-          <div class="title-rule" aria-hidden="true"></div>
+    <div class="pmv-m">
+      <div class="pmv-m-media"><div class="pmv-m-film" id="pmvMFilm" aria-hidden="true"></div><div class="pmv-shade" aria-hidden="true"></div><p class="pmv-place" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0119 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Marina Beach, Chennai, India</p></div>
+      <div class="pmv-m-cards">
+        <article class="pmv-m-card">
+          <div><div class="eyebrow">Our</div><h2>Purpose</h2><div class="pmv-m-rule" aria-hidden="true"><i style="width:33.3%"></i></div></div>
           <p>Widening access to world-class care, restoring health and mobility.</p>
-        </figcaption>
-      </figure>
-      <figure class="ab-feat">
-        <img src="images/events/achievers-summit-group.jpg" alt="Avana team together at the Annual Achievers Summit" loading="lazy">
-        <figcaption class="ab-feat-cap">
-          <h2 id="ab-mission">Our Mission</h2>
-          <div class="title-rule" aria-hidden="true"></div>
-          <p>A partner surgeons and hospitals across India can trust — for world-class products, medical education and customer service they can count on.</p>
-        </figcaption>
-      </figure>
-      <figure class="ab-feat">
-        <img src="images/events/training-session.jpg" alt="Avana team in a training session" loading="lazy">
-        <figcaption class="ab-feat-cap">
-          <h2 id="ab-vision">Our Vision</h2>
-          <div class="title-rule" aria-hidden="true"></div>
-          <p>To be the most trusted medical company — growing across specialties, known for exceptional talent, real outcomes, and the standard we set in all we do.</p>
-        </figcaption>
-      </figure>
-    </section>
-
-    <section class="wrap ab-certs" aria-labelledby="ab-cert-h">
-      <div class="ab-certs-head">
-        <h2 id="ab-cert-h">Certifications</h2>
-        <div class="title-rule center-rule" aria-hidden="true"></div>
-      </div>
-      <div class="ab-cert-grid">
-        <article class="ab-cert">
-          <div class="ab-cert-mark">
-            <img class="ab-cert-badge" src="images/certifications/great-place-to-work-2026-27.png" alt="Great Place To Work Certified, January 2026 to January 2027, India" width="116" height="190">
-          </div>
-          <div class="ab-cert-body">
-            <p class="ab-cert-k">2026 · India</p>
-            <h3>Great Place To Work<sup>®</sup> Certified<sup>™</sup></h3>
-            <p>Avana is certified again by Great Place To Work<sup>®</sup> India for January 2026 to January 2027, a recognition based entirely on what our own people say about working here.</p>
-            <a class="ab-cert-link" href="https://www.greatplacetowork.in/great/company/avana-group" target="_blank" rel="noopener">View our certification<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg><span class="sr-only"> (opens in a new tab)</span></a>
-          </div>
         </article>
-        <article class="ab-cert">
-          <div class="ab-cert-mark">
-            <img class="ab-cert-iso" src="images/certifications/iso-13485.png" alt="ISO 13485 Quality Management System" width="118" height="127">
-          </div>
-          <div class="ab-cert-body">
-            <p class="ab-cert-k">Certified by SGS</p>
-            <h3>ISO 13485:2016 Certified</h3>
-            <p>Our quality management system meets ISO (International Organization for Standardization) 13485:2016, the international standard for medical devices, across procurement, storage, sales and distribution, installation and servicing.</p>
-            <p class="ab-cert-ref">Certificate IN25/00000233</p>
-            <button type="button" class="ab-cert-link" data-open-cert aria-haspopup="dialog">View our certificate<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
-          </div>
+        <article class="pmv-m-card">
+          <div><div class="eyebrow">Our</div><h2>Mission</h2><div class="pmv-m-rule" aria-hidden="true"><i style="width:66.6%"></i></div></div>
+          <p>A partner surgeons and hospitals across India can trust, for world-class products, medical education and customer service they can count on.</p>
+        </article>
+        <article class="pmv-m-card">
+          <div><div class="eyebrow">Our</div><h2>Vision</h2><div class="pmv-m-rule" aria-hidden="true"><i style="width:100%"></i></div></div>
+          <p>To be the most trusted medical company, growing across specialties, known for exceptional talent, real outcomes and the standard we set in all we do.</p>
         </article>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </div>
 
 <!-- ============ Meet the Team ============ -->
@@ -435,73 +402,61 @@
       <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
     </button>
   </section>
-  <section class="team" aria-labelledby="team-h">
-    <div class="wrap">
-      <h2 class="center" id="team-h">Leadership Team</h2>
-      <div class="title-rule" aria-hidden="true"></div>
-      <article class="member flip">
-        <img class="photo" src="images/team/p-sundararajan.jpg" alt="P. Sundararajan, Managing Director">
-        <div>
-          <h3>P. Sundararajan</h3>
-          <div class="role">Managing Director, Avana Group <a href="https://www.linkedin.com/in/sundararajan-pandian-66964923" target="_blank" rel="noopener" aria-label="P. Sundararajan on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
-          <p class="member-tag">"Building Businesses. Developing People. Creating Lasting Impact"</p>
-          <p>A technocrat from Madurai and a first-generation entrepreneur, he brings over three decades of experience in the medical technology industry. As Managing Director of AVANA Group, his journey has been shaped by a passion for entrepreneurship, a belief in people and a commitment to making a meaningful difference in healthcare. Beyond building successful businesses, he takes pride in nurturing talent, creating opportunities and empowering individuals to realise their potential. For him, true success is not measured by business growth alone, but by the people developed, the relationships built and the lasting impact created along the way.</p>
+  <section class="lt" id="leaders" aria-labelledby="lt-h">
+    <div class="lt-grid">
+      <div class="lt-titlebar rv">
+        <h2 id="lt-h">Leadership Team</h2>
+        <div class="title-rule" aria-hidden="true"></div>
+      </div>
+      <div class="lt-sub rv rv-2">
+        <div class="lt-pagi"><span data-pagi-count>01</span><span aria-hidden="true">/</span><span data-pagi-total>07</span></div>
+        <div class="lt-sub-main" aria-live="polite">
+          <div class="lt-sub-item active" data-i="0"><p class="lt-sub-desc">A technocrat from Madurai and a first-generation entrepreneur, he brings over three decades of experience in the medical technology industry. As Managing Director of AVANA Group, his journey has been shaped by a passion for entrepreneurship, a belief in people and a commitment to making a meaningful difference in healthcare. Beyond building successful businesses, he takes pride in nurturing talent, creating opportunities and empowering individuals to realise their potential. For him, true success is not measured by business growth alone, but by the people developed, the relationships built and the lasting impact created along the way.</p></div>
+          <div class="lt-sub-item" data-i="1"><p class="lt-sub-desc">With over 25 years in the medical device and pharmaceutical industries, Manish is a passionate, resilient and results-driven sales leader. Known for leading from the front, building high-performing teams and a never-give-up attitude, he consistently goes the extra mile to create value, exceed customer expectations and drive sustainable business growth.</p></div>
+          <div class="lt-sub-item" data-i="2"><p class="lt-sub-desc">With over two and a half decades in marketing and business leadership, he brings a rare blend of strategic vision and commercial acumen, building brands and translating market opportunities into business success. At AVANA, he plays a pivotal role in strengthening market leadership, championing innovation and advancing the adoption of cutting-edge healthcare solutions in India.</p></div>
+          <div class="lt-sub-item" data-i="3"><p class="lt-sub-desc">With more than 18 years in the medical device industry, he has built highly motivated teams of trusted achievers. He is committed to exceeding expectations and growing the business profitably, reliably and consistently, guided by a philosophy of high integrity and leading with purpose.</p></div>
+          <div class="lt-sub-item" data-i="4"><p class="lt-sub-desc">With nearly two decades of experience spanning sales, marketing, and medical education, he is passionate about connecting people, knowledge, and innovation. At AVANA Medical Devices, he has been instrumental in building educational platforms, strengthening international partnerships, and driving professional excellence through meaningful learning initiatives. He believes in empowering teams, encouraging fresh perspectives, and translating collective expertise into meaningful progress for healthcare professionals.</p></div>
+          <div class="lt-sub-item" data-i="5"><p class="lt-sub-desc">A long-standing member of the Avana family, he has been part of the company's journey for more than a decade, growing with it through every stage of its expansion. Beyond finance and accounts, his responsibilities now span administration, legal, compliance and regulatory matters, giving him a broad view of how the business runs. His steady commitment to Avana is built on accountability, teamwork, professional ethics and a solution-oriented approach.</p></div>
+          <div class="lt-sub-item" data-i="6"><p class="lt-sub-desc">He heads Avana's IT and service functions, keeping the company's systems and networks secure and running, while leading the technical team that installs, maintains and repairs capital equipment such as arthroscopy and visualisation systems for hospitals. His focus is minimal downtime for the operating theatres that depend on this equipment, and quick, reliable support whenever surgeons and hospital teams need it. He takes ownership of every service commitment and builds a team that solves problems with transparency and a drive for continuous improvement.</p></div>
         </div>
-      </article>
-      <article class="member">
-        <img class="photo" src="images/team/manish-gautham.jpg" alt="Manish Gautham, Director of Sales, Sports Medicine">
-        <div>
-          <h3>Manish Gautham</h3>
-          <div class="role">Director of Sales, Sports Medicine <a href="https://www.linkedin.com/in/manish-gautam-23a17115a" target="_blank" rel="noopener" aria-label="Manish Gautham on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
-          <p class="member-tag">"Fueled by Passion, Driven by Resilience, Going the Extra Mile for Customer Delight"</p>
-          <p>With over 25 years in the medical device and pharmaceutical industries, Manish is a passionate, resilient and results-driven sales leader. Known for leading from the front, building high-performing teams and a never-give-up attitude, he consistently goes the extra mile to create value, exceed customer expectations and drive sustainable business growth.</p>
+      </div>
+      <div class="lt-main rv rv-3">
+        <div class="lt-line" aria-hidden="true"><div class="lt-line-inner"></div></div>
+        <button type="button" class="lt-arrow lt-prev" data-dir="-1" aria-label="Previous leader"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button type="button" class="lt-arrow lt-next" data-dir="1" aria-label="Next leader"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+        <div class="lt-slide" aria-roledescription="carousel" aria-label="Leadership team">
+          <ul class="lt-track">
+            <li class="lt-item active" data-i="0">
+              <div class="lt-img-wrap"><img class="lt-img" src="images/team/p-sundararajan.jpg?v=3" alt="P. Sundararajan, Managing Director"><canvas class="lt-mask" width="480" height="600" aria-hidden="true"></canvas></div>
+              <div class="lt-item-text"><h2 class="lt-name">P. Sundararajan</h2><p class="lt-pos">Managing Director, Avana Group</p><a class="lt-in" href="https://www.linkedin.com/in/sundararajan-pandian-66964923" target="_blank" rel="noopener" aria-label="P. Sundararajan on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4v11H3v-11zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.36h-4v-4.75c0-1.13-.02-2.59-1.58-2.59-1.58 0-1.82 1.23-1.82 2.5v4.84h-4v-11z"/></svg></a></div>
+            </li>
+            <li class="lt-item" data-i="1">
+              <div class="lt-img-wrap"><img class="lt-img" src="images/team/manish-gautham.jpg?v=3" alt="Manish Gautham, Director of Sales, Sports Medicine"><canvas class="lt-mask" width="480" height="600" aria-hidden="true"></canvas></div>
+              <div class="lt-item-text"><h2 class="lt-name">Manish Gautham</h2><p class="lt-pos">Director of Sales, Sports Medicine</p><a class="lt-in" href="https://www.linkedin.com/in/manish-gautam-23a17115a" target="_blank" rel="noopener" aria-label="Manish Gautham on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4v11H3v-11zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.36h-4v-4.75c0-1.13-.02-2.59-1.58-2.59-1.58 0-1.82 1.23-1.82 2.5v4.84h-4v-11z"/></svg></a></div>
+            </li>
+            <li class="lt-item" data-i="2">
+              <div class="lt-img-wrap"><img class="lt-img" src="images/team/ruchir-gupta.jpg?v=3" alt="Ruchir Gupta, Deputy Director, Marketing and Business Strategy"><canvas class="lt-mask" width="480" height="600" aria-hidden="true"></canvas></div>
+              <div class="lt-item-text"><h2 class="lt-name">Ruchir Gupta</h2><p class="lt-pos">Deputy Director, Marketing &amp; Business Strategy</p><a class="lt-in" href="https://www.linkedin.com/in/ruchir-gupta-4903ab7" target="_blank" rel="noopener" aria-label="Ruchir Gupta on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4v11H3v-11zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.36h-4v-4.75c0-1.13-.02-2.59-1.58-2.59-1.58 0-1.82 1.23-1.82 2.5v4.84h-4v-11z"/></svg></a></div>
+            </li>
+            <li class="lt-item" data-i="3">
+              <div class="lt-img-wrap"><img class="lt-img" src="images/team/praveen-raghavendra.jpg?v=3" alt="Praveen Raghavendra, National Sales Manager, Dextra and Bio"><canvas class="lt-mask" width="480" height="600" aria-hidden="true"></canvas></div>
+              <div class="lt-item-text"><h2 class="lt-name">Praveen Raghavendra</h2><p class="lt-pos">National Sales Manager, Dextra &amp; Bio</p><a class="lt-in" href="https://www.linkedin.com/in/praveen-raghavendra-7b2a6a41" target="_blank" rel="noopener" aria-label="Praveen Raghavendra on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4v11H3v-11zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.36h-4v-4.75c0-1.13-.02-2.59-1.58-2.59-1.58 0-1.82 1.23-1.82 2.5v4.84h-4v-11z"/></svg></a></div>
+            </li>
+            <li class="lt-item" data-i="4">
+              <div class="lt-img-wrap"><img class="lt-img" src="images/team/avadhut-kaluskar.jpg?v=3" alt="Avadhut Kaluskar, Senior Manager, Medical Education"><canvas class="lt-mask" width="480" height="600" aria-hidden="true"></canvas></div>
+              <div class="lt-item-text"><h2 class="lt-name">Avadhut Kaluskar</h2><p class="lt-pos">Senior Manager, Medical Education</p><a class="lt-in" href="https://www.linkedin.com/in/avadhut-kaluskar-9828926" target="_blank" rel="noopener" aria-label="Avadhut Kaluskar on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4v11H3v-11zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.36h-4v-4.75c0-1.13-.02-2.59-1.58-2.59-1.58 0-1.82 1.23-1.82 2.5v4.84h-4v-11z"/></svg></a></div>
+            </li>
+            <li class="lt-item" data-i="5">
+              <div class="lt-img-wrap"><img class="lt-img" src="images/team/m-srinivasan.jpg?v=3" alt="M. Srinivasan, Senior Manager, Finance and Administration"><canvas class="lt-mask" width="480" height="600" aria-hidden="true"></canvas></div>
+              <div class="lt-item-text"><h2 class="lt-name">M. Srinivasan</h2><p class="lt-pos">Senior Manager, Finance &amp; Administration</p></div>
+            </li>
+            <li class="lt-item" data-i="6">
+              <div class="lt-img-wrap"><img class="lt-img" src="images/team/s-singaravel.jpg?v=3" alt="S. Singaravel, Manager, IT and Service"><canvas class="lt-mask" width="480" height="600" aria-hidden="true"></canvas></div>
+              <div class="lt-item-text"><h2 class="lt-name">S. Singaravel</h2><p class="lt-pos">Manager, IT &amp; Service</p><a class="lt-in" href="https://www.linkedin.com/in/singaravel-subramaniam-52455039" target="_blank" rel="noopener" aria-label="S. Singaravel on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4v11H3v-11zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.36h-4v-4.75c0-1.13-.02-2.59-1.58-2.59-1.58 0-1.82 1.23-1.82 2.5v4.84h-4v-11z"/></svg></a></div>
+            </li>
+          </ul>
         </div>
-      </article>
-      <article class="member">
-        <img class="photo" src="images/team/ruchir-gupta.jpg" alt="Ruchir Gupta, Deputy Director, Marketing and Business Strategy">
-        <div>
-          <h3>Ruchir Gupta</h3>
-          <div class="role">Deputy Director, Marketing &amp; Business Strategy <a href="https://www.linkedin.com/in/ruchir-gupta-4903ab7" target="_blank" rel="noopener" aria-label="Ruchir Gupta on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
-          <p class="member-tag">"Shaping brands with strategy, powering growth through innovation"</p>
-          <p>With over two and a half decades in marketing and business leadership, he brings a rare blend of strategic vision and commercial acumen, building brands and translating market opportunities into business success. At AVANA, he plays a pivotal role in strengthening market leadership, championing innovation and advancing the adoption of cutting-edge healthcare solutions in India.</p>
-        </div>
-      </article>
-      <article class="member">
-        <img class="photo" src="images/team/praveen-raghavendra.jpg?v=2" alt="Praveen Raghavendra, National Sales Manager, Dextra and Bio">
-        <div>
-          <h3>Praveen Raghavendra</h3>
-          <div class="role">National Sales Manager, Dextra &amp; Bio <a href="https://www.linkedin.com/in/praveen-raghavendra-7b2a6a41" target="_blank" rel="noopener" aria-label="Praveen Raghavendra on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
-          <p class="member-tag">"Leading teams with trust and unwavering commitment"</p>
-          <p>With more than 18 years in the medical device industry, he has built highly motivated teams of trusted achievers. He is committed to exceeding expectations and growing the business profitably, reliably and consistently, guided by a philosophy of high integrity and leading with purpose.</p>
-        </div>
-      </article>
-      <article class="member">
-        <img class="photo" src="images/team/avadhut-kaluskar.jpg?v=2" alt="Avadhut Kaluskar, Senior Manager, Medical Education">
-        <div>
-          <h3>Avadhut Kaluskar</h3>
-          <div class="role">Senior Manager, Medical Education <a href="https://www.linkedin.com/in/avadhut-kaluskar-9828926" target="_blank" rel="noopener" aria-label="Avadhut Kaluskar on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
-          <p class="member-tag">"Turning knowledge into inspiration, and inspiration into progress"</p>
-          <p>With nearly two decades of experience spanning sales, marketing, and medical education, he is passionate about connecting people, knowledge, and innovation. At AVANA Medical Devices, he has been instrumental in building educational platforms, strengthening international partnerships, and driving professional excellence through meaningful learning initiatives. He believes in empowering teams, encouraging fresh perspectives, and translating collective expertise into meaningful progress for healthcare professionals.</p>
-        </div>
-      </article>
-      <article class="member">
-        <img class="photo" src="images/team/m-srinivasan.jpg?v=2" alt="M. Srinivasan, Senior Manager, Finance and Administration">
-        <div>
-          <h3>M. Srinivasan</h3>
-          <div class="role">Senior Manager, Finance &amp; Administration</div>
-          <p class="member-tag">"More than a workplace, a learning ground"</p>
-          <p>A long-standing member of the Avana family, he has been part of the company's journey for more than a decade, growing with it through every stage of its expansion. Beyond finance and accounts, his responsibilities now span administration, legal, compliance and regulatory matters, giving him a broad view of how the business runs. His steady commitment to Avana is built on accountability, teamwork, professional ethics and a solution-oriented approach.</p>
-        </div>
-      </article>
-      <article class="member">
-        <img class="photo" src="images/team/s-singaravel.jpg?v=2" alt="S. Singaravel, Manager, IT and Service">
-        <div>
-          <h3>S. Singaravel</h3>
-          <div class="role">Manager, IT &amp; Service <a href="https://www.linkedin.com/in/singaravel-subramaniam-52455039" target="_blank" rel="noopener" aria-label="S. Singaravel on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4z"/></svg></a></div>
-          <p class="member-tag">"Integrity in every commitment, solutions in every challenge"</p>
-          <p>He heads Avana's IT and service functions, keeping the company's systems and networks secure and running, while leading the technical team that installs, maintains and repairs capital equipment such as arthroscopy and visualisation systems for hospitals. His focus is minimal downtime for the operating theatres that depend on this equipment, and quick, reliable support whenever surgeons and hospital teams need it. He takes ownership of every service commitment and builds a team that solves problems with transparency and a drive for continuous improvement.</p>
-        </div>
-      </article>
+      </div>
     </div>
   </section>
 </div>
@@ -533,7 +488,7 @@
         <article class="acard"><img class="img" src="images/arthrex/hand-wrist.jpg" alt="" loading="lazy"><div class="body"><h2>Hand &amp; Wrist</h2><a class="more" href="https://www.arthrex.com/hand-wrist" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Hand &amp; Wrist on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
         <article class="acard"><img class="img" src="images/arthrex/foot-ankle.jpg" alt="" loading="lazy"><div class="body"><h2>Foot &amp; Ankle</h2><a class="more" href="https://www.arthrex.com/foot-ankle" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Foot &amp; Ankle on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
         <article class="acard"><img class="img" src="images/arthrex/hip.jpg" alt="" loading="lazy"><div class="body"><h2>Hip</h2><a class="more" href="https://www.arthrex.com/hip" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Hip on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
-        <article class="acard"><img class="img" src="images/arthrex/orthobiologics.jpg?v=2" alt="" loading="lazy"><div class="body"><h2>Orthobiologics</h2><a class="more" href="https://www.arthrex.com/orthobiologics" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Orthobiologics on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
+        <article class="acard"><img class="img" src="images/arthrex/orthobiologics.jpg?v=3" alt="" loading="lazy"><div class="body"><h2>Orthobiologics</h2><a class="more" href="https://www.arthrex.com/orthobiologics" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Orthobiologics on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
         <article class="acard"><img class="img" src="images/arthrex/imaging-resection.jpg" alt="" loading="lazy"><div class="body"><h2>Imaging &amp; Resection</h2><a class="more" href="https://synergy.arthrex.com" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Imaging &amp; Resection on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
         <article class="acard"><img class="img" src="images/arthrex/endoscopy.jpg" alt="" loading="lazy"><div class="body"><h2>Endoscopy</h2><a class="more" href="https://endoscopy.arthrex.com/en" target="_blank" rel="noopener">Learn More<span class="sr-only"> about Endoscopy on arthrex.com (opens in a new tab)</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a></div></article>
       </div>
@@ -568,12 +523,6 @@
         <article class="acard"><img class="img" src="images/echi/inflammationfriend-chip.jpg" alt="e.CHI InflammationFriend frequency chip" loading="lazy"><div class="body"><h2>InflammationFriend</h2><span class="more">Learn More<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></span></div></article>
         <article class="acard"><img class="img" src="images/echi/backfriend-chip.jpg" alt="e.CHI BackFriend frequency chip" loading="lazy"><div class="body"><h2>BackFriend</h2><span class="more">Learn More<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></span></div></article>
       </div>
-    </div>
-  </section>
-  <section class="cat-band dark">
-    <div class="wrap">
-      <div><h2>Need the full e.CHI catalogue?</h2><p>Our team will send the latest catalogue and pricing for your clinic or hospital.</p></div>
-      <a class="btn" href="#contact" data-route="contact">Request Catalogue</a>
     </div>
   </section>
 </div>
@@ -856,5 +805,6 @@
 <script src="js/jobs.js"></script>
 <script src="js/careers-request.js"></script>
 <script src="js/certificate.js"></script>
+<script src="js/about-leaders.js"></script>
 </body>
 </html>

@@ -85,5 +85,5 @@ test('ISO certificate: shown page by page for viewing, the PDF is not on the web
   assert.strictEqual((await get('/images/certifications/Avana-ISO-13485-2016-Certificate.pdf')).status, 404);
   assert.strictEqual((await get('/server/private/certificates/iso-13485-page-1.jpg')).status, 404);
   const about = await (await get('/about-us/')).text();
-  assert.ok(about.includes('data-open-cert') && !about.includes('Certificate.pdf'));
+  assert.ok(!about.includes('Certificate.pdf'));
 });

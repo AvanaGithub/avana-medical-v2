@@ -43,8 +43,11 @@
   document.addEventListener('click',function(e){if(!e.target.closest('.has-menu'))closeAll()});
 
   /* ---- Mobile menu ---- */
-  function setMobile(o){nav.classList.toggle('open',o);menuBtn.setAttribute('aria-expanded',o)}
+  var siteHead=document.querySelector('header.main');
+  function setMobile(o){nav.classList.toggle('open',o);menuBtn.setAttribute('aria-expanded',o);siteHead.classList.toggle('ov-open',!!o)}
   menuBtn.addEventListener('click',function(){setMobile(!nav.classList.contains('open'))});
+  /* About Us only: clicking anywhere outside the floating header folds the tabs back into the three lines */
+  document.addEventListener('click',function(e){if(document.body.classList.contains('route-about')&&nav.classList.contains('open')&&!e.target.closest('header.main'))setMobile(false)});
 
   /* ---- Router ---- */
   // On the server each section has its own address (about → /about-us/), title and description, given in body[data-pages].
@@ -71,6 +74,7 @@
     }
     var cta=document.getElementById('cta');if(cta)cta.hidden=(route==='contact');
     if(PAGES&&PAGES[route])setMeta(route);else document.title=(names[route]||'Home')+' · Avana Medical Devices';
+    document.body.classList.toggle('route-about',route==='about');
     closeAll();setMobile(false);
     if(scrollTo){var t=document.getElementById(scrollTo);if(t){t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});t.setAttribute('tabindex','-1');t.focus({preventScroll:true});return}}
     window.scrollTo(0,0);
@@ -218,8 +222,6 @@
   var ev=document.getElementById('echiVideo'),et=document.getElementById('echiToggle');
   et.addEventListener('click',function(){var p=!ev.paused;if(p)ev.pause();else{var r=ev.play();r&&r.catch(function(){})}et.setAttribute('aria-pressed',p);et.setAttribute('aria-label',p?'Play background video':'Pause background video')});
 
-  var bgv=document.getElementById('aboutBg'),bgt=document.getElementById('aboutBgToggle');
-  bgt.addEventListener('click',function(){var p=!bgv.paused;if(p)bgv.pause();else{var r=bgv.play();r&&r.catch(function(){})}bgt.setAttribute('aria-pressed',p);bgt.setAttribute('aria-label',p?'Play background video':'Pause background video')});
 
   var mmv=document.getElementById('mmVideo'),mmt=document.getElementById('mmToggle');
   mmt.addEventListener('click',function(){var p=!mmv.paused;if(p)mmv.pause();else{var r=mmv.play();r&&r.catch(function(){})}mmt.setAttribute('aria-pressed',p);mmt.setAttribute('aria-label',p?'Play background video':'Pause background video')});
@@ -233,7 +235,7 @@
   /* ---- About video ---- */
   var av=document.getElementById('aboutVideo'),at=document.getElementById('aboutToggle');
   /* keep both background videos looping without a stall */
-  [['aboutVideo','aboutToggle'],['heroVideo','vidToggle'],['arthrexVideo','arthrexToggle'],['echiVideo','echiToggle'],['aboutBg','aboutBgToggle'],['mmVideo','mmToggle'],['teamBg','teamBgToggle'],['contactBg','contactBgToggle']].forEach(function(p){
+  [['aboutVideo','aboutToggle'],['heroVideo','vidToggle'],['arthrexVideo','arthrexToggle'],['echiVideo','echiToggle'],['mmVideo','mmToggle'],['teamBg','teamBgToggle'],['contactBg','contactBgToggle']].forEach(function(p){
     var v=document.getElementById(p[0]),t=document.getElementById(p[1]);if(!v)return;v.loop=true;
     function userPaused(){return t&&t.getAttribute('aria-pressed')==='true'}
     v.addEventListener('ended',function(){v.currentTime=0;var r=v.play();r&&r.catch(function(){})});
