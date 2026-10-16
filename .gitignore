@@ -20,3 +20,6 @@ server/TEST-LOGIN.txt
 
 # Private files served by the server but never published (the repo is public): e.g. the ISO certificate pages
 server/private/
+
+# Original high-quality videos supplied by Avana (kept locally; the site uses the encoded copies in videos/)
+videos/HD/

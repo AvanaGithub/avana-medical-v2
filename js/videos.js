@@ -36,25 +36,27 @@
     });
   }
 
+  // Large screens on a normal connection get the full-HD version of a video; phones and data-saver get the lighter one
+  var conn = navigator.connection || {};
+  var hd = window.matchMedia('(min-width: 1024px)').matches && !conn.saveData && !/(^|-)2g$/.test(conn.effectiveType || '');
+  function pick(name, v) { return name + (hd ? '-1080' : '-720') + '.mp4?v=' + v; }
+
   // Home page
   (function(){
     var v = document.getElementById('heroVideo');
-    if (v){ v.src = 'videos/hero.mp4'; if (!reduce){ var p = v.play(); p && p.catch(function(){}); } }
+    if (v){ v.src = 'videos/' + pick('hero', 2);   // Arthrex ACL reconstruction film (HD)
+      if (!reduce){ var p = v.play(); p && p.catch(function(){}); } }
   })();
   lazy('about-section.mp4?v=2', ['aboutVideo'], ['aboutToggle']);
 
   // Brand pages
   lazy('arthrex.mp4', ['arthrexVideo'], ['arthrexToggle'], ['arthrex']);
-  lazy('echi.mp4', ['echiVideo'], ['echiToggle'], ['echi']);
+  lazy(pick('echi', 2), ['echiVideo'], ['echiToggle'], ['echi']);
   lazy('movmedix.mp4', ['mmVideo'], ['mmToggle'], ['movmedix']);
-
-  // Large screens on a normal connection get the full-HD version of a video; phones and data-saver get the lighter one
-  var conn = navigator.connection || {};
-  var hd = window.matchMedia('(min-width: 1024px)').matches && !conn.saveData && !/(^|-)2g$/.test(conn.effectiveType || '');
 
   // About Us: Arthro Knee 2026 event video (full 92 s, muted web versions of "Arthroknee Post Event Video Final.mp4":
   // 1080p for large screens, 720p for phones). Bump "?v=" whenever a file is replaced, so browsers don't show a cached copy.
-  lazy((hd ? 'about-arthroknee-1080.mp4' : 'about-arthroknee-720.mp4') + '?v=3', ['aboutBg'], ['aboutBgToggle'], ['about']);
+  lazy(pick('about-arthroknee', 3), ['aboutBg'], ['aboutBgToggle'], ['about']);
 
   // Meet the Team and Contact share one background video.
   lazy('page-background.mp4', ['teamBg','contactBg'], ['teamBgToggle','contactBgToggle'], ['team','contact'], ['teamBg','contactBg']);
