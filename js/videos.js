@@ -50,7 +50,7 @@
   lazy('about-section.mp4?v=2', ['aboutVideo'], ['aboutToggle']);
 
   // Brand pages
-  lazy('arthrex.mp4', ['arthrexVideo'], ['arthrexToggle'], ['arthrex']);
+  lazy(pick('arthrex', 2), ['arthrexVideo'], ['arthrexToggle'], ['arthrex']);
   lazy(pick('echi', 2), ['echiVideo'], ['echiToggle'], ['echi']);
   lazy(pick('movmedix', 2), ['mmVideo'], ['mmToggle'], ['movmedix']);
 
