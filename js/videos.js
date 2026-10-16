@@ -48,9 +48,13 @@
   lazy('echi.mp4', ['echiVideo'], ['echiToggle'], ['echi']);
   lazy('movmedix.mp4', ['mmVideo'], ['mmToggle'], ['movmedix']);
 
-  // About Us: Arthro Knee 2026 event video (full 92 s, muted web version of "Arthroknee Post Event Video Final.mp4")
-  // "?v=2": bump the number whenever the file is replaced, so browsers don't keep showing a cached copy
-  lazy('about-arthroknee.mp4?v=2', ['aboutBg'], ['aboutBgToggle'], ['about']);
+  // Large screens on a normal connection get the full-HD version of a video; phones and data-saver get the lighter one
+  var conn = navigator.connection || {};
+  var hd = window.matchMedia('(min-width: 1024px)').matches && !conn.saveData && !/(^|-)2g$/.test(conn.effectiveType || '');
+
+  // About Us: Arthro Knee 2026 event video (full 92 s, muted web versions of "Arthroknee Post Event Video Final.mp4":
+  // 1080p for large screens, 720p for phones). Bump "?v=" whenever a file is replaced, so browsers don't show a cached copy.
+  lazy((hd ? 'about-arthroknee-1080.mp4' : 'about-arthroknee-720.mp4') + '?v=3', ['aboutBg'], ['aboutBgToggle'], ['about']);
 
   // Meet the Team and Contact share one background video.
   lazy('page-background.mp4', ['teamBg','contactBg'], ['teamBgToggle','contactBgToggle'], ['team','contact'], ['teamBg','contactBg']);
