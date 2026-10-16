@@ -183,7 +183,7 @@ function openingsEmail(lead, url, items) {
         You received this email because you asked for our openings on avanamedical.com. If that wasn't you, you can ignore it.
       </td></tr>
       <tr><td style="background:#172025;padding:16px 32px;font:12px/1.6 Arial,Helvetica,sans-serif;color:#AAB2B2">
-        Avana Medical Devices Pvt. Ltd. · Chennai, India · <a href="mailto:info@avanamedical.com" style="color:#D19A1E">info@avanamedical.com</a>
+        Avana Medical Devices Pvt. Ltd. · Chennai, India · <a href="mailto:${esc(config.mail.replyTo)}" style="color:#D19A1E">${esc(config.mail.replyTo)}</a>
       </td></tr>
     </table>
   </td></tr></table>
@@ -211,4 +211,30 @@ function notifyHr(lead, siteUrl) {
   mailer.send({ to: config.mail.hrNotify, subject: `Openings request: ${lead.name}`, text }).catch(() => {});
 }
 
-module.exports = { validate, save, replaceCv, apply, appliedJobIds, get, newToken, findByToken, recordVisit, list, remove, counts, sendLink, notifyHr, openingsEmail, linkFor, MARITAL };
+// Heads-up for HR each time someone applies (APPLICATION_NOTIFY_EMAIL). Fire and forget; the CV stays in the admin panel.
+function notifyApplication(lead, job, coverNote, siteUrl) {
+  if (!config.mail.applicationNotify) return;
+  const lpa = n => (n === null || n === undefined ? '-' : n + ' LPA');
+  const link = `${siteUrl}/admin/#applications`;
+  const rows = [
+    ['Position', `${job.title} (${job.ref_code})`], ['Name', lead.name], ['Email', lead.email], ['Mobile', lead.phone],
+    ['City', lead.city], ['Experience', lead.total_exp === null ? '-' : lead.total_exp + ' years'],
+    ['Current employer', [lead.current_role, lead.current_employer].filter(Boolean).join(', ') || '-'],
+    ['CTC now → expected', `${lpa(lead.current_ctc)} → ${lpa(lead.expected_ctc)}`], ['Notice period', lead.notice_period || '-'],
+    ['Education', lead.education], ['Note', String(coverNote || '').trim() || '-']
+  ];
+  const subject = `New application: ${job.title} – ${lead.name}`;
+  const text = ['A new job application has been received on the website.', '',
+    ...rows.map(([k, v]) => `${k}: ${v}`), '', `Review it and download the CV in the admin panel: ${link}`].join('\n');
+  const html = `<!doctype html><html><body style="margin:0;padding:24px 12px;background:#F3EFE5;font:15px/1.6 Arial,Helvetica,sans-serif;color:#2E3538">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#fff;border-top:4px solid #B27F0D">
+    <tr><td style="padding:22px 28px;background:#172025;color:#fff;font:800 20px/1.3 Arial,Helvetica,sans-serif">New application received</td></tr>
+    <tr><td style="padding:20px 28px 6px">${esc(lead.name)} applied for <b>${esc(job.title)}</b>.</td></tr>
+    <tr><td style="padding:0 28px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows.map(([k, v]) =>
+      `<tr><td style="padding:6px 12px 6px 0;color:#6B7275;white-space:nowrap;vertical-align:top">${esc(k)}</td><td style="padding:6px 0;font-weight:600">${esc(v)}</td></tr>`).join('')}</table></td></tr>
+    <tr><td style="padding:20px 28px 26px"><a href="${esc(link)}" style="display:inline-block;background:#B27F0D;color:#fff;font:700 14px/1 Arial,Helvetica,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:14px 22px">Open in the admin panel</a></td></tr>
+  </table></body></html>`;
+  mailer.send({ to: config.mail.applicationNotify, subject, text, html }).catch(() => {});
+}
+
+module.exports = { validate, save, replaceCv, apply, appliedJobIds, get, newToken, findByToken, recordVisit, list, remove, counts, sendLink, notifyHr, notifyApplication, openingsEmail, linkFor, MARITAL };

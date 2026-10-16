@@ -35,7 +35,8 @@ module.exports = {
     pass: process.env.SMTP_PASS || '',
     from: process.env.MAIL_FROM || 'Avana Medical Devices <noreply@avanamedical.com>',
     replyTo: process.env.MAIL_REPLY_TO || 'info@avanamedical.com',
-    hrNotify: process.env.HR_NOTIFY_EMAIL || ''                     // optional: also tell HR about each new request
+    hrNotify: process.env.HR_NOTIFY_EMAIL || '',                    // optional: also tell HR about each new request
+    applicationNotify: process.env.APPLICATION_NOTIFY_EMAIL || ''   // optional: email this address each time someone applies for a job
   },
   // How long the emailed "current openings" link keeps working
   openingsLinkDays: Number(process.env.OPENINGS_LINK_DAYS) || 30

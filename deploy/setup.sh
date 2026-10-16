@@ -47,7 +47,9 @@ UPLOADS_DIR=$DATA_DIR/uploads
 # SMTP_USER=
 # SMTP_PASS=
 # MAIL_FROM=Avana Medical Devices <noreply@avanamedical.com>
+# MAIL_REPLY_TO=recruitment@avanamedical.com
 # HR_NOTIFY_EMAIL=
+# APPLICATION_NOTIFY_EMAIL=
 EOF
   chown "$APP_USER:$APP_USER" "$APP_DIR/server/.env"; chmod 600 "$APP_DIR/server/.env"
 fi

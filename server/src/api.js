@@ -103,6 +103,7 @@ router.post('/apply/:slug', (req, res) => {
     }
     const r = leads.apply(lead, job, req.body.cover_note);
     if (r.error) return res.status(r.code).json({ error: r.error, field: r.field });
+    leads.notifyApplication(lead, job, req.body.cover_note, siteUrl(req));
     recent.push(now); applyLog.set(req.ip, recent);
     ok(res, { ok: true, job: job.title });
   });
