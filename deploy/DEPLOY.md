@@ -71,7 +71,7 @@ DigitalOcean blocks the usual email ports (25, 465, 587) on new droplets, so use
 2. SPF: the domain already has `v=spf1 include:spf.protection.outlook.com -all`. **Edit that record** to `v=spf1 include:spf.protection.outlook.com include:spf.brevo.com -all`. Never add a second SPF record: two SPF records break email for both.
 3. The domain's DMARC policy is `quarantine`, so emails only reach inboxes once Brevo shows the domain as **Authenticated** (DKIM). Wait for that before testing.
 4. Create an SMTP key (Brevo: SMTP & API → SMTP), then in `/var/www/avana-medical/server/.env` uncomment and fill in `SMTP_HOST=smtp-relay.brevo.com`, `SMTP_PORT=2525`, `SMTP_USER` (the SMTP login Brevo shows) and `SMTP_PASS` (the key). Optionally set `MAIL_REPLY_TO` (where candidates' replies go) and `HR_NOTIFY_EMAIL` (a copy of each request).
-5. `systemctl restart avana-medical`, then `cd /var/www/avana-medical/server && sudo -u avana npm run test-email -- you@avanamedical.com`. Check it lands in the inbox, not spam. Then request the openings yourself on the Careers page.
+5. `systemctl restart avana-medical`, then request the openings yourself on the Careers page and check that the email lands in the inbox, not spam.
 
 ## Step 5 — Go live on avanamedical.com (when everyone is happy)
 
