@@ -4,22 +4,18 @@
 (function(){
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function start(v, toggleIds){
-    if (reduce){
-      v.removeAttribute('autoplay');
-      toggleIds.forEach(function(id){ var t = document.getElementById(id); if (t) t.setAttribute('aria-pressed','true'); });
-    } else {
-      var p = v.play(); p && p.catch(function(){});
-    }
+  function start(v){
+    if (reduce) v.removeAttribute('autoplay');
+    else { var p = v.play(); p && p.catch(function(){}); }
   }
 
   // Load [videoIds] with file when any of [pages] is shown
-  function lazy(file, videoIds, toggleIds, pages, playIds){
+  function lazy(file, videoIds, pages, playIds){
     var done = false;
     function load(){
       if (done) return; done = true;
       videoIds.forEach(function(id){ var v = document.getElementById(id); if (v) v.src = 'videos/' + file; });
-      (playIds || videoIds).forEach(function(id){ var v = document.getElementById(id); if (v) start(v, toggleIds); });
+      (playIds || videoIds).forEach(function(id){ var v = document.getElementById(id); if (v) start(v); });
     }
     if (!pages){ load(); return; }
     pages.forEach(function(r){
@@ -47,18 +43,18 @@
     if (v){ v.src = 'videos/' + pick('hero', 2);   // Arthrex ACL reconstruction film (HD)
       if (!reduce){ var p = v.play(); p && p.catch(function(){}); } }
   })();
-  lazy('about-section.mp4?v=2', ['aboutVideo'], ['aboutToggle']);
+  lazy('about-section.mp4?v=2', ['aboutVideo']);
 
   // Brand pages
-  lazy(pick('arthrex', 2), ['arthrexVideo'], ['arthrexToggle'], ['arthrex']);
-  lazy(pick('echi', 2), ['echiVideo'], ['echiToggle'], ['echi']);
-  lazy(pick('movmedix', 2), ['mmVideo'], ['mmToggle'], ['movmedix']);
+  lazy(pick('arthrex', 2), ['arthrexVideo'], ['arthrex']);
+  lazy(pick('echi', 2), ['echiVideo'], ['echi']);
+  lazy(pick('movmedix', 2), ['mmVideo'], ['movmedix']);
 
   // Meet the Team: Arthro Knee 2026 event video (full 92 s, muted web versions of "Arthroknee Post Event Video Final.mp4":
   // 1080p for large screens, 720p for phones). Bump "?v=" whenever a file is replaced, so browsers don't show a cached copy.
   // (About Us now plays the Marina Beach film, see js/about-leaders.js)
-  lazy(pick('about-arthroknee', 3), ['teamBg'], ['teamBgToggle'], ['team']);
+  lazy(pick('about-arthroknee', 3), ['teamBg'], ['team']);
 
   // Contact: Arthro Knee 2026 montage (same 8 shots as the old page-background.mp4, re-cut from the HD original)
-  lazy(pick('page-background', 2), ['contactBg'], ['contactBgToggle'], ['contact'], ['contactBg']);
+  lazy(pick('page-background', 2), ['contactBg'], ['contact'], ['contactBg']);
 })();

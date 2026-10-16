@@ -214,39 +214,16 @@
     apply();
   })();
 
-  /* ---- Arthrex video ---- */
-  var xv=document.getElementById('arthrexVideo'),xt=document.getElementById('arthrexToggle');
-  xt.addEventListener('click',function(){var p=!xv.paused;if(p)xv.pause();else{var r=xv.play();r&&r.catch(function(){})}xt.setAttribute('aria-pressed',p);xt.setAttribute('aria-label',p?'Play background video':'Pause background video')});
-
-  var ev=document.getElementById('echiVideo'),et=document.getElementById('echiToggle');
-  et.addEventListener('click',function(){var p=!ev.paused;if(p)ev.pause();else{var r=ev.play();r&&r.catch(function(){})}et.setAttribute('aria-pressed',p);et.setAttribute('aria-label',p?'Play background video':'Pause background video')});
-
-
-  var mmv=document.getElementById('mmVideo'),mmt=document.getElementById('mmToggle');
-  mmt.addEventListener('click',function(){var p=!mmv.paused;if(p)mmv.pause();else{var r=mmv.play();r&&r.catch(function(){})}mmt.setAttribute('aria-pressed',p);mmt.setAttribute('aria-label',p?'Play background video':'Pause background video')});
-
-  var tbv=document.getElementById('teamBg'),tbt=document.getElementById('teamBgToggle');
-  tbt.addEventListener('click',function(){var p=!tbv.paused;if(p)tbv.pause();else{var r=tbv.play();r&&r.catch(function(){})}tbt.setAttribute('aria-pressed',p);tbt.setAttribute('aria-label',p?'Play background video':'Pause background video')});
-
-  var cbv=document.getElementById('contactBg'),cbt=document.getElementById('contactBgToggle');
-  cbt.addEventListener('click',function(){var p=!cbv.paused;if(p)cbv.pause();else{var r=cbv.play();r&&r.catch(function(){})}cbt.setAttribute('aria-pressed',p);cbt.setAttribute('aria-label',p?'Play background video':'Pause background video')});
-
-  /* ---- About video ---- */
-  var av=document.getElementById('aboutVideo'),at=document.getElementById('aboutToggle');
-  /* keep both background videos looping without a stall */
-  [['aboutVideo','aboutToggle'],['heroVideo','vidToggle'],['arthrexVideo','arthrexToggle'],['echiVideo','echiToggle'],['mmVideo','mmToggle'],['teamBg','teamBgToggle'],['contactBg','contactBgToggle']].forEach(function(p){
-    var v=document.getElementById(p[0]),t=document.getElementById(p[1]);if(!v)return;v.loop=true;
-    function userPaused(){return t&&t.getAttribute('aria-pressed')==='true'}
-    v.addEventListener('ended',function(){v.currentTime=0;var r=v.play();r&&r.catch(function(){})});
-    v.addEventListener('pause',function(){if(!userPaused()&&!document.hidden){setTimeout(function(){if(v.paused&&!userPaused()){var r=v.play();r&&r.catch(function(){})}},150)}});
-    document.addEventListener('visibilitychange',function(){if(!document.hidden&&v.paused&&!userPaused()){var r=v.play();r&&r.catch(function(){})}});
+  /* ---- Background videos: no pause buttons; they keep looping without a stall.
+     Visitors who ask their device for reduced motion get the still poster instead (see js/videos.js). ---- */
+  var stillOnly=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  ['aboutVideo','heroVideo','arthrexVideo','echiVideo','mmVideo','teamBg','contactBg'].forEach(function(id){
+    var v=document.getElementById(id);if(!v)return;v.loop=true;
+    if(stillOnly){v.removeAttribute('autoplay');v.pause();return}
+    function play(){var r=v.play();r&&r.catch(function(){})}
+    v.addEventListener('ended',function(){v.currentTime=0;play()});
+    v.addEventListener('pause',function(){if(!document.hidden){setTimeout(function(){if(v.paused)play()},150)}});
+    document.addEventListener('visibilitychange',function(){if(!document.hidden&&v.paused)play()});
   });
-  at.addEventListener('click',function(){var p=!av.paused;if(p)av.pause();else{var r=av.play();r&&r.catch(function(){})}at.setAttribute('aria-pressed',p);at.setAttribute('aria-label',p?'Play background video':'Pause background video')});
-
-  /* ---- Hero video ---- */
-  var hv=document.getElementById('heroVideo'),vt=document.getElementById('vidToggle');
-  function setPaused(p){if(p){hv.pause()}else{var pr=hv.play();pr&&pr.catch(function(){})}vt.setAttribute('aria-pressed',p);vt.setAttribute('aria-label',p?'Play background video':'Pause background video')}
-  vt.addEventListener('click',function(){setPaused(!hv.paused)});
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches){hv.removeAttribute('autoplay');setPaused(true)}
 
 })();

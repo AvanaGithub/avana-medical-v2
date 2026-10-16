@@ -79,12 +79,6 @@ main:focus,h1[tabindex="-1"]:focus,section[tabindex="-1"]:focus{outline:none}
 .btn.hero-ghost:hover{background:var(--gold);border-color:var(--gold);color:#fff}
 .hero .hero-product sup{font-size:.36em;font-weight:700;vertical-align:super;margin-left:2px;color:var(--gold-hi)}
 .hero .sub{font:500 clamp(18px,1.9vw,22px)/1.4 var(--f-display);color:var(--sand);margin:18px 0 30px;max-width:44ch;text-shadow:0 1px 12px rgba(0,0,0,.4)}
-.vid-toggle{position:absolute;right:20px;bottom:20px;width:44px;height:44px;border:1px solid rgba(215,208,188,.6);background:rgba(23,32,37,.55);color:#fff;display:grid;place-items:center;cursor:pointer}
-.vid-toggle:hover{background:var(--gold);border-color:var(--gold)}
-.vid-toggle svg{width:16px;height:16px}
-.vid-toggle .i-play{display:none}
-.vid-toggle[aria-pressed="true"] .i-play{display:block}
-.vid-toggle[aria-pressed="true"] .i-pause{display:none}
 .rule{width:72px;height:4px;background:var(--gold);margin-top:34px}
 
 /* Partners */
@@ -361,7 +355,6 @@ section.split.flip .media-box{order:2}
   .about-vid .bgvid{position:relative;inset:auto;display:block;width:100%;height:auto;aspect-ratio:16/9;object-position:center;transform:none}
   .about-shade{display:none}
   .about-vid .wrap{padding-block:36px 56px}
-  .about-vid .vid-toggle{top:12px;bottom:auto}
 }
 
 /* Careers: Why Avana over team photo */
@@ -551,7 +544,6 @@ html.cm-lock{overflow:hidden}
   .hero-video{object-position:50% 50%}
   .hero-shade{background:linear-gradient(0deg,rgba(23,32,37,.94) 0%,rgba(23,32,37,.78) 38%,rgba(23,32,37,.2) 72%,rgba(23,32,37,.05) 100%)}
   .hero .wrap{padding-block:40px 40px}
-  .hero .vid-toggle{top:12px;bottom:auto;right:12px;width:38px;height:38px}
 }
 
 
@@ -688,12 +680,10 @@ html.cm-lock{overflow:hidden}
 #aboutBg.gl-bgvid,#teamBg.gl-bgvid,#contactBg.gl-bgvid{filter:none;transform:none}
 #glHero .gl-glow,#tmHero .gl-glow{background:radial-gradient(55% 75% at 50% 40%,rgba(17,24,28,.45),rgba(17,24,28,0) 75%),linear-gradient(180deg,rgba(23,32,37,.45) 0%,rgba(17,24,28,.55) 100%)}
 .gl-hero .gl-glow{background:radial-gradient(60% 70% at 78% 105%,rgba(178,127,13,.30),rgba(178,127,13,0) 70%),radial-gradient(55% 75% at 50% 35%,rgba(17,24,28,.55),rgba(17,24,28,0) 75%),linear-gradient(180deg,rgba(23,32,37,.80) 0%,rgba(17,24,28,.86) 100%)}
-.gl-hero .vid-toggle{z-index:2}
 .gl-sub.team-intro{min-height:1.7em;margin-bottom:0}
 #tmHero{align-items:flex-start}
 #tmHero .gl-wrap{padding-top:72px}
 @media (max-width:900px){#tmHero{min-height:349px}#tmHero .gl-wrap{padding-top:30px}}
-@media (max-width:900px){.gl-hero .vid-toggle{top:12px;bottom:auto;right:12px;width:38px;height:38px}}
 /* Breadcrumbs under the logo (About Us / Meet the Team): centred, matching */
 .gl-hero .crumbs{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:0 12px;width:100%;margin:0;font:600 15px/1.4 var(--f-body);letter-spacing:.02em}
 .gl-hero .crumbs a,.gl-hero .crumbs span[aria-current]{color:var(--gold-hi);font-weight:600}
