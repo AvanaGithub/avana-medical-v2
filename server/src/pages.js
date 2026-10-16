@@ -33,7 +33,7 @@ const PAGES = {
   movmedix: {
     path: '/products/movmedix/',
     title: 'MovMedix LARS Ligaments in India – Avana Medical',
-    description: 'MovMedix LARS synthetic ligaments from France for knee, shoulder, foot and ankle and soft-tissue reconstruction, available in India through Avana.'
+    description: 'MovMedix LARS synthetic ligaments from France for knee, shoulder, foot and ankle and soft-tissue reconstruction, coming soon to India through Avana.'
   },
   careers: {
     path: '/careers/',

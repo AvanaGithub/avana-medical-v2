@@ -326,6 +326,11 @@ section.split.flip .media-box{order:2}
 .ax-head .brand-title .divider{background:rgba(215,208,188,.5)}
 .ax-head p{max-width:64ch;color:var(--sand);margin:0;font-size:18px;line-height:1.8;text-shadow:0 1px 10px rgba(0,0,0,.4)}
 .ax-range{background:#F6F4F1;padding-block:64px 96px}
+/* MovMedix: not launched in India yet */
+.soon-note{display:flex;align-items:center;flex-wrap:wrap;gap:12px 18px;margin:0 0 28px;padding:16px 20px;background:#fff;border:1px solid rgba(178,127,13,.35);border-left:4px solid var(--gold)}
+.soon-note p{margin:0;flex:1 1 320px;color:var(--body);line-height:1.6}
+.soon-note a{color:var(--gold-dk);font-weight:700}
+.soon-badge{flex:none;padding:8px 12px;background:var(--gold);color:#fff;font:700 13px/1 var(--f-display);letter-spacing:.12em;text-transform:uppercase}
 .acards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
 .acard{position:relative;min-width:0;background:#fff;display:flex;flex-direction:column;border:1px solid rgba(178,127,13,.28);transition:box-shadow .2s,transform .2s,border-color .2s}
 .acard:hover,.acard:focus-within{border-color:rgba(178,127,13,.6)}
