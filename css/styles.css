@@ -102,7 +102,7 @@ main:focus,h1[tabindex="-1"]:focus,section[tabindex="-1"]:focus{outline:none}
 .partners a img{width:150px;height:44px;object-fit:contain;display:block}
 .partners a img.echi{padding:0 9px}
 .partners a{justify-content:space-between;min-height:96px}
-.partners a small{font:600 11px/1 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--grey)}
+.partners a small{font:600 12px/1 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--grey)}
 
 /* Split sections */
 section.split{padding-block:96px}
@@ -341,7 +341,7 @@ section.split.flip .media-box{order:2}
 .acard span.more{cursor:default}
 @media (max-width:1080px){.acards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-@media (max-width:480px){.acards{grid-template-columns:1fr}}
+
 
 /* About video section: whole video frame always visible (contain), text overlaid on the dark left side */
 .about-vid{position:relative;background:#0f0f0f;color:#fff;overflow:hidden;min-height:clamp(480px,70vh,680px);display:flex;align-items:center}
@@ -508,7 +508,7 @@ html.cm-lock{overflow:hidden}
 .cm-field{margin-bottom:16px;min-width:0}
 .cm-field label{display:block;font:700 14px/1.3 var(--f-display);color:var(--charcoal);margin-bottom:7px}
 .cm-opt{font:500 12px/1 var(--f-body);color:var(--muted);margin-left:6px;letter-spacing:.02em}
-.cm-field input[type=text],.cm-field input[type=email],.cm-field input[type=number],.cm-field select,.cm-field textarea{width:100%;font:400 16px/1.4 var(--f-body);color:var(--ink);background:#fff;border:1px solid #CFC8B6;border-radius:2px;padding:11px 12px;transition:border-color .15s,box-shadow .15s}
+.cm-field input[type=text],.cm-field input[type=email],.cm-field input[type=number],.cm-field input[type=tel],.cm-field input[type=url],.cm-field select,.cm-field textarea{width:100%;font:400 16px/1.4 var(--f-body);color:var(--ink);background:#fff;border:1px solid #CFC8B6;border-radius:2px;padding:11px 12px;transition:border-color .15s,box-shadow .15s}
 .cm-field textarea{resize:vertical;min-height:72px}
 .cm-field select{appearance:none;-webkit-appearance:none;background-image:url("../images/icons/select-arrow.svg");background-repeat:no-repeat;background-position:right 12px center;background-size:12px 8px;padding-right:36px}
 .cm-field input:focus,.cm-field select:focus,.cm-field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(209,154,30,.25)}
@@ -975,3 +975,32 @@ html.cm-lock{overflow:hidden}
 /* Uniform titles: one size for every page title, one size for every section title */
 .page-head h1,.page-head .brand-title h1,.ax-head h1,.ax-head .brand-title h1{font-size:clamp(34px,4.4vw,52px);font-weight:800;line-height:1.08;letter-spacing:-.01em}
 .ab-row h2,.ab-feat-cap h2,.ct-mail h2,.ct-offices h2,.copy h2,.testi h2,.cta h2,.cat-head h2,.cat-band h2,.team h2.center,.life h2,.openings h2,.voices h2,.why-copy h2,.about-vid .copy h2{font-size:clamp(28px,3.4vw,40px);font-weight:800;line-height:1.1}
+
+/* ---- File pickers (CV upload): a proper button instead of the browser's plain one ---- */
+.cm-field input[type=file],.af-file input{width:100%;padding:10px;border:1.5px dashed #CFC8B6;background:var(--sand-lt);font:500 14px/1.4 var(--f-body);color:var(--body);border-radius:2px}
+input[type=file]::file-selector-button{margin-right:12px;padding:10px 14px;border:0;border-radius:2px;background:var(--charcoal);color:#fff;font:700 12px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .15s}
+input[type=file]::file-selector-button:hover{background:var(--gold)}
+
+/* ---- Phones: bigger tap targets and compact grids ---- */
+@media (max-width:640px){
+  /* links get a taller tap area without moving anything */
+  .crumbs a{display:inline-block;padding-block:11px;margin-block:-11px}
+  footer .top{grid-template-columns:1fr 1fr;gap:28px 20px}
+  footer .top>div:first-child{grid-column:1/-1}
+  footer ul{gap:0}
+  footer ul a{display:inline-block;padding-block:10px}
+  .member .role a{flex:none;width:38px;height:38px}
+  .member .role a svg{width:18px;height:18px}
+  /* partner logos three across instead of a tall stack */
+  .partners ul{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+  .partners a{min-width:0;min-height:84px;padding:14px 8px 10px}
+  .partners a img{width:100%;height:34px}
+  /* product cards two across */
+  .acards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .acard .body{padding:16px 10px 18px;gap:8px}
+  .acard h2{font-size:17px}
+  .acard .more{font-size:15px}
+  .ab-cert-link,.ct-mailline a{display:inline-block;padding-block:10px}
+  /* keep the job details clear of the close button */
+  .job-dlg .jd-kicker{padding-right:48px}
+}
