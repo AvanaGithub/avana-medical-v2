@@ -401,7 +401,7 @@
             <h3>ISO 13485:2016 Certified</h3>
             <p>Our quality management system meets ISO (International Organization for Standardization) 13485:2016, the international standard for medical devices, across procurement, storage, sales and distribution, installation and servicing.</p>
             <p class="ab-cert-ref">Certificate IN25/00000233</p>
-            <a class="ab-cert-link" href="images/certifications/Avana-ISO-13485-2016-Certificate.pdf" target="_blank" rel="noopener">View our certificate<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg><span class="sr-only"> (PDF, opens in a new tab)</span></a>
+            <button type="button" class="ab-cert-link" data-open-cert aria-haspopup="dialog">View our certificate<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
           </div>
         </article>
       </div>
@@ -673,7 +673,7 @@
       <div class="cm-row">
         <div class="cm-field">
           <label for="cm-age">Age<span class="cm-req" aria-hidden="true">*</span></label>
-          <input id="cm-age" name="age" type="number" inputmode="numeric" min="18" max="65" required>
+          <input id="cm-age" name="age" type="text" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="18–65" required>
           <p class="cm-err" id="cm-age-e"></p>
         </div>
         <div class="cm-field">
@@ -692,19 +692,19 @@
       <div class="cm-row">
         <div class="cm-field">
           <label for="cm-phone">Mobile number<span class="cm-req" aria-hidden="true">*</span></label>
-          <input id="cm-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+91" required>
+          <input id="cm-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="16" placeholder="98765 43210" required>
           <p class="cm-err" id="cm-phone-e"></p>
         </div>
         <div class="cm-field">
           <label for="cm-city">Current city<span class="cm-req" aria-hidden="true">*</span></label>
-          <input id="cm-city" name="city" type="text" autocomplete="address-level2" maxlength="60" required>
+          <input id="cm-city" name="city" type="text" autocomplete="address-level2" minlength="2" maxlength="60" required>
           <p class="cm-err" id="cm-city-e"></p>
         </div>
       </div>
       <div class="cm-row">
         <div class="cm-field">
           <label for="cm-exp">Total experience (years)<span class="cm-req" aria-hidden="true">*</span></label>
-          <input id="cm-exp" name="total_exp" type="number" min="0" max="50" step="0.5" inputmode="decimal" placeholder="0 for freshers" required>
+          <input id="cm-exp" name="total_exp" type="text" inputmode="decimal" maxlength="4" autocomplete="off" placeholder="e.g. 4.5 (0 for freshers)" required>
           <p class="cm-err" id="cm-exp-e"></p>
         </div>
         <div class="cm-field">
@@ -725,18 +725,18 @@
       <div class="cm-row">
         <div class="cm-field">
           <label for="cm-ctc">Current CTC (₹ lakh per annum) <span class="cm-opt">Optional</span></label>
-          <input id="cm-ctc" name="current_ctc" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 6.5">
+          <input id="cm-ctc" name="current_ctc" type="text" inputmode="decimal" maxlength="5" autocomplete="off" placeholder="e.g. 6.5">
           <p class="cm-err" id="cm-ctc-e"></p>
         </div>
         <div class="cm-field">
           <label for="cm-ectc">Expected CTC (₹ lakh per annum) <span class="cm-opt">Optional</span></label>
-          <input id="cm-ectc" name="expected_ctc" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 8">
+          <input id="cm-ectc" name="expected_ctc" type="text" inputmode="decimal" maxlength="5" autocomplete="off" placeholder="e.g. 8">
           <p class="cm-err" id="cm-ectc-e"></p>
         </div>
       </div>
       <div class="cm-field">
         <label for="cm-linkedin">LinkedIn profile <span class="cm-opt">Optional</span></label>
-        <input id="cm-linkedin" name="linkedin" type="url" maxlength="200" placeholder="https://linkedin.com/in/…">
+        <input id="cm-linkedin" name="linkedin" type="url" maxlength="200" placeholder="https://www.linkedin.com/in/your-name">
         <p class="cm-err" id="cm-linkedin-e"></p>
       </div>
       <div class="cm-field">
@@ -782,6 +782,19 @@
     </div>
   </div>
 </div>
+
+<!-- ============ ISO 13485 certificate: view only (pages served by the server, see server/src/index.js) ============ -->
+<dialog class="cert-dlg" id="certDialog" aria-labelledby="certTitle">
+  <div class="cert-head">
+    <h2 id="certTitle">ISO 13485:2016 certificate</h2>
+    <p>Certificate IN25/00000233 · issued by SGS · valid until 27 March 2028</p>
+    <button class="job-dlg-x cert-x" type="button" data-cert-close aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+  </div>
+  <div class="cert-pages" id="certPages" data-pages="2"></div>
+  <p class="cert-note">For viewing only. For a copy of the certificate, please write to <a href="mailto:info@avanamedical.com">info@avanamedical.com</a>.</p>
+</dialog>
 
 <!-- ============ Careers: job details + application ============ -->
 <dialog class="job-dlg" id="jobDialog" aria-labelledby="jobDlgTitle">
@@ -836,5 +849,6 @@
 <script src="js/card-slides.js"></script>
 <script src="js/jobs.js"></script>
 <script src="js/careers-request.js"></script>
+<script src="js/certificate.js"></script>
 </body>
 </html>

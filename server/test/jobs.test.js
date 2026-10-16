@@ -302,11 +302,30 @@ test('job titles and names are escaped on the website and in the email', async (
   assert.ok(!page.includes('<img src=x onerror=alert(1)>'));
   assert.ok(page.includes('&lt;img src=x onerror=alert(1)&gt;'));
 
-  await ask(client(), { email: 'x@example.com', name: '<b>Eve</b> "x"' });
+  // names with markup are refused outright; an apostrophe is fine and is escaped where it is shown
+  assert.strictEqual((await ask(client(), { email: 'x@example.com', name: '<b>Eve</b> "x"' })).body.field, 'name');
+  await ask(client(), { email: 'x@example.com', name: "Eve D'Souza" });
   const mail = lastEmail();
-  assert.ok(!mail.includes('<b>Eve</b>') && mail.includes('&lt;b&gt;Eve&lt;/b&gt;'));
+  assert.ok(mail.includes('Hi Eve,'));
   assert.ok(!mail.includes('<img src=x'));
   const t = new URL(linkIn(mail)).searchParams.get('t');
   const own = await (await fetch(`${base}/job?t=${t}`)).text();
-  assert.ok(!own.includes('<b>Eve</b>'));
+  assert.ok(own.includes('data-lead-name="Eve D&#39;Souza"'));
+});
+
+test('form rules: age, mobile, name, city, experience, CTC, LinkedIn', async () => {
+  const pub = client();
+  const field = async o => (await ask(pub, Object.assign({ email: 'rules@example.com' }, o))).body.field;
+  for (const age of ['150', '7', '17', '66', '27.5', '2a']) assert.strictEqual(await field({ age }), 'age', 'age ' + age);
+  for (const phone of ['12345 67890', '98765', '+1 202 555 0100', '98765432101']) assert.strictEqual(await field({ phone }), 'phone', 'phone ' + phone);
+  assert.strictEqual(await field({ name: 'Priya 2' }), 'name');
+  assert.strictEqual(await field({ city: '600001' }), 'city');
+  assert.strictEqual(await field({ total_exp: '13' }), 'total_exp', 'more experience than age allows (27 - 15 = 12)');
+  assert.strictEqual(await field({ total_exp: '4.25' }), 'total_exp');
+  assert.strictEqual(await field({ current_ctc: '1500' }), 'current_ctc');
+  assert.strictEqual(await field({ linkedin: 'https://example.com/me' }), 'linkedin');
+  // accepted formats are stored the same way
+  const ok = await ask(pub, { email: 'rules@example.com', phone: '09876543210' });
+  assert.strictEqual(ok.status, 200, JSON.stringify(ok.body));
+  assert.strictEqual(db.prepare("SELECT phone FROM job_leads WHERE email = 'rules@example.com'").get().phone, '+91 98765 43210');
 });

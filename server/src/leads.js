@@ -25,11 +25,14 @@ function validate(b) {
   };
   if (l.name.length < 2) return { error: 'Please enter your full name.', field: 'name' };
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(l.email)) return { error: 'Please enter a valid email address, like name@example.com.', field: 'email' };
-  if (!Number.isInteger(l.age) || l.age < 18 || l.age > 65) return { error: 'Please enter an age between 18 and 65.', field: 'age' };
+  if (!/^\d{2}$/.test(String(b.age ?? '').trim()) || l.age < 18 || l.age > 65) return { error: 'Please enter your age in years, between 18 and 65.', field: 'age' };
   if (!MARITAL.includes(l.marital_status)) return { error: 'Please choose your marital status.', field: 'marital_status' };
   if (l.education.length < 2) return { error: 'Please enter your highest qualification.', field: 'education' };
+  if (l.education.length > 120) return { error: 'Please keep your qualification under 120 characters.', field: 'education' };
   const p = apps.validate(Object.assign({}, b, { qualification: l.education, cover_note: '' }));
   if (p.error) return p;
+  // work experience can't start before about age 15
+  if (p.value.total_exp > l.age - 15) return { error: `At age ${l.age}, total experience can be at most ${l.age - 15} years.`, field: 'total_exp' };
   if (!yes(b.truthful)) return { error: 'Please confirm that your details are truthful to continue.', field: 'truthful' };
   const { phone, city, total_exp, current_ctc, expected_ctc, notice_period, current_employer, current_role, linkedin } = p.value;
   return { value: Object.assign(l, { phone, city, total_exp, current_ctc, expected_ctc, notice_period, current_employer, current_role, linkedin }) };

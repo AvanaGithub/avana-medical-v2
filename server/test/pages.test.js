@@ -71,3 +71,19 @@ test('sitemap lists every page; robots.txt points to it and keeps private areas 
   assert.match(robots, /Disallow: \/job/);
   assert.ok(!xml.includes('/job'), 'the private openings page is not in the sitemap');
 });
+
+test('ISO certificate: shown page by page for viewing, the PDF is not on the website', async () => {
+  for (const p of [1, 2]) {
+    const r = await get('/certificates/iso-13485/' + p);
+    assert.strictEqual(r.status, 200);
+    assert.strictEqual(r.headers.get('content-type'), 'image/jpeg');
+    assert.strictEqual(r.headers.get('content-disposition'), 'inline');
+    assert.match(r.headers.get('cache-control'), /no-store/);
+  }
+  assert.strictEqual((await get('/certificates/iso-13485/3')).status, 404);
+  assert.strictEqual((await get('/certificates/iso-13485/..%2F..%2Fdata')).status, 404);
+  assert.strictEqual((await get('/images/certifications/Avana-ISO-13485-2016-Certificate.pdf')).status, 404);
+  assert.strictEqual((await get('/server/private/certificates/iso-13485-page-1.jpg')).status, 404);
+  const about = await (await get('/about-us/')).text();
+  assert.ok(about.includes('data-open-cert') && !about.includes('Certificate.pdf'));
+});

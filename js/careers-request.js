@@ -8,19 +8,30 @@
       why = document.getElementById('cm-why'), whyN = document.getElementById('cm-why-n'), hint = document.getElementById('cmReadyHint'),
       sending = false, last = null;
 
+  // Same rules as the server (server/src/applications.js and leads.js)
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var NAME_RE = /^\p{L}[\p{L}\p{M} .'-]*$/u;
+  var LINKEDIN_RE = /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\/(in|pub)\/[\w%-]+\/?(\?\S*)?$/i;
+  var DEC_RE = /^\d{1,3}(\.\d)?$/;
+  function mobileOk(v) { var d = v.replace(/[\s()-]/g, '').replace(/^(\+?91|0)(?=\d{10}$)/, ''); return /^[6-9]\d{9}$/.test(d); }
+  function ageNow() { var a = document.getElementById('cm-age').value.trim(); return /^\d{2}$/.test(a) ? Number(a) : null; }
   var rules = {
-    'cm-name': function (v) { return v.length < 2 ? 'Please enter your full name.' : ''; },
-    'cm-email': function (v) { return !v ? 'Please enter your email address.' : (!EMAIL_RE.test(v) ? 'Please enter a valid email address, like name@example.com.' : ''); },
-    'cm-age': function (v) { var n = Number(v); return !v ? 'Please enter your age.' : (!Number.isInteger(n) || n < 18 || n > 65 ? 'Please enter an age between 18 and 65.' : ''); },
+    'cm-name': function (v) { return v.length < 2 ? 'Please enter your full name.' : (!NAME_RE.test(v) ? 'Please use letters only (no numbers or symbols).' : ''); },
+    'cm-email': function (v) { return !v ? 'Please enter your email address.' : (!EMAIL_RE.test(v) || v.length > 120 ? 'Please enter a valid email address, like name@example.com.' : ''); },
+    'cm-age': function (v) { var n = Number(v); return !v ? 'Please enter your age.' : (!/^\d{2}$/.test(v) || n < 18 || n > 65 ? 'Please enter an age between 18 and 65.' : ''); },
     'cm-marital': function (v) { return !v ? 'Please choose your marital status.' : ''; },
-    'cm-edu': function (v) { return v.length < 2 ? 'Please enter your highest qualification.' : ''; },
-    'cm-phone': function (v) { var d = v.replace(/\D/g, '').length; return !v ? 'Please enter your mobile number.' : (d < 10 || d > 13 ? 'Please enter a valid mobile number (10 digits).' : ''); },
-    'cm-city': function (v) { return !v ? 'Please enter your current city.' : ''; },
-    'cm-exp': function (v) { var n = Number(v); return v === '' ? 'Please enter your total experience in years (0 for freshers).' : (isNaN(n) || n < 0 || n > 50 ? 'Please enter your experience in years, 0 to 50.' : ''); },
-    'cm-ctc': function (v) { return v && (isNaN(Number(v)) || Number(v) < 0 || Number(v) > 500) ? 'Enter CTC in lakh per annum, e.g. 6.5' : ''; },
-    'cm-ectc': function (v) { return v && (isNaN(Number(v)) || Number(v) < 0 || Number(v) > 500) ? 'Enter CTC in lakh per annum, e.g. 8' : ''; },
-    'cm-linkedin': function (v) { return v && !/^https?:\/\/\S+$/i.test(v) ? 'Enter the full LinkedIn link, starting with https://' : ''; },
+    'cm-edu': function (v) { return v.length < 2 ? 'Please enter your highest qualification.' : (v.length > 120 ? 'Please keep this under 120 characters.' : ''); },
+    'cm-phone': function (v) { return !v ? 'Please enter your mobile number.' : (!mobileOk(v) ? 'Please enter a valid 10-digit Indian mobile number, like 98765 43210.' : ''); },
+    'cm-city': function (v) { return !v ? 'Please enter your current city.' : (v.length < 2 || !NAME_RE.test(v) ? 'Please enter your city using letters only.' : ''); },
+    'cm-exp': function (v) {
+      if (v === '') return 'Please enter your total experience in years (0 for freshers).';
+      var n = Number(v), age = ageNow();
+      if (!DEC_RE.test(v) || n > 50) return 'Please enter years of experience, 0 to 50 (e.g. 4 or 4.5).';
+      return age && n > age - 15 ? 'At age ' + age + ', experience can be at most ' + (age - 15) + ' years.' : '';
+    },
+    'cm-ctc': function (v) { return v && (!DEC_RE.test(v) || Number(v) > 500) ? 'Enter CTC in lakh per annum, 0 to 500 (e.g. 6.5).' : ''; },
+    'cm-ectc': function (v) { return v && (!DEC_RE.test(v) || Number(v) > 500) ? 'Enter CTC in lakh per annum, 0 to 500 (e.g. 8).' : ''; },
+    'cm-linkedin': function (v) { return v && !LINKEDIN_RE.test(v) ? 'Enter your LinkedIn profile link, like https://www.linkedin.com/in/your-name' : ''; },
     'cm-cv': function (v, el) {
       var f = el.files && el.files[0];
       if (!f) return 'Please attach your CV (PDF or Word, up to 5 MB).';
@@ -59,6 +70,21 @@
     if (el.type !== 'checkbox' && el.type !== 'file') el.addEventListener('blur', function () { if (el.value.trim() || el.getAttribute('aria-invalid') === 'true') setErr(id, msgFor(id)); });
   });
   why.addEventListener('input', function () { whyN.textContent = why.value.length; });
+  var KEEP = { 'cm-age': /[^\d]/g, 'cm-exp': /[^\d.]/g, 'cm-ctc': /[^\d.]/g, 'cm-ectc': /[^\d.]/g, 'cm-phone': /[^\d+ ()-]/g };
+  Object.keys(KEEP).forEach(function (id) {
+    var el = document.getElementById(id);
+    el.addEventListener('input', function () {
+      var v = el.value.replace(KEEP[id], '');
+      if (id !== 'cm-age' && id !== 'cm-phone') v = v.replace(/^(\d*\.\d?).*$/, '$1');   // one decimal place at most
+      if (el.maxLength > 0) v = v.slice(0, el.maxLength);
+      if (v !== el.value) el.value = v;
+    });
+  });
+  // experience is checked against age, so re-check it when the age changes
+  document.getElementById('cm-age').addEventListener('input', function () {
+    var exp = document.getElementById('cm-exp');
+    if (exp.value) setErr('cm-exp', msgFor('cm-exp'));
+  });
 
   /* ---------- open / close ---------- */
   function focusables() {

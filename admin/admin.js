@@ -69,6 +69,18 @@
     });
   }
 
+  // On phones each table row is shown as a card (admin.css): label every cell with its column name
+  document.querySelectorAll('table.table').forEach(table => {
+    const label = () => {
+      const names = [...table.querySelectorAll('thead th')].map(th => th.textContent.trim());
+      table.querySelectorAll('tbody tr').forEach(tr => [...tr.children].forEach((td, i) => {
+        if (names[i]) td.setAttribute('data-label', names[i]); else td.removeAttribute('data-label');
+      }));
+    };
+    new MutationObserver(label).observe(table.tBodies[0], { childList: true });
+    label();
+  });
+
   // Close buttons and backdrop clicks for every dialog
   document.querySelectorAll('dialog').forEach(d => {
     d.addEventListener('click', e => {

@@ -21,24 +21,45 @@ function cvType(buf, name) {
 const num = v => { if (v === '' || v === undefined || v === null) return null; const n = Number(v); return Number.isFinite(n) && n >= 0 ? Math.round(n * 10) / 10 : NaN; };
 const str = (v, max) => String(v ?? '').trim().slice(0, max);
 
+// Shared rules for the candidate forms (js/careers-request.js mirrors them so people see errors before sending)
+const RULES = {
+  NAME: /^\p{L}[\p{L}\p{M} .'-]*$/u,                                  // letters, spaces, . ' - (no digits or symbols)
+  EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
+  LINKEDIN: /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\/(in|pub)\/[\w%-]+\/?(\?\S*)?$/i
+};
+// Indian mobile: 10 digits starting 6–9, with or without +91 / 91 / 0 in front. Returns "+91 98765 43210" or null.
+function indianMobile(v) {
+  const d = String(v ?? '').replace(/[\s()-]/g, '').replace(/^(\+?91|0)(?=\d{10}$)/, '');
+  return /^[6-9]\d{9}$/.test(d) ? `+91 ${d.slice(0, 5)} ${d.slice(5)}` : null;
+}
+// A number with at most one decimal place, between min and max; null when empty, NaN when invalid
+function decimal(v, min, max) {
+  const s = String(v ?? '').trim();
+  if (s === '') return null;
+  if (!/^\d{1,3}(\.\d)?$/.test(s)) return NaN;
+  const n = Number(s);
+  return n >= min && n <= max ? n : NaN;
+}
+
 function validate(b) {
   const a = {
-    name: str(b.name, 80), email: str(b.email, 120).toLowerCase(), phone: str(b.phone, 20), city: str(b.city, 60),
-    total_exp: num(b.total_exp), current_ctc: num(b.current_ctc), expected_ctc: num(b.expected_ctc),
+    name: str(b.name, 200).replace(/\s+/g, ' '), email: str(b.email, 200).toLowerCase(), phone: str(b.phone, 30), city: str(b.city, 200).replace(/\s+/g, ' '),
+    total_exp: decimal(b.total_exp, 0, 50), current_ctc: decimal(b.current_ctc, 0, 500), expected_ctc: decimal(b.expected_ctc, 0, 500),
     notice_period: str(b.notice_period, 40), current_employer: str(b.current_employer, 100), current_role: str(b.current_role, 100),
     qualification: str(b.qualification, 120), linkedin: str(b.linkedin, 200), cover_note: str(b.cover_note, 1500)
   };
-  if (a.name.length < 2) return { error: 'Enter your full name.', field: 'name' };
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(a.email)) return { error: 'Enter a valid email address.', field: 'email' };
-  const digits = a.phone.replace(/\D/g, '');
-  if (digits.length < 10 || digits.length > 13) return { error: 'Enter a valid mobile number (10 digits).', field: 'phone' };
-  if (!a.city) return { error: 'Enter your current city.', field: 'city' };
-  if (a.total_exp === null || Number.isNaN(a.total_exp) || a.total_exp > 50) return { error: 'Enter your total experience in years (0 for freshers).', field: 'total_exp' };
+  if (a.name.length < 2 || a.name.length > 80 || !RULES.NAME.test(a.name)) return { error: 'Enter your full name using letters only (2–80 characters).', field: 'name' };
+  if (a.email.length > 120 || !RULES.EMAIL.test(a.email)) return { error: 'Enter a valid email address, like name@example.com.', field: 'email' };
+  const phone = indianMobile(a.phone);
+  if (!phone) return { error: 'Enter a valid 10-digit Indian mobile number, like 98765 43210.', field: 'phone' };
+  a.phone = phone;
+  if (a.city.length < 2 || a.city.length > 60 || !RULES.NAME.test(a.city)) return { error: 'Enter your current city using letters only.', field: 'city' };
+  if (a.total_exp === null || Number.isNaN(a.total_exp)) return { error: 'Enter your total experience in years, 0 to 50 (e.g. 4 or 4.5; 0 for freshers).', field: 'total_exp' };
   for (const k of ['current_ctc', 'expected_ctc']) {
-    if (Number.isNaN(a[k]) || (a[k] !== null && a[k] > 500)) return { error: 'Enter CTC in lakh per annum, e.g. 6.5', field: k };
+    if (Number.isNaN(a[k])) return { error: 'Enter CTC in lakh per annum, 0 to 500 (e.g. 6.5).', field: k };
   }
   if (a.notice_period && !NOTICE.includes(a.notice_period)) return { error: 'Choose your notice period.', field: 'notice_period' };
-  if (a.linkedin && !/^https?:\/\/\S+$/i.test(a.linkedin)) return { error: 'Enter the full LinkedIn link, starting with https://', field: 'linkedin' };
+  if (a.linkedin && !RULES.LINKEDIN.test(a.linkedin)) return { error: 'Enter your LinkedIn profile link, like https://www.linkedin.com/in/your-name', field: 'linkedin' };
   if (!(b.consent === 'yes' || b.consent === true || b.consent === 'on')) return { error: 'Please agree to the privacy notice so we can review your application.', field: 'consent' };
   return { value: a };
 }

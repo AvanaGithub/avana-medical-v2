@@ -17,3 +17,6 @@ server/data/
 uploads/
 
 server/TEST-LOGIN.txt
+
+# Private files served by the server but never published (the repo is public): e.g. the ISO certificate pages
+server/private/

@@ -73,6 +73,17 @@ DigitalOcean blocks the usual email ports (25, 465, 587) on new droplets, so use
 4. Create an SMTP key (Brevo: SMTP & API → SMTP), then in `/var/www/avana-medical/server/.env` uncomment and fill in `SMTP_HOST=smtp-relay.brevo.com`, `SMTP_PORT=2525`, `SMTP_USER` (the SMTP login Brevo shows) and `SMTP_PASS` (the key). Optionally set `MAIL_REPLY_TO` (where candidates' replies go) and `HR_NOTIFY_EMAIL` (a copy of each request).
 5. `systemctl restart avana-medical`, then request the openings yourself on the Careers page and check that the email lands in the inbox, not spam.
 
+## Step 4c — Copy the private files
+
+The GitHub repository is public, so some files are kept out of it and copied to the server by hand. Today that is the ISO 13485 certificate: two watermarked page images that the About page shows in a view-only viewer. From the computer that has them:
+
+```bash
+scp -i ~/.ssh/avana_medical_do -r server/private root@<droplet-ip>:/var/www/avana-medical/server/
+ssh -i ~/.ssh/avana_medical_do root@<droplet-ip> chown -R avana:avana /var/www/avana-medical/server/private
+```
+
+`git pull` leaves this folder alone (it is in `.gitignore`).
+
 ## Step 5 — Go live on avanamedical.com (when everyone is happy)
 
 1. DNS: point the `@` (and `www`) A records to the droplet IP.
