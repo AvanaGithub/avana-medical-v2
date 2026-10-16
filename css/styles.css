@@ -545,15 +545,15 @@ html.cm-lock{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.cm-overlay,.cm-panel{transition:none}}
 
 
-/* Home hero on mobile: whole 16:9 video visible (no crop, no overlay), text below */
+/* Home hero on mobile: the video fills the screen below the header and the text sits over it (one section, like on desktop) */
 @media (max-width:900px){
-  .hero{flex-direction:column;align-items:stretch;min-height:0}
-  .hero-video{position:relative;inset:auto;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#000}
-  .hero-shade{display:none}
-  .hero .wrap{padding-block:30px 52px}
-  .hero .hero-product,.hero .sub{text-shadow:none}
-  .hero .vid-toggle{top:calc(100vw * 9 / 16);bottom:auto;right:0;width:38px;height:38px}
+  .hero{min-height:calc(100svh - 70px);align-items:flex-end}
+  .hero-video{object-position:50% 50%}
+  .hero-shade{background:linear-gradient(0deg,rgba(23,32,37,.94) 0%,rgba(23,32,37,.78) 38%,rgba(23,32,37,.2) 72%,rgba(23,32,37,.05) 100%)}
+  .hero .wrap{padding-block:40px 40px}
+  .hero .vid-toggle{top:12px;bottom:auto;right:12px;width:38px;height:38px}
 }
+
 
 
 /* Careers header: same banner size as product pages */

@@ -5,10 +5,10 @@
     var page=sec.closest('[data-page]'), track=sec.querySelector('.lt-track'), slide=sec.querySelector('.lt-slide'),
         orig=[].slice.call(track.children), n=orig.length, subs=[].slice.call(sec.querySelectorAll('.lt-sub-item')),
         cnt=sec.querySelector('[data-pagi-count]'), bar=sec.querySelector('.lt-line-inner'),
-        wide=matchMedia('(min-width:768px)'), still=matchMedia('(prefers-reduced-motion: reduce)'),
+        still=matchMedia('(prefers-reduced-motion: reduce)'),
         pos=0, loop=false, real=-1, drawn=false;
     function pad(k){return k<10?'0'+k:''+k}
-    // copies before and after the real cards make the loop endless on laptops and tablets
+    // copies before and after the real cards make the loop endless on every screen (on phones too, so the chosen leader is always the first card and the row never stops at the end)
     var pre=document.createDocumentFragment(), post=document.createDocumentFragment();
     orig.forEach(function(li){
       [0,1].forEach(function(k){var c=li.cloneNode(true);c.classList.add('lt-clone');c.setAttribute('aria-hidden','true');
@@ -46,8 +46,7 @@
     function normalize(){if(!loop)return;if(pos<n||pos>=2*n){pos=((pos%n)+n)%n+n;render(false);void track.offsetWidth}}
     function go(d){normalize();if(loop)pos+=d;else pos=Math.max(0,Math.min(n-1,pos+d));render(true)}
     track.addEventListener('transitionend',function(e){if(e.target===track)normalize()});
-    function setMode(){loop=wide.matches;clones.forEach(function(c){c.style.display=loop?'':'none'});pos=loop?n+(real<0?0:real):Math.max(real,0);render(false)}
-    wide.addEventListener?wide.addEventListener('change',setMode):wide.addListener(setMode);
+    function setMode(){loop=true;clones.forEach(function(c){c.style.display=loop?'':'none'});pos=loop?n+(real<0?0:real):Math.max(real,0);render(false)}
     addEventListener('resize',function(){render(false)});
     var arrows=[].slice.call(sec.querySelectorAll('.lt-arrow'));
     arrows.forEach(function(b){b.addEventListener('click',function(){go(+b.getAttribute('data-dir'))})});
