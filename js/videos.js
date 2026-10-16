@@ -52,7 +52,7 @@
   // Brand pages
   lazy('arthrex.mp4', ['arthrexVideo'], ['arthrexToggle'], ['arthrex']);
   lazy(pick('echi', 2), ['echiVideo'], ['echiToggle'], ['echi']);
-  lazy('movmedix.mp4', ['mmVideo'], ['mmToggle'], ['movmedix']);
+  lazy(pick('movmedix', 2), ['mmVideo'], ['mmToggle'], ['movmedix']);
 
   // About Us: Arthro Knee 2026 event video (full 92 s, muted web versions of "Arthroknee Post Event Video Final.mp4":
   // 1080p for large screens, 720p for phones). Bump "?v=" whenever a file is replaced, so browsers don't show a cached copy.
