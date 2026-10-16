@@ -132,7 +132,8 @@ test('asking for the openings: full profile and CV, then an email with a persona
 
   const mail = lastEmail();
   assert.match(mail, /To: priya@example\.com/);
-  assert.match(mail, /Subject: 1 open position at Avana Medical Devices/);
+  assert.match(mail, /Subject: You’re one step closer to joining the Avana family – 1 open position/);
+  assert.ok(mail.includes('one step closer to joining the Avana family</div>'), 'also the heading');
   assert.ok(mail.includes('Hi Priya,'));
   assert.ok(mail.includes('Territory Manager – Sports Medicine'));
   assert.ok(!mail.includes('Draft role'));

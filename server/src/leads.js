@@ -134,9 +134,10 @@ const firstName = n => String(n).trim().split(/\s+/)[0];
 function openingsEmail(lead, url, items) {
   const days = config.openingsLinkDays;
   const jobLine = j => [j.department, j.locations.join(' · '), jobs.experienceLabel(j)].filter(Boolean).join(' | ');
+  const closer = 'You’re one step closer to joining the Avana family';
   const subject = items.length
-    ? `${items.length} open position${items.length === 1 ? '' : 's'} at Avana Medical Devices`
-    : 'Openings at Avana Medical Devices';
+    ? `${closer} – ${items.length} open position${items.length === 1 ? '' : 's'}`
+    : `${closer} – our openings`;
   // same two groups as the /job page; a group with no jobs is left out
   const groups = jobs.CATEGORIES.map(c => [c, items.filter(j => jobs.category(j) === c)]).filter(g => g[1].length);
 
@@ -163,7 +164,7 @@ function openingsEmail(lead, url, items) {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-top:4px solid #B27F0D">
       <tr><td style="background:#172025;padding:26px 32px">
         <div style="font:700 13px/1 Arial,Helvetica,sans-serif;letter-spacing:2px;text-transform:uppercase;color:#D19A1E">Careers at Avana</div>
-        <div style="font:800 26px/1.2 Arial,Helvetica,sans-serif;color:#ffffff;margin-top:10px">Our current openings</div>
+        <div style="font:800 26px/1.2 Arial,Helvetica,sans-serif;color:#ffffff;margin-top:10px">${esc(closer)}</div>
       </td></tr>
       <tr><td style="padding:28px 32px 8px;font:16px/1.6 Arial,Helvetica,sans-serif;color:#2E3538">
         <p style="margin:0 0 14px">Hi ${esc(firstName(lead.name))},</p>
