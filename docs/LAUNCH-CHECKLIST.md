@@ -4,12 +4,7 @@ Status as of 15 Oct 2026. Tick items off as they are done.
 
 ## 1. Decisions and content from the Avana team
 
-- [ ] **Leadership names and titles.** Confirm the spelling of Gautham or Gautam, Avadhut or Avdhut, and Praveen Raghavendra's title ("Dextra & Bio").
-  - S. Singaravel: "Service & IT" or "IT & Service"?
-  - M. Srinivasan: "Finance & Admin Accounts" or "Finance & Administration"?
-- [ ] **Photos** (600×600) for E. Siva Praveen and S. Sathish.
-- [ ] **LinkedIn links** for E. Siva Praveen, S. Sathish and M. Srinivasan, or confirm that they have none so the icon can be hidden.
-- [ ] **Team bios.** Keep both versions (the colleague's profile and the person's own words) or only one?
+- [x] **Leadership team.** Matched to the MD's version on 16 Oct: 7 leaders, their order, titles, bios and photos (E. Siva Praveen and S. Sathish removed).
 - [ ] **ISO certificate.** Open "View our certificate" on the About page and confirm that the PDF is correct.
 - [ ] **News & Events.** Add real dates and photos for the five upcoming events (they currently say "Dates to be announced"). This can be done in the admin panel.
 - [ ] **Careers form.** HR to confirm that age and marital status should be required fields.
