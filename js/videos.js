@@ -50,10 +50,9 @@
   lazy(pick('echi', 2), ['echiVideo'], ['echi']);
   lazy(pick('movmedix', 2), ['mmVideo'], ['movmedix']);
 
-  // Meet the Team: Arthro Knee 2026 event video (full 92 s, muted web versions of "Arthroknee Post Event Video Final.mp4":
-  // 1080p for large screens, 720p for phones). Bump "?v=" whenever a file is replaced, so browsers don't show a cached copy.
-  // (About Us now plays the Marina Beach film, see js/about-leaders.js)
-  lazy(pick('about-arthroknee', 3), ['teamBg'], ['team']);
+  // Meet our Leaders: the same Arthro Knee 2026 montage as the Contact page (the browser downloads it once for both).
+  // Bump "?v=" whenever a file is replaced, so browsers don't show a cached copy. About Us plays the Marina Beach film (js/about-leaders.js).
+  lazy(pick('page-background', 2), ['teamBg'], ['team']);
 
   // Contact: Arthro Knee 2026 montage (same 8 shots as the old page-background.mp4, re-cut from the HD original)
   lazy(pick('page-background', 2), ['contactBg'], ['contact'], ['contactBg']);
