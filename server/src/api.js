@@ -258,6 +258,49 @@ router.delete('/admin/applications/:id', (req, res) => {
   ok(res);
 });
 
+// View a CV in the browser without downloading it: a PDF opens in the browser's viewer, a .docx is shown as a
+// plain page (text, lists, tables, images; converted with mammoth). An old .doc can't be shown, so it offers the download.
+// The Word page is sandboxed, so nothing in a candidate's file can run scripts on the admin site.
+async function viewCv(req, res, row, kind, downloadUrl) {
+  const p = row && apps.cvPath(row.cv_file);
+  if (!p || !require('fs').existsSync(p)) return bad(res, 'CV not found.', 404);
+  audit(req.user.id, 'view_cv', kind, row.id);
+  res.set('Cache-Control', 'no-store');
+  res.set('X-Content-Type-Options', 'nosniff');
+  const ext = require('path').extname(row.cv_file).slice(1);
+  const name = esc(row.name);
+  if (ext === 'pdf') {
+    // no CSP sandbox here: Chrome refuses to show a PDF in a sandboxed page; its PDF viewer is isolated anyway
+    res.set('Content-Disposition', 'inline');
+    return res.type('application/pdf').sendFile(p);
+  }
+  let body;
+  if (ext === 'docx') {
+    try { body = (await require('mammoth').convertToHtml({ path: p })).value; } catch (e) { body = ''; }
+  }
+  if (!body) {
+    body = `<p class="note">${ext === 'doc'
+      ? 'This CV is an older Word file (.doc), which browsers cannot show.'
+      : 'This CV could not be shown in the browser.'} Please <a href="${downloadUrl}">download it</a> to read it.</p>`;
+  }
+  res.set('Content-Security-Policy', "sandbox allow-popups allow-downloads; default-src 'none'; img-src data:; style-src 'unsafe-inline'");
+  res.type('html').send(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${name} – CV</title><style>
+body{margin:0;background:#F3EFE5;font:16px/1.6 Arial,Helvetica,sans-serif;color:#2E3538}
+.bar{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 20px;background:#172025;color:#fff;font-weight:700}
+.bar a{color:#D19A1E;font-weight:600;text-decoration:none}
+.page{max-width:820px;margin:24px auto;padding:40px 48px;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.08);overflow-wrap:anywhere}
+.page img{max-width:100%;height:auto}.page table{border-collapse:collapse;max-width:100%}.page td,.page th{border:1px solid #E6E1D3;padding:4px 8px;vertical-align:top}
+.note{color:#5A6266}@media (max-width:700px){.page{margin:0;padding:24px 18px}}
+</style></head><body><div class="bar"><span>${name} – CV</span><a href="${downloadUrl}">Download</a></div><main class="page">${body}</main></body></html>`);
+}
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+router.get('/admin/applications/:id/cv/view', (req, res, next) =>
+  viewCv(req, res, apps.get(int(req.params.id)), 'application', `/api/admin/applications/${int(req.params.id)}/cv`).catch(next));
+router.get('/admin/leads/:id/cv/view', (req, res, next) =>
+  viewCv(req, res, leads.get(int(req.params.id)), 'lead', `/api/admin/leads/${int(req.params.id)}/cv`).catch(next));
+
 router.get('/admin/applications/:id/cv', (req, res) => {
   const a = apps.get(int(req.params.id));
   const p = a && apps.cvPath(a.cv_file);

@@ -548,7 +548,8 @@
         <td><span class="chip ${cls}"${l.email_error ? ` title="${esc(l.email_error)}"` : ''}>${label}</span></td>
         <td>${link}</td>
         <td>${l.applications ? `<a class="link" href="#applications">${l.applications}</a>` : '–'}</td>
-        <td>${l.has_cv ? `<a class="btn btn-ghost btn-sm" href="/api/admin/leads/${l.id}/cv" title="${esc(l.cv_name)}">CV</a>` : ''}
+        <td>${l.has_cv ? `<a class="btn btn-ghost btn-sm" href="/api/admin/leads/${l.id}/cv/view" target="_blank" rel="noopener" title="${esc(l.cv_name)}">View CV</a>
+            <a class="btn btn-ghost btn-sm" href="/api/admin/leads/${l.id}/cv" title="Download ${esc(l.cv_name)}">Download</a>` : ''}
             <button class="btn btn-ghost btn-sm" type="button" data-act="resend">New link</button>
             <button class="btn btn-ghost btn-sm" type="button" data-act="delete">Delete</button></td>
       </tr>`;
@@ -642,6 +643,7 @@
     $('appCover').hidden = !a.cover_note;
     $('appCover').textContent = a.cover_note;
     $('appCv').href = `/api/admin/applications/${a.id}/cv`;
+    $('appCvView').href = `/api/admin/applications/${a.id}/cv/view`;
     $('appStatus').value = a.status;
     $('appNotes').value = a.notes;
     showError($('appError'));

@@ -218,6 +218,13 @@ test('applying is one click: the saved profile and CV are used; once per job', a
   assert.ok(String(cv.body).startsWith('%PDF'));
   assert.notStrictEqual(a.cv_file, db.prepare('SELECT cv_file FROM job_leads').get().cv_file, 'the application has its own copy');
   assert.strictEqual((await client()('GET', `/api/admin/applications/${a.id}/cv`)).status, 401);
+  // "View CV": the same file, shown in the browser instead of downloaded
+  const view = await admin('GET', `/api/admin/applications/${a.id}/cv/view`);
+  assert.strictEqual(view.status, 200);
+  assert.strictEqual(view.headers.get('content-type'), 'application/pdf');
+  assert.strictEqual(view.headers.get('content-disposition'), 'inline');
+  assert.ok(String(view.body).startsWith('%PDF'));
+  assert.strictEqual((await client()('GET', `/api/admin/applications/${a.id}/cv/view`)).status, 401);
   assert.strictEqual((await fetch(`${base}/uploads/../cv/${a.cv_file}`)).status, 404);
   assert.ok(!fs.existsSync(path.join(process.env.UPLOADS_DIR, 'cv')), 'CVs are not stored in the public uploads folder');
 
@@ -254,6 +261,8 @@ test('admin: requests list with CV, resend gives a fresh link (old one stops), d
   assert.strictEqual(leadCv.status, 200);
   assert.ok(String(leadCv.body).includes('newer cv'));
   assert.strictEqual((await client()('GET', `/api/admin/leads/${lead.id}/cv`)).status, 401);
+  assert.strictEqual((await admin('GET', `/api/admin/leads/${lead.id}/cv/view`)).headers.get('content-disposition'), 'inline');
+  assert.strictEqual((await client()('GET', `/api/admin/leads/${lead.id}/cv/view`)).status, 401);
 
   const re = await admin('POST', `/api/admin/leads/${lead.id}/resend`);
   assert.strictEqual(re.body.status, 'not_configured');
