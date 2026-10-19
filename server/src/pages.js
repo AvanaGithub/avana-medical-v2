@@ -51,13 +51,18 @@ const PAGES = {
     path: '/contact-us/',
     title: 'Contact Us – Avana Medical Devices',
     description: 'Contact Avana Medical Devices in Chennai, Mumbai, Delhi and Bengaluru. Call +91 44 2233 1061 or email info@avanamedical.com.'
+  },
+  privacy: {
+    path: '/privacy-policy/',
+    title: 'Privacy Policy – Avana Medical Devices',
+    description: 'How Avana Medical Devices collects, uses and protects personal information, including enquiries, job applications and CVs.'
   }
 };
 
 const byPath = Object.fromEntries(Object.entries(PAGES).map(([route, p]) => [p.path, route]));
 
 // Old avanamedical.com (WordPress) addresses and common guesses → the new page (301, permanent).
-// Still to decide: /surgeon-education/, /patient-education/, /knowledge-center/, /research-publications/ (they 404 for now).
+// Old education pages now live on other sites (the same links as the Medical Education / Patient Education menus).
 const REDIRECTS = {
   '/index.html': '/', '/index.php': '/', '/home/': '/',
   '/about/': '/about-us/',
@@ -68,7 +73,11 @@ const REDIRECTS = {
   '/news-events/': '/', '/news/': '/', '/events/': '/', '/gallary/': '/', '/gallery/': '/',
   '/products/': '/products/arthrex/', '/arthrex/': '/products/arthrex/', '/whats-new-at-arthrex/': '/products/arthrex/',
   '/new-techniques-of-the-month/': '/products/arthrex/', '/clavicle/': '/products/arthrex/', '/research-publications-old/': '/products/arthrex/',
-  '/echi/': '/products/echi/', '/movmedix/': '/products/movmedix/'
+  '/echi/': '/products/echi/', '/movmedix/': '/products/movmedix/',
+  '/research-publications/': '/products/arthrex/',
+  '/surgeon-education/': 'https://arthrolab.in/',
+  '/knowledge-center/': 'https://www.youtube.com/@MargdarshanAvana',
+  '/patient-education/': 'https://www.orthopedia.com/'
 };
 
 // Old WordPress leftovers: tell search engines they are gone for good

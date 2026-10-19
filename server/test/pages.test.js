@@ -48,7 +48,10 @@ test('old addresses redirect permanently; WordPress leftovers are gone', async (
   const cases = {
     '/about-us': '/about-us/', '/career/': '/careers/', '/gallary/': '/', '/news-events/': '/', '/products/': '/products/arthrex/',
     '/whats-new-at-arthrex/': '/products/arthrex/', '/find-a-doctor/': '/contact-us/', '/index.php': '/', '/index.html': '/',
-    '/contact/?utm_source=x': '/contact-us/?utm_source=x', '/jobs/some-old-job': '/careers/'
+    '/contact/?utm_source=x': '/contact-us/?utm_source=x', '/jobs/some-old-job': '/careers/',
+    '/research-publications/': '/products/arthrex/', '/surgeon-education/': 'https://arthrolab.in/',
+    '/knowledge-center/': 'https://www.youtube.com/@MargdarshanAvana', '/patient-education/': 'https://www.orthopedia.com/',
+    '/privacy-policy': '/privacy-policy/'
   };
   for (const [from, to] of Object.entries(cases)) {
     const r = await get(from);

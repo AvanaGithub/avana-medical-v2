@@ -2,7 +2,7 @@
   var pages=[].slice.call(document.querySelectorAll('[data-page]'));
   var routes=pages.map(function(p){return p.getAttribute('data-page')});
   var nav=document.getElementById('nav'),menuBtn=document.getElementById('menuBtn');
-  var names={home:'Home',about:'About Us',team:'Meet the Team',contact:'Contact Us',arthrex:'Arthrex Product Range',echi:'e.CHI Catalogue',movmedix:'MovMedix Catalogue',careers:'Careers'};
+  var names={home:'Home',about:'About Us',team:'Meet the Team',contact:'Contact Us',arthrex:'Arthrex Product Range',echi:'e.CHI Catalogue',movmedix:'MovMedix Catalogue',careers:'Careers',privacy:'Privacy Policy'};
 
   /* ---- Dropdown menus (disclosure pattern) ---- */
   var toggles=[].slice.call(document.querySelectorAll('.has-menu>button'));

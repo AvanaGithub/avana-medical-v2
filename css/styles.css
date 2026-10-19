@@ -1242,3 +1242,16 @@ body.route-about header.main.ov-open.ov-solid{background:var(--paper);border-bot
 .lt-titlebar{grid-column:1 / 17;grid-row:1;margin-bottom:calc(var(--u)*2)}
 .lt-titlebar h2{margin:0;font:800 clamp(28px,3.4vw,40px)/1.1 var(--f-display);color:var(--charcoal)}
 @media (max-width:767px){.lt-titlebar{margin-bottom:6px}}
+
+/* Privacy Policy */
+.legal-updated{margin:0;color:var(--muted);font-size:15px}
+.legal{background:#fff;padding-block:56px 88px}
+.legal-body{max-width:860px;color:var(--body);font-size:17px;line-height:1.7}
+.legal-body h2{font:700 22px/1.3 var(--f-display);color:var(--charcoal);margin:40px 0 12px}
+.legal-body p{margin:0 0 14px}
+.legal-body ul{margin:0 0 14px;padding-left:22px}
+.legal-body li{margin-bottom:8px}
+.legal-body a{color:var(--gold-dk);text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
+footer .bottom a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+footer .bottom a:hover{color:var(--gold-hi)}
+@media (max-width:767px){.legal{padding-block:36px 56px}.legal-body{font-size:16px}.legal-body h2{font-size:20px;margin-top:32px}}

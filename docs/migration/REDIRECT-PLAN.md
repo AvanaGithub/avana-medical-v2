@@ -18,32 +18,36 @@ Audit of the current WordPress site (Yoast SEO), done on 14 Oct 2026 from its si
 3. **Send everything else to the closest new page with a permanent (301) redirect,** so bookmarks, old links and Google rankings carry over.
 4. **Answer 410 Gone for junk pages** so Google drops them quickly.
 
-## Redirect map
+## Redirect map (as built, updated 19 Oct 2026)
+
+The live rules are in `server/src/pages.js` (`REDIRECTS`, `GONE`) and are checked by `server/test/pages.test.js`.
 
 | Old address | New address | Type | Notes |
 |---|---|---|---|
 | `/` | `/` | same | |
 | `/about-us/` | `/about-us/` | same | |
 | `/contact-us/` | `/contact-us/` | same | |
-| `/news-events/` | `/news-events/` | same | |
-| `/privacy-policy/` | `/privacy-policy/` | same | **The new site has no privacy page yet. It is needed (DPDP Act, job applications).** Port the current text. |
-| `/career/` | `/careers/` | 301 | |
-| `/products/` | `/products/arthrex/` | 301 | The old products page is the Arthrex range by anatomy |
-| `/whats-new-at-arthrex/` | `/products/arthrex/` | 301 | |
-| `/new-techniques-of-the-month/` | `/products/arthrex/` | 301 | |
-| `/research-publications/` | `/products/arthrex/` | 301 | Clinical papers are Arthrex PDFs; alternative: a small Research page on the new site |
-| `/research-publications-old/` | `/products/arthrex/` | 301 | |
+| `/careers/` | `/careers/` | same | Was a redirect to a JPG on the old site; now the real page |
+| `/privacy-policy/` | `/privacy-policy/` | same | New page: the old site's text plus job applications and CVs |
+| `/career/`, `/jobs/`, `/jobs/<job>` | `/careers/` | 301 | |
+| `/news-events/`, `/news/`, `/events/`, `/gallary/`, `/gallery/` | `/` | 301 | News & Events removed at the MD's request (16 Oct 2026) |
+| `/products/`, `/arthrex/` | `/products/arthrex/` | 301 | The old products page is the Arthrex range by anatomy |
+| `/whats-new-at-arthrex/`, `/new-techniques-of-the-month/` | `/products/arthrex/` | 301 | |
+| `/research-publications/`, `/research-publications-old/` | `/products/arthrex/` | 301 | Clinical papers are Arthrex PDFs |
 | `/clavicle/` | `/products/arthrex/` | 301 | Empty test page |
-| `/surgeon-education/` | `https://arthrolab.in/` | 301 | Matches the new menu: Medical Education → ArthroLab India |
-| `/knowledge-center/` | `https://www.youtube.com/@MargdarshanAvana` | 301 | Videos now live on the Margdarshan YouTube channel |
-| `/patient-education/` | `https://www.orthopedia.com/` | 301 | Matches the new menu: Patient Education |
+| `/surgeon-education/` | `https://arthrolab.in/` | 301 | Medical Education → ArthroLab India |
+| `/knowledge-center/` | `https://www.youtube.com/@MargdarshanAvana` | 301 | Videos on the Margdarshan YouTube channel |
+| `/patient-education/` | `https://www.orthopedia.com/` | 301 | Patient Education |
 | `/find-a-doctor/` | `/contact-us/` | 301 | "Seeking guidance?" page for patients |
-| `/gallary/`, `/gallery/` | `/news-events/` | 301 | Event photos now sit in News & Events |
-| `/about/`, `/contact/`, `/news/`, `/events/`, `/home/`, `/index.php` | matching new page | 301 | Common guesses, kept working as today |
+| `/about/`, `/contact/`, `/home/`, `/index.php`, `/index.html` | matching new page | 301 | Common guesses |
+| `/team/`, `/leaders/`, `/meet-the-team/` | `/leadership/` | 301 | Shortcuts |
+| `/echi/`, `/movmedix/` | `/products/echi/`, `/products/movmedix/` | 301 | Shortcuts |
+| `/openings` | `/job` | 301 | Links in early openings emails |
+| any page address without the final `/` | same address with `/` | 301 | One address per page |
 | `/filter-search/*`, `/comments/feed/`, `/feed/` | none | 410 | Plugin and feed leftovers |
-| `/wp-admin/`, `/wp-login.php`, `/xmlrpc.php` | none | 410 | WordPress is gone; stops bots knocking |
+| `/wp-admin/`, `/wp-login.php`, `/xmlrpc.php`, `/wp-json/*` | none | 410 | WordPress is gone; stops bots knocking |
 
-New pages with no old equivalent: `/leadership/` (Meet the Team), `/products/echi/`, `/products/movmedix/`, `/jobs/<job>`.
+New pages with no old equivalent: `/leadership/`, `/products/echi/`, `/products/movmedix/`, and the private `/job` page (personal link only, kept out of search).
 Old links to the hash addresses (`/#about`, `/#careers` …) keep working.
 
 ## Proposed titles and descriptions for the new site
@@ -56,7 +60,6 @@ Old links to the hash addresses (`/#about`, `/#careers` …) keep working.
 | `/products/arthrex/` | Arthrex Products in India – Avana Medical Devices | Arthrex solutions by anatomy: shoulder, knee, hand and wrist, foot and ankle, hip, orthobiologics, imaging and endoscopy, available through Avana. |
 | `/products/echi/` | e.CHI FrequenzChip in India – Avana Medical Devices | e.CHI from Germany: a drug-free wearable FrequenzChip for everyday pain relief, now in India through Avana Medical Devices. |
 | `/products/movmedix/` | MovMedix LARS Ligaments in India – Avana Medical | MovMedix LARS synthetic ligaments from France for knee, shoulder, foot and ankle and soft-tissue reconstruction, available in India through Avana. |
-| `/news-events/` | News & Events – Avana Medical Devices | Upcoming events, academic programmes and recognitions from across the Avana family, from dealer meets to knee surgery programmes. |
 | `/careers/` | Careers at Avana – Medical Device Jobs in India | Join Avana Medical Devices in sales, medical education and service. Great Place To Work certified. Request our current openings by email. |
 | `/contact-us/` | Contact Us – Avana Medical Devices | Contact Avana Medical Devices in Chennai, Mumbai, Delhi and Bengaluru. Call +91 44 2233 1061 or email info@avanamedical.com. |
 | `/privacy-policy/` | Privacy Policy – Avana Medical Devices | How Avana Medical Devices collects, uses and protects personal information, including job applications and enquiries. |
