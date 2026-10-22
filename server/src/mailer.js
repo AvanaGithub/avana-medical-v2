@@ -24,13 +24,13 @@ function saveToOutbox(msg) {
   const dir = path.join(config.dataDir, 'outbox');
   fs.mkdirSync(dir, { recursive: true });
   const name = `${new Date().toISOString().replace(/[:.]/g, '-')}-${String(msg.to).replace(/[^\w.@-]/g, '_')}.html`;
-  const head = `<!-- To: ${msg.to}\n     Subject: ${msg.subject} -->\n`;
+  const head = `<!-- To: ${msg.to}${msg.cc ? `\n     Cc: ${msg.cc}` : ''}\n     Subject: ${msg.subject} -->\n`;
   fs.writeFileSync(path.join(dir, name), head + (msg.html || `<pre>${msg.text}</pre>`));
 }
 
 // Returns { status: 'sent' | 'failed' | 'not_configured', error? }. Never throws.
-async function send({ to, subject, text, html }) {
-  const msg = { from: config.mail.from, replyTo: config.mail.replyTo, to, subject, text, html };
+async function send({ to, cc, subject, text, html }) {
+  const msg = { from: config.mail.from, replyTo: config.mail.replyTo, to, cc: cc || undefined, subject, text, html };
   if (!configured()) {
     try { saveToOutbox(msg); } catch (e) { console.error('outbox:', e.message); }
     return { status: 'not_configured' };

@@ -9,6 +9,7 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'avana-jobs-'));
 // Tests never send real email, whatever server/.env says: messages go to the outbox folder instead
 process.env.SMTP_HOST = '';
 process.env.APPLICATION_NOTIFY_EMAIL = 'hr-alerts@test.local';
+process.env.APPLICATION_NOTIFY_CC = 'cc-one@test.local, cc-two@test.local';
 process.env.DATA_DIR = tmp;
 process.env.UPLOADS_DIR = path.join(tmp, 'uploads');
 process.env.SITE_URL = 'https://new.avanamedical.com';
@@ -194,6 +195,7 @@ test('applying is one click: the saved profile and CV are used; once per job', a
   assert.strictEqual(alert.length, 1, 'one alert per application');
   const alertMail = fs.readFileSync(path.join(outbox(), alert[0]), 'utf8');
   assert.match(alertMail, /Subject: New application: Territory Manager – Sports Medicine – Priya Raman/);
+  assert.match(alertMail, /Cc: cc-one@test.local, cc-two@test.local/, 'copied to APPLICATION_NOTIFY_CC');
   assert.ok(alertMail.includes('https://new.avanamedical.com/admin/#applications'));
   assert.ok(alertMail.includes('I have 4 years in arthroscopy sales.'));
   const again = await pub('POST', APPLY, applyForm({ token }));

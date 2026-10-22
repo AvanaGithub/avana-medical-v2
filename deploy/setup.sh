@@ -50,6 +50,7 @@ UPLOADS_DIR=$DATA_DIR/uploads
 # MAIL_REPLY_TO=recruitment@avanamedical.com
 # HR_NOTIFY_EMAIL=
 # APPLICATION_NOTIFY_EMAIL=
+# APPLICATION_NOTIFY_CC=      (comma-separated copies of the application alert)
 EOF
   chown "$APP_USER:$APP_USER" "$APP_DIR/server/.env"; chmod 600 "$APP_DIR/server/.env"
 fi

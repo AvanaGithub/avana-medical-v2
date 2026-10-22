@@ -36,7 +36,8 @@ module.exports = {
     from: process.env.MAIL_FROM || 'Avana Medical Devices <noreply@avanamedical.com>',
     replyTo: process.env.MAIL_REPLY_TO || 'info@avanamedical.com',
     hrNotify: process.env.HR_NOTIFY_EMAIL || '',                    // optional: also tell HR about each new request
-    applicationNotify: process.env.APPLICATION_NOTIFY_EMAIL || ''   // optional: email this address each time someone applies for a job
+    applicationNotify: process.env.APPLICATION_NOTIFY_EMAIL || '',  // optional: email this address each time someone applies for a job
+    applicationNotifyCc: process.env.APPLICATION_NOTIFY_CC || ''    // optional: copy that email to these addresses (comma-separated)
   },
   // How long the emailed "current openings" link keeps working
   openingsLinkDays: Number(process.env.OPENINGS_LINK_DAYS) || 30

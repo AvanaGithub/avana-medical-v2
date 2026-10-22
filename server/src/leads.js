@@ -194,7 +194,7 @@ function notifyHr(lead, siteUrl) {
   mailer.send({ to: config.mail.hrNotify, subject: `Openings request: ${lead.name}`, text }).catch(() => {});
 }
 
-// Heads-up for HR each time someone applies (APPLICATION_NOTIFY_EMAIL). Fire and forget; the CV stays in the admin panel.
+// Heads-up for HR each time someone applies (APPLICATION_NOTIFY_EMAIL, copied to APPLICATION_NOTIFY_CC). Fire and forget; the CV stays in the admin panel.
 function notifyApplication(lead, job, coverNote, siteUrl) {
   if (!config.mail.applicationNotify) return;
   const lpa = n => (n === null || n === undefined ? '-' : n + ' LPA');
@@ -217,7 +217,7 @@ function notifyApplication(lead, job, coverNote, siteUrl) {
       `<tr><td style="padding:6px 12px 6px 0;color:#6B7275;white-space:nowrap;vertical-align:top">${esc(k)}</td><td style="padding:6px 0;font-weight:600">${esc(v)}</td></tr>`).join('')}</table></td></tr>
     <tr><td style="padding:20px 28px 26px"><a href="${esc(link)}" style="display:inline-block;background:#B27F0D;color:#fff;font:700 14px/1 Arial,Helvetica,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:14px 22px">Open in the admin panel</a></td></tr>
   </table></body></html>`;
-  mailer.send({ to: config.mail.applicationNotify, subject, text, html }).catch(() => {});
+  mailer.send({ to: config.mail.applicationNotify, cc: config.mail.applicationNotifyCc, subject, text, html }).catch(() => {});
 }
 
 module.exports = { validate, save, replaceCv, apply, appliedJobIds, get, newToken, findByToken, recordVisit, list, remove, counts, sendLink, notifyHr, notifyApplication, openingsEmail, linkFor, MARITAL };
