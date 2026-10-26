@@ -345,6 +345,24 @@
 </dialog>
 
 <!-- ============ Application detail ============ -->
+<!-- Job preview: the job exactly as candidates see it (the site's /job page in staff-preview mode), with Edit -->
+<dialog class="drawer drawer-preview" id="jobPreviewDialog" aria-labelledby="jobPreviewTitle">
+  <div class="app-sheet">
+    <header class="drawer-head">
+      <div><h2 id="jobPreviewTitle"></h2><p class="muted small">Preview: how candidates see this job</p></div>
+      <button class="icon-btn" type="button" data-close aria-label="Close">✕</button>
+    </header>
+    <div class="preview-body"><iframe id="jobPreviewFrame" title="Job preview" src="about:blank"></iframe></div>
+    <footer class="drawer-foot">
+      <span class="muted small" id="jobPreviewStatus"></span>
+      <div class="foot-actions">
+        <button class="btn btn-ghost" type="button" data-close>Close</button>
+        <button class="btn btn-primary" type="button" id="jobPreviewEdit">Edit this job</button>
+      </div>
+    </footer>
+  </div>
+</dialog>
+
 <dialog class="drawer drawer-narrow" id="appDialog" aria-labelledby="appName">
   <div class="app-sheet">
     <header class="drawer-head">

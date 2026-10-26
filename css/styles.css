@@ -1255,3 +1255,9 @@ body.route-about header.main.ov-open.ov-solid{background:var(--paper);border-bot
 footer .bottom a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 footer .bottom a:hover{color:var(--gold-hi)}
 @media (max-width:767px){.legal{padding-block:36px 56px}.legal-body{font-size:16px}.legal-body h2{font-size:20px;margin-top:32px}}
+
+/* Admin job preview panel (/job?preview=…&embed=1): only the job details, filling the frame */
+body[data-embed]{background:#fff}
+body[data-embed] header.main,body[data-embed] main,body[data-embed] footer,body[data-embed] .job-dlg-x{display:none!important}
+body[data-embed] .job-dlg{width:100%;max-width:none;height:100%;max-height:none;margin:0;border-top:0;box-shadow:none}
+body[data-embed] .job-dlg::backdrop{background:#fff}

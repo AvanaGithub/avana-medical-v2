@@ -67,8 +67,10 @@
     if (dlg.open) dlg.close();
   }
   dlg.addEventListener('click', function (e) {
+    if (document.body.hasAttribute('data-embed')) return;   // admin preview panel: the details stay open
     if (e.target === dlg || e.target.closest('[data-job-close]')) close();
   });
+  dlg.addEventListener('cancel', function (e) { if (document.body.hasAttribute('data-embed')) e.preventDefault(); });
 
   /* ---------- one-click apply: the profile and CV they gave when asking for the openings ---------- */
   var me = function (k) { return document.body.getAttribute('data-lead-' + k) || ''; };

@@ -69,7 +69,10 @@ app.get(['/job', '/job/'], (req, res, next) => {
     // HR's "View" in the admin: signed-in staff see the job as candidates do, without a personal link
     const user = req.query.preview && auth.currentUser(req);
     const previewJob = user && jobs.getBySlug(String(req.query.preview));
-    if (previewJob) return res.type('html').send(renderIndex({ route: 'jobs', siteUrl: siteUrlOf(req), preview: previewJob }));
+    if (previewJob) {
+      const opts = { route: 'jobs', siteUrl: siteUrlOf(req), preview: previewJob, embed: req.query.embed === '1' };
+      return res.type('html').send(renderIndex(opts));
+    }
     const token = String(req.query.t || '');
     const lead = leads.findByToken(token);
     if (lead) leads.recordVisit(lead.id);

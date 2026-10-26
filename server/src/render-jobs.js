@@ -109,13 +109,13 @@ function expiredHtml() {
 }
 
 // opts: { lead, token, applied: [job ids] } on the /job page with a valid link; { expired: true } on /job without one;
-// { preview: job } for signed-in staff: the page exactly as candidates see it, with that job open and applying switched off
+// { preview: job, embed } for signed-in staff (embed: inside the admin's preview panel, the job details only): the page exactly as candidates see it, with that job open and applying switched off
 // (a draft or closed job is added to the list so HR can check it before it goes live).
 function renderJobsInto(html, opts = {}) {
   let items = jobs.listPublic();
   if (opts.preview) {
     if (!items.some(j => j.id === opts.preview.id)) items = items.concat(opts.preview);
-    html = html.replace(/<body([^>]*)>/i, `<body$1 data-portal${items.length ? ' data-portal-list' : ''} data-preview="${esc(opts.preview.slug)}">`);
+    html = html.replace(/<body([^>]*)>/i, `<body$1 data-portal${items.length ? ' data-portal-list' : ''} data-preview="${esc(opts.preview.slug)}"${opts.embed ? ' data-embed' : ''}>`);
     html = html.replace(/<!-- jobs:list -->[\s\S]*?<!-- \/jobs:list -->/,
       `<!-- jobs:list -->\n      ${listHtml(items, '', [], true)}\n      <!-- /jobs:list -->`);
     html = html.replace(/(<p class="jobs-count" id="jobsCount"[^>]*>)[\s\S]*?(<\/p>)/,

@@ -410,7 +410,7 @@
         </div>
         <div class="ev-actions">
           ${j.status === 'open' ? '<button class="btn btn-ghost btn-sm" type="button" data-act="close">Close job</button>' : `<button class="btn btn-ghost btn-sm" type="button" data-act="open">${j.status === 'draft' ? 'Publish' : 'Reopen'}</button>`}
-          <a class="btn btn-ghost btn-sm" href="/job?preview=${encodeURIComponent(j.slug)}" target="_blank" rel="noopener" title="See this job as candidates see it">View</a>
+          <button class="btn btn-ghost btn-sm" type="button" data-act="view" title="See this job as candidates see it">View</button>
           <button class="btn btn-ghost btn-sm" type="button" data-act="edit">Edit</button>
           <button class="btn btn-ghost btn-sm" type="button" data-act="dup">Duplicate</button>
           <button class="btn btn-ghost btn-sm" type="button" data-act="delete" aria-label="Delete ${esc(j.title)}">Delete</button>
@@ -429,6 +429,7 @@
     const act = btn.dataset.act;
     try {
       if (act === 'edit') return openJob(j);
+      if (act === 'view') return previewJob(j);
       if (act === 'apps') { appFilter.job = String(id); return; }      // the link itself switches to #applications
       if (act === 'open' || act === 'close') {
         await api('PUT', `/admin/jobs/${id}`, { status: act === 'open' ? 'open' : 'closed' });
@@ -464,6 +465,22 @@
   function fillSelect(sel, opts, labels) {
     sel.innerHTML = opts.map(o => `<option value="${esc(o)}">${esc((labels && labels[o]) || o || 'Not specified')}</option>`).join('');
   }
+
+  // "View": the job as candidates see it, in a panel like Edit; "Edit this job" switches to the edit form
+  let previewing = null;
+  function previewJob(j) {
+    previewing = j;
+    $('jobPreviewTitle').textContent = j.title;
+    $('jobPreviewStatus').textContent = j.status === 'open' ? 'On the website' : j.status === 'draft' ? 'Draft: not on the website yet' : 'Closed: not on the website';
+    $('jobPreviewFrame').src = `/job?preview=${encodeURIComponent(j.slug)}&embed=1`;
+    $('jobPreviewDialog').showModal();
+  }
+  $('jobPreviewEdit').addEventListener('click', () => {
+    const j = previewing;
+    $('jobPreviewDialog').close();
+    if (j) openJob(j);
+  });
+  $('jobPreviewDialog').addEventListener('close', () => { $('jobPreviewFrame').src = 'about:blank'; });
 
   async function openJob(j) {
     if (!jstate.options) await loadJobs();
