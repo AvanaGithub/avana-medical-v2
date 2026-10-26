@@ -121,7 +121,7 @@ function renderJobsInto(html, opts = {}) {
     html = html.replace(/(<p class="jobs-count" id="jobsCount"[^>]*>)[\s\S]*?(<\/p>)/,
       `$1${items.length} open position${items.length === 1 ? '' : 's'}$2`);
     return html.replace(/(<p class="jobs-lead" id="jobsLead">)[\s\S]*?(<\/p>)/,
-      '$1<strong>Staff preview.</strong> This is how candidates see the openings. Applying is switched off here.$2');
+      '$1<strong>Staff preview.</strong> This is how candidates see the openings.$2');
   }
   const personal = !!opts.lead;
   if (personal || opts.expired) {

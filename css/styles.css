@@ -937,6 +937,7 @@ button.ab-cert-link{background:none;border-width:0 0 1px;border-style:solid;padd
 .jd-skills span{padding:6px 12px;background:var(--sand-lt);border:1px solid var(--line);font-size:14px;font-weight:600;color:var(--charcoal)}
 .jd-eeo{margin-top:26px;font-size:14px;color:var(--muted)}
 .job-dlg-foot{position:sticky;bottom:0;display:flex;flex-wrap:wrap;gap:12px;margin:26px -42px 0;padding:16px 42px;background:#fff;border-top:1px solid var(--line)}
+.job-dlg-foot[hidden]{display:none}
 
 /* application form */
 .apply-back{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;padding:0;border:0;background:none;font:700 13px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--gold-dk);cursor:pointer}

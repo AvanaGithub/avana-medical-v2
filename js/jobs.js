@@ -56,8 +56,9 @@
     detail.innerHTML = li.querySelector('template[data-detail]').innerHTML;
     document.getElementById('applyTitle').textContent = current.title;
     var applied = li.hasAttribute('data-applied');
-    applyBtn.disabled = applied || !!preview;
-    applyBtn.textContent = preview ? 'Apply (switched off in staff preview)' : applied ? 'You have applied for this job' : 'Apply for this job';
+    applyBtn.disabled = applied;
+    applyBtn.textContent = applied ? 'You have applied for this job' : 'Apply for this job';
+    applyBtn.parentNode.hidden = !!preview;   // staff preview: details only, no Apply button
     show('view');
     if (!dlg.open) dlg.showModal();
   }
