@@ -107,6 +107,14 @@ test('posting a job: validation; the public Careers page only invites people to 
   assert.ok(!page.includes('open position right now'), 'the Careers page does not count them either');
   assert.ok(page.includes('data-open-careers'));
 
+  // HR's "View" in the admin: the candidate's job page with this job open, applying switched off; only for signed-in staff
+  const prev = await admin('GET', `/job?preview=${job.slug}`);
+  assert.strictEqual(prev.status, 200);
+  assert.ok(prev.body.includes(`data-preview="${job.slug}"`) && prev.body.includes('Territory Manager – Sports Medicine'));
+  assert.ok(prev.body.includes('Staff preview.'));
+  const anon = await (await fetch(`${base}/job?preview=${job.slug}`)).text();
+  assert.ok(!anon.includes('Territory Manager – Sports Medicine') && !anon.includes('data-preview'), 'visitors get no preview');
+
   // old public job links go to the Careers page
   const old = await fetch(base + '/jobs/territory-manager-sports-medicine', { redirect: 'manual' });
   assert.strictEqual(old.status, 301);

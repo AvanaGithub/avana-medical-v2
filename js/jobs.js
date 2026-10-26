@@ -3,6 +3,7 @@
    (/job?t=…, see server/src/render-jobs.js). Applying needs that link's token. */
 (function () {
   var token = document.body.getAttribute('data-openings-token');
+  var preview = document.body.getAttribute('data-preview');   // HR's preview from the admin: details only, no applying
   var dlg = document.getElementById('jobDialog');
   if (!dlg) return;
 
@@ -55,8 +56,8 @@
     detail.innerHTML = li.querySelector('template[data-detail]').innerHTML;
     document.getElementById('applyTitle').textContent = current.title;
     var applied = li.hasAttribute('data-applied');
-    applyBtn.disabled = applied;
-    applyBtn.textContent = applied ? 'You have applied for this job' : 'Apply for this job';
+    applyBtn.disabled = applied || !!preview;
+    applyBtn.textContent = preview ? 'Apply (switched off in staff preview)' : applied ? 'You have applied for this job' : 'Apply for this job';
     show('view');
     if (!dlg.open) dlg.showModal();
   }
@@ -128,7 +129,7 @@
     if (side) side.outerHTML = '<span class="job-badge">Applied</span>';
   }
 
-  /* ---------- arriving from the emailed link: open the job it pointed to, if any ---------- */
-  var slug = (location.search.match(/[?&]job=([\w-]+)/) || [])[1];
-  if (token && slug) setTimeout(function () { if (cardFor(slug)) open(slug); }, 80);
+  /* ---------- arriving from the emailed link (or HR's preview): open the job it pointed to, if any ---------- */
+  var slug = preview || (location.search.match(/[?&]job=([\w-]+)/) || [])[1];
+  if ((token || preview) && slug) setTimeout(function () { if (cardFor(slug)) open(slug); }, 80);
 })();

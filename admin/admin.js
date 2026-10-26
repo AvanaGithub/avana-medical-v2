@@ -410,7 +410,7 @@
         </div>
         <div class="ev-actions">
           ${j.status === 'open' ? '<button class="btn btn-ghost btn-sm" type="button" data-act="close">Close job</button>' : `<button class="btn btn-ghost btn-sm" type="button" data-act="open">${j.status === 'draft' ? 'Publish' : 'Reopen'}</button>`}
-          ${j.live ? `<a class="btn btn-ghost btn-sm" href="/jobs/${esc(j.slug)}" target="_blank" rel="noopener">View</a>` : ''}
+          <a class="btn btn-ghost btn-sm" href="/job?preview=${encodeURIComponent(j.slug)}" target="_blank" rel="noopener" title="See this job as candidates see it">View</a>
           <button class="btn btn-ghost btn-sm" type="button" data-act="edit">Edit</button>
           <button class="btn btn-ghost btn-sm" type="button" data-act="dup">Duplicate</button>
           <button class="btn btn-ghost btn-sm" type="button" data-act="delete" aria-label="Delete ${esc(j.title)}">Delete</button>

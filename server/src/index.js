@@ -61,9 +61,15 @@ app.get(pages.PUBLIC_PATHS, (req, res, next) => {
 // The openings page (/job), from the personal link we email: the jobs in two groups, each with details and Apply.
 // The link is private, so the page is never cached, indexed or passed on to other sites.
 const leads = require('./leads');
+const auth = require('./auth');
+const jobs = require('./jobs');
 app.get(['/job', '/job/'], (req, res, next) => {
   try {
     res.set({ 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'no-referrer' });
+    // HR's "View" in the admin: signed-in staff see the job as candidates do, without a personal link
+    const user = req.query.preview && auth.currentUser(req);
+    const previewJob = user && jobs.getBySlug(String(req.query.preview));
+    if (previewJob) return res.type('html').send(renderIndex({ route: 'jobs', siteUrl: siteUrlOf(req), preview: previewJob }));
     const token = String(req.query.t || '');
     const lead = leads.findByToken(token);
     if (lead) leads.recordVisit(lead.id);

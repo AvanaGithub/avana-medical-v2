@@ -56,7 +56,7 @@ function detail(j) {
       <p class="jd-eeo">Avana is an equal opportunity employer. We welcome applications from everyone.</p>`;
 }
 
-function card(j, token, applied) {
+function card(j, token, applied, preview) {
   const chips = [
     [ICON.pin, locSummary(j)],
     [ICON.bag, [jobs.experienceLabel(j), j.employment_type].filter(Boolean).join(' · ')],
@@ -64,7 +64,7 @@ function card(j, token, applied) {
     [ICON.rupee, jobs.salaryLabel(j)]
   ].filter(c => c[1]);
   return `<li class="job${applied ? ' job-applied' : ''}"${applied ? ' data-applied' : ''}>
-          <a class="job-row" href="/job?t=${esc(token)}&amp;job=${esc(j.slug)}" data-job="${esc(j.slug)}" aria-haspopup="dialog">
+          <a class="job-row" href="${preview ? `/job?preview=${esc(j.slug)}` : `/job?t=${esc(token)}&amp;job=${esc(j.slug)}`}" data-job="${esc(j.slug)}" aria-haspopup="dialog">
             <span class="job-main">
               <span class="job-dept">${esc(j.department)}</span>
               <span class="job-title">${esc(j.title)}</span>
@@ -80,7 +80,7 @@ function card(j, token, applied) {
 }
 
 // The /job page list: Marketing & Sales first, then Others
-function listHtml(items, token, applied = []) {
+function listHtml(items, token, applied = [], preview = false) {
   if (!items.length) {
     return `<div class="jobs-empty">
         <p><strong>There are no open positions right now.</strong></p>
@@ -92,7 +92,7 @@ function listHtml(items, token, applied = []) {
     return `<section class="job-cat" aria-labelledby="jobcat-${i}">
         <h2 class="job-cat-h" id="jobcat-${i}">${esc(cat)} <span class="job-cat-n">${list.length} open</span></h2>
         ${list.length
-          ? `<ul class="jobs-list">\n          ${list.map(j => card(j, token, applied.includes(j.id))).join('\n          ')}\n        </ul>`
+          ? `<ul class="jobs-list">\n          ${list.map(j => card(j, token, applied.includes(j.id), preview)).join('\n          ')}\n        </ul>`
           : '<p class="jobs-none">No openings in this area right now.</p>'}
       </section>`;
   }).join('\n      ');
@@ -108,9 +108,21 @@ function expiredHtml() {
       </div>`;
 }
 
-// opts: { lead, token, applied: [job ids] } on the /job page with a valid link; { expired: true } on /job without one
+// opts: { lead, token, applied: [job ids] } on the /job page with a valid link; { expired: true } on /job without one;
+// { preview: job } for signed-in staff: the page exactly as candidates see it, with that job open and applying switched off
+// (a draft or closed job is added to the list so HR can check it before it goes live).
 function renderJobsInto(html, opts = {}) {
-  const items = jobs.listPublic();
+  let items = jobs.listPublic();
+  if (opts.preview) {
+    if (!items.some(j => j.id === opts.preview.id)) items = items.concat(opts.preview);
+    html = html.replace(/<body([^>]*)>/i, `<body$1 data-portal${items.length ? ' data-portal-list' : ''} data-preview="${esc(opts.preview.slug)}">`);
+    html = html.replace(/<!-- jobs:list -->[\s\S]*?<!-- \/jobs:list -->/,
+      `<!-- jobs:list -->\n      ${listHtml(items, '', [], true)}\n      <!-- /jobs:list -->`);
+    html = html.replace(/(<p class="jobs-count" id="jobsCount"[^>]*>)[\s\S]*?(<\/p>)/,
+      `$1${items.length} open position${items.length === 1 ? '' : 's'}$2`);
+    return html.replace(/(<p class="jobs-lead" id="jobsLead">)[\s\S]*?(<\/p>)/,
+      '$1<strong>Staff preview.</strong> This is how candidates see the openings. Applying is switched off here.$2');
+  }
   const personal = !!opts.lead;
   if (personal || opts.expired) {
     html = html.replace(/<body([^>]*)>/i, `<body$1 data-portal${personal && items.length ? ' data-portal-list' : ''}>`);
