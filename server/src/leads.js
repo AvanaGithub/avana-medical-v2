@@ -1,6 +1,6 @@
-// "See open positions" requests: a job seeker gives their full profile and CV once and gets a personal link to the
+// "See open positions" requests: a job seeker gives their profile once and gets a personal link to the
 // current openings by email. The link (/job?t=<token>) is the only way to see and apply for jobs; applying reuses the
-// saved profile and CV, so it is one click. Only a SHA-256 hash of each token is stored, so the database alone can't
+// saved profile, plus the CV attached with their first application (kept for the next ones), so it is quick. Only a SHA-256 hash of each token is stored, so the database alone can't
 // be used to open anyone's link.
 const fs = require('fs');
 const crypto = require('crypto');
@@ -50,17 +50,19 @@ const PROFILE = ['name', 'age', 'marital_status', 'education', 'why_join', 'phon
 
 function dropCv(file) { const p = file && apps.cvPath(file); if (p) fs.rm(p, { force: true }, () => {}); }
 
-// Saves the request with its CV ({ file, name } from apps.saveCv). One row per email address: asking again
-// updates the profile and replaces the CV. Returns { lead, token }.
-function save(l, cv) {
-  const old = db.prepare('SELECT id, cv_file FROM job_leads WHERE email = ?').get(l.email);
-  const row = Object.assign({}, l, { cv_file: cv.file, cv_name: cv.name });
+// Saves the request. The CV is no longer asked for here: it comes with the first application (see apply in api.js).
+// cv ({ file, name } from apps.saveCv) is only given by pages cached from before that change. One row per email
+// address: asking again updates the profile and keeps the CV they already sent, if any. Returns { lead, token }.
+function save(l, cv = null) {
+  const old = db.prepare('SELECT id, cv_file, cv_name FROM job_leads WHERE email = ?').get(l.email);
+  const keep = cv || (old ? { file: old.cv_file, name: old.cv_name } : { file: '', name: '' });
+  const row = Object.assign({}, l, { cv_file: keep.file, cv_name: keep.name });
   let id;
   if (old) {
     id = old.id;
     db.prepare(`UPDATE job_leads SET ${PROFILE.map(k => `${k} = @${k}`).join(', ')}, cv_file = @cv_file, cv_name = @cv_name,
       requests = requests + 1, consent_at = datetime('now'), updated_at = datetime('now') WHERE id = @id`).run(Object.assign({ id }, row));
-    if (old.cv_file !== cv.file) dropCv(old.cv_file);
+    if (old.cv_file !== keep.file) dropCv(old.cv_file);
   } else {
     id = db.prepare(`INSERT INTO job_leads (email, ${PROFILE.join(', ')}, cv_file, cv_name, token_hash, expires_at, consent_at)
       VALUES (@email, ${PROFILE.map(k => '@' + k).join(', ')}, @cv_file, @cv_name, @tmp, datetime('now'), datetime('now'))`)
@@ -69,7 +71,7 @@ function save(l, cv) {
   return { lead: get(id), token: newToken(id) };
 }
 
-// A replacement CV given while applying becomes their CV from then on
+// The CV given while applying (required the first time, optional later) becomes their CV from then on
 function replaceCv(lead, cv) {
   db.prepare("UPDATE job_leads SET cv_file = ?, cv_name = ?, updated_at = datetime('now') WHERE id = ?").run(cv.file, cv.name, lead.id);
   dropCv(lead.cv_file);

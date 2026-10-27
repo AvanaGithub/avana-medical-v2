@@ -58,7 +58,8 @@ const siteUrl = req => config.siteUrl || `${req.protocol}://${req.get('host')}`;
 const cvUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: apps.CV_MAX, files: 1, fields: 30 } });
 const cvError = err => (err.code === 'LIMIT_FILE_SIZE' ? 'Your CV must be smaller than 5 MB.' : 'Upload failed. Please try again.');
 
-// The request form: full profile + CV (multipart). One row per email; asking again updates it.
+// The request form: the profile (multipart). No CV here any more: it is attached with the first application.
+// One row per email; asking again updates it.
 const requestLog = new Map();   // IP → timestamps, max 5 requests per hour
 router.post('/openings-request', (req, res, next) => {
   const now = Date.now();
@@ -70,9 +71,11 @@ router.post('/openings-request', (req, res, next) => {
       if (req.body.website) return ok(res, { ok: true, delivered: true });   // honeypot
       const v = leads.validate(req.body);
       if (v.error) return res.status(400).json({ error: v.error, field: v.field });
-      if (!req.file) return res.status(400).json({ error: 'Please attach your CV (PDF or Word, up to 5 MB).', field: 'cv' });
-      const cv = apps.saveCv(req.file.buffer, req.file.originalname);
-      if (cv.error) return res.status(400).json({ error: cv.error, field: 'cv' });
+      let cv = null;                                          // only from pages cached before the CV moved to Apply
+      if (req.file) {
+        cv = apps.saveCv(req.file.buffer, req.file.originalname);
+        if (cv.error) return res.status(400).json({ error: cv.error, field: 'cv' });
+      }
       recent.push(now); requestLog.set(req.ip, recent);
       const { lead, token } = leads.save(v.value, cv);
       const r = await leads.sendLink(lead, token, siteUrl(req));
@@ -82,7 +85,8 @@ router.post('/openings-request', (req, res, next) => {
   });
 });
 
-/* ---------- public: apply for a job (only with a valid openings link; reuses the saved profile and CV) ---------- */
+/* ---------- public: apply for a job (only with a valid openings link; the saved profile, and the CV: required with the
+   first application, then reused) ---------- */
 
 const applyLog = new Map();   // IP → timestamps, max 10 applications per hour
 router.post('/apply/:slug', (req, res) => {
@@ -96,7 +100,8 @@ router.post('/apply/:slug', (req, res) => {
     const job = jobs.getBySlug(String(req.params.slug));
     if (!jobs.isLive(job)) return bad(res, 'This position is no longer accepting applications.', 410);
     if (req.body.website) return ok(res);                       // hidden "honeypot" field: bots fill it, people don't
-    if (req.file) {                                             // optional: a newer CV for this and later applications
+    if (!req.file && !lead.cv_file) return res.status(400).json({ error: 'Please attach your CV (PDF or Word, up to 5 MB).', field: 'cv' });
+    if (req.file) {                                             // first application, or a newer CV for this and later ones
       const cv = apps.saveCv(req.file.buffer, req.file.originalname);
       if (cv.error) return res.status(400).json({ error: cv.error, field: 'cv' });
       lead = leads.replaceCv(lead, cv);

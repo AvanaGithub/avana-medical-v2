@@ -1,4 +1,5 @@
-/* Careers: the "See open positions" form. The job seeker gives their profile and CV once, and the server emails
+/* Careers: the "See open positions" form. The job seeker gives their profile once (the CV comes with their first
+   application on the /job page), and the server emails
    them a personal link to the current openings (see server/src/leads.js). Any [data-open-careers] button opens it. */
 (function () {
   var ov = document.getElementById('careersModal');
@@ -32,18 +33,12 @@
     'cm-ctc': function (v) { return v && (!DEC_RE.test(v) || Number(v) > 500) ? 'Enter CTC in lakh per annum, 0 to 500 (e.g. 6.5).' : ''; },
     'cm-ectc': function (v) { return v && (!DEC_RE.test(v) || Number(v) > 500) ? 'Enter CTC in lakh per annum, 0 to 500 (e.g. 8).' : ''; },
     'cm-linkedin': function (v) { return v && !LINKEDIN_RE.test(v) ? 'Enter your LinkedIn profile link, like https://www.linkedin.com/in/your-name' : ''; },
-    'cm-cv': function (v, el) {
-      var f = el.files && el.files[0];
-      if (!f) return 'Please attach your CV (PDF or Word, up to 5 MB).';
-      if (!/\.(pdf|docx?)$/i.test(f.name)) return 'Please attach your CV as a PDF or Word file.';
-      return f.size > 5 * 1024 * 1024 ? 'Your CV must be smaller than 5 MB.' : '';
-    },
     'cm-consent': function (v, el) { return el.checked ? '' : 'Please tick this box to continue.'; },
     'cm-truth': function (v, el) { return el.checked ? '' : 'Please confirm that your details are truthful to continue.'; }
   };
   // the server names fields by their form name; map them back to the inputs
   var byName = { name: 'cm-name', email: 'cm-email', age: 'cm-age', marital_status: 'cm-marital', education: 'cm-edu', consent: 'cm-consent', truthful: 'cm-truth',
-    phone: 'cm-phone', city: 'cm-city', total_exp: 'cm-exp', current_ctc: 'cm-ctc', expected_ctc: 'cm-ectc', linkedin: 'cm-linkedin', cv: 'cm-cv' };
+    phone: 'cm-phone', city: 'cm-city', total_exp: 'cm-exp', current_ctc: 'cm-ctc', expected_ctc: 'cm-ectc', linkedin: 'cm-linkedin' };
   var ids = Object.keys(rules);
 
   function msgFor(id) { var el = document.getElementById(id); return rules[id](el.type === 'checkbox' ? '' : el.value.trim(), el); }

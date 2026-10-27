@@ -636,7 +636,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <img class="cm-logo" src="images/logos/avana-white.png" alt="Avana">
       <span class="eyebrow">Careers at Avana</span>
       <h2 id="cm-h">See our open positions</h2>
-      <p id="cm-intro">You're one step closer to joining the Avana family. Tell us about yourself and attach your CV. We'll email you a link to all our current openings, and you can apply for any of them in one click.</p>
+      <p id="cm-intro">You're one step closer to joining the Avana family. Tell us about yourself and we'll email you a link to all our current openings. You can then apply for any of them and attach your CV.</p>
     </div>
     <form class="cm-form" id="cmForm" novalidate>
       <p class="cm-reqnote">Fields marked <span class="cm-req" aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.</p>
@@ -723,12 +723,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="cm-err" id="cm-linkedin-e"></p>
       </div>
       <div class="cm-field">
-        <label for="cm-cv">CV / résumé<span class="cm-req" aria-hidden="true">*</span></label>
-        <input id="cm-cv" name="cv" type="file" required accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-        <p class="cm-hint">PDF or Word, up to 5 MB. We'll use it for every job you apply for.</p>
-        <p class="cm-err" id="cm-cv-e"></p>
-      </div>
-      <div class="cm-field">
         <label for="cm-why">Why do you want to join our team? <span class="cm-opt">Optional</span></label>
         <textarea id="cm-why" name="why_join" rows="2" maxlength="600"></textarea>
         <p class="cm-hint"><span id="cm-why-n">0</span>/600 characters</p>
@@ -749,7 +743,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button type="submit" class="btn" id="cmSubmit" aria-disabled="true" aria-describedby="cmReadyHint">Send me the link</button>
         <button type="button" class="btn ghost" id="cmCancel">Cancel</button>
       </div>
-      <p class="cm-hint cm-ready" id="cmReadyHint">Fill in all required fields, attach your CV and tick both boxes to get the link.</p>
+      <p class="cm-hint cm-ready" id="cmReadyHint">Fill in all required fields and tick both boxes to get the link.</p>
     </form>
     <div class="cm-done" id="cmDone" hidden tabindex="-1">
       <span class="cm-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
@@ -802,12 +796,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="apply-me-k">Applying as</p>
         <p class="apply-me-name" id="applyMeName"></p>
         <p class="apply-me-sub" id="applyMeSub"></p>
-        <p class="apply-me-cv">CV: <b id="applyMeCv"></b></p>
-        <p class="apply-me-note">We'll send HR the details and CV you gave when you asked for our openings. Details changed? Request the openings again from the Careers page with your new details.</p>
+        <p class="apply-me-cv" id="applyMeCvLine">CV: <b id="applyMeCv"></b></p>
+        <p class="apply-me-note">We'll send HR the details you gave when you asked for our openings, with your CV. Details changed? Request the openings again from the Careers page with your new details.</p>
       </div>
       <div class="apply-grid">
         <label class="af af-wide"><span>Why are you interested in this role? <small>Optional</small></span><textarea name="cover_note" rows="3" maxlength="1500"></textarea></label>
-        <label class="af af-wide af-file"><span>Use a different CV <small>Optional · PDF or Word, up to 5 MB</small></span>
+        <label class="af af-wide af-file"><span id="applyCvLabel">Use a different CV <small>Optional · PDF or Word, up to 5 MB</small></span>
           <input name="cv" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
         <label class="af-hp" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
         <input type="hidden" name="token" id="applyToken">

@@ -78,7 +78,8 @@ const SEEKER = { name: 'Priya Raman', email: 'Priya@Example.com', age: '27', mar
   why_join: 'Keen on sports medicine.', phone: '+91 98765 43210', city: 'Chennai', total_exp: '4.5', current_ctc: '6.2',
   expected_ctc: '8', notice_period: '30 days', current_employer: 'MedCo', current_role: 'Sales Executive',
   linkedin: 'https://linkedin.com/in/priya', consent: 'on', truthful: 'on' };
-const ask = (pub, o = {}, file) => pub('POST', '/api/openings-request', cvForm(Object.assign({}, SEEKER, o), file));
+// the request form has no CV any more (it comes with the first application); a file is only sent by pages cached before that
+const ask = (pub, o = {}, file = null) => pub('POST', '/api/openings-request', cvForm(Object.assign({}, SEEKER, o), file));
 const outbox = () => path.join(tmp, 'outbox');
 const lastEmail = () => {
   const files = fs.readdirSync(outbox()).sort();
@@ -130,7 +131,6 @@ test('asking for the openings: full profile and CV, then an email with a persona
   assert.strictEqual((await ask(pub, { total_exp: '' })).body.field, 'total_exp');
   assert.strictEqual((await ask(pub, { consent: '' })).body.field, 'consent');
   assert.strictEqual((await ask(pub, { truthful: '' })).body.field, 'truthful');
-  assert.strictEqual((await ask(pub, {}, null)).body.field, 'cv', 'a CV is required');
   const fake = await ask(pub, {}, { data: 'MZ this is a program', name: 'cv.pdf', type: 'application/pdf' });
   assert.strictEqual(fake.body.field, 'cv', 'a non-PDF renamed to .pdf is refused');
   assert.strictEqual(db.prepare('SELECT COUNT(*) n FROM job_leads').get().n, 0, 'nothing saved from refused requests');
@@ -156,7 +156,7 @@ test('asking for the openings: full profile and CV, then an email with a persona
   assert.strictEqual(row.email, 'priya@example.com');
   assert.strictEqual(row.phone, '+91 98765 43210');
   assert.strictEqual(row.total_exp, 4.5);
-  assert.strictEqual(row.cv_name, 'Priya CV.pdf');
+  assert.strictEqual(row.cv_name, '', 'no CV yet: it is asked for with the first application');
   assert.strictEqual(row.email_status, 'not_configured');
 });
 
@@ -175,7 +175,7 @@ test('the personal link shows the openings; a wrong link shows the "expired" not
   assert.ok(html.includes('data-route="jobs"'));
   assert.match(html, /<body[^>]* data-portal data-portal-list/, 'the focused jobs page: only the job categories in the menu');
   assert.ok(html.includes(`data-openings-token="${token}"`));
-  assert.ok(html.includes('data-lead-cv="Priya CV.pdf"'), 'the page knows which CV will be sent');
+  assert.ok(html.includes('data-lead-cv=""'), 'the page knows there is no CV yet, so Apply asks for one');
   assert.strictEqual(db.prepare('SELECT visits FROM job_leads').get().visits, 1);
   const careers = await (await fetch(`${base}/careers/`)).text();
   assert.ok(!careers.includes('Territory Manager – Sports Medicine') && !careers.includes('open position right now'),
@@ -190,13 +190,17 @@ test('the personal link shows the openings; a wrong link shows the "expired" not
   assert.ok(bad.includes('That openings link has expired'));
 });
 
-test('applying is one click: the saved profile and CV are used; once per job', async () => {
+test('applying: the CV is attached the first time, then the saved profile and CV are used; once per job', async () => {
   const pub = client();
   const noLink = await pub('POST', APPLY, applyForm({}));
   assert.strictEqual(noLink.status, 403, 'no link, no application');
   assert.match(noLink.body.error, /expired/);
 
-  const ok = await pub('POST', APPLY, applyForm({ token, cover_note: 'I have 4 years in arthroscopy sales.' }));
+  const noCv = await pub('POST', APPLY, applyForm({ token }));
+  assert.strictEqual(noCv.status, 400, 'the first application needs a CV');
+  assert.strictEqual(noCv.body.field, 'cv');
+  const ok = await pub('POST', APPLY, applyForm({ token, cover_note: 'I have 4 years in arthroscopy sales.' },
+    { data: '%PDF-1.4\n%test cv\n', name: 'Priya CV.pdf', type: 'application/pdf' }));
   assert.strictEqual(ok.status, 200, JSON.stringify(ok.body));
   // HR gets a heads-up with the admin link
   const alert = fs.readdirSync(outbox()).filter(f => f.includes('hr-alerts@test.local'));

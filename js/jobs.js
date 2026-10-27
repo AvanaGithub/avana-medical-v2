@@ -76,7 +76,17 @@
   var me = function (k) { return document.body.getAttribute('data-lead-' + k) || ''; };
   document.getElementById('applyMeName').textContent = me('name');
   document.getElementById('applyMeSub').textContent = [me('email'), me('phone'), me('city')].filter(Boolean).join(' · ');
-  document.getElementById('applyMeCv').textContent = me('cv') || 'the CV you sent us';
+  // No CV saved yet (it is no longer asked for on the first form): the first application must attach one
+  function cvMode() {
+    var has = !!me('cv'), input = form.elements.cv;
+    document.getElementById('applyMeCv').textContent = me('cv');
+    document.getElementById('applyMeCvLine').hidden = !has;
+    input.required = !has;
+    document.getElementById('applyCvLabel').innerHTML = has
+      ? 'Use a different CV <small>Optional · PDF or Word, up to 5 MB</small>'
+      : 'Your CV / résumé <small>Required · PDF or Word, up to 5 MB</small>';
+  }
+  cvMode();
 
   var applyBtn = document.getElementById('jobApplyBtn');
   applyBtn.addEventListener('click', function () {
@@ -97,7 +107,8 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     err.hidden = true;
-    var cv = form.elements.cv.files[0];          // optional newer CV; the server checks it again
+    var cv = form.elements.cv.files[0];          // required the first time, then optional; the server checks it again
+    if (!cv && !me('cv')) return fieldError('cv', 'Please attach your CV (PDF or Word, up to 5 MB).');
     if (cv && !/\.(pdf|docx?)$/i.test(cv.name)) return fieldError('cv', 'Upload your CV as a PDF or Word file.');
     if (cv && cv.size > 5 * 1024 * 1024) return fieldError('cv', 'Your CV must be smaller than 5 MB.');
 
@@ -110,7 +121,7 @@
       return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, d: d }; });
     }).then(function (res) {
       if (!res.ok && res.status !== 409) return fieldError(res.d.field, res.d.error || 'We could not send your application. Please try again.');
-      if (cv) document.getElementById('applyMeCv').textContent = cv.name;
+      if (cv) { document.body.setAttribute('data-lead-cv', cv.name); cvMode(); }   // saved for their next applications
       markApplied(current.li);
       document.getElementById('applyDoneName').textContent = me('name').split(' ')[0];
       document.getElementById('applyDoneJob').textContent = current.title;
